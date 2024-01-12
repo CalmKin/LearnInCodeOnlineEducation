@@ -5,16 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7b67c6ab-72a9-481c-81b4-bfd15320c6e6" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LearnInCodeOnlineEducation.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,7 +29,7 @@
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
-        <option name="localRepository" value="D:\Java_Sourse\.m2\repository" />
+        <option name="localRepository" value="D:\Java_Sourse\.m2\EduRepo" />
         <option name="mavenHome" value="$PROJECT_DIR$/../../Java_Sourse/apache-maven-3.6.1" />
         <option name="useMavenConfig" value="false" />
         <option name="userSettingsFile" value="D:\Java_Sourse\.m2\settings.xml" />
@@ -42,9 +37,7 @@
     </option>
   </component>
   <component name="ProjectId" id="2an85yi3kVap3BwHng0AgUdtDnc" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
-    <ConfirmationsSetting value="2" id="Add" />
-  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="openDirectoriesWithSingleClick" value="true" />
@@ -59,7 +52,7 @@
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "master",
     "jdk.selected.JAVA_MODULE": "17",
-    "last_opened_file_path": "D:/Java_Project/LearnInCodeOnlineEducation",
+    "last_opened_file_path": "D:/Java_Project/LearnInCodeOnlineEducation/LearnInCode-Content",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -68,9 +61,9 @@
     "project.structure.last.edited": "模块",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.31954023",
-    "settings.editor.selected.configurable": "MavenSettings",
+    "settings.editor.selected.configurable": "project.propVCSSupport.Confirmation",
     "settings.editor.splitter.proportion": "0.3058104",
-    "spring.configuration.checksum": "2342193c1beb565cca9424ffce0e8bc0",
+    "spring.configuration.checksum": "707895cf1e9a748e6478e6849c701796",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -83,6 +76,20 @@
     <configuration name="LearnInCodeBaseApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="LearnInCode-Base" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.calmkin.LearnInCodeBaseApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="LearnInCodeContentInterfaceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="LearnInCode-Content-Api" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.calmkin.LearnInCodeContentInterfaceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="LearnInCodeModelApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="LearnInCode-Content-Model" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.calmkin.LearnInCodeModelApplication" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -105,12 +112,26 @@
       <updated>1696508661440</updated>
       <workItem from="1704942805194" duration="697000" />
       <workItem from="1704943521290" duration="1597000" />
-      <workItem from="1704945130950" duration="426000" />
+      <workItem from="1704945130950" duration="2389000" />
+      <workItem from="1704980870497" duration="574000" />
+      <workItem from="1705031171790" duration="1787000" />
+      <workItem from="1705037911680" duration="2325000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />

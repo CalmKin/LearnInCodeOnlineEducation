@@ -3,6 +3,14 @@
   <component name="Encoding" native2AsciiForPropertiesFiles="true" defaultCharsetForPropertiesFiles="UTF-8">
     <file url="file://$PROJECT_DIR$/LearnInCode-Base/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/LearnInCode-Base/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/LearnInCode-Content/LearnInCode-Content-Api/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/LearnInCode-Content/LearnInCode-Content-Api/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/LearnInCode-Content/LearnInCode-Content-Model/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/LearnInCode-Content/LearnInCode-Content-Model/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/LearnInCode-Content/LearnInCode-Content-Service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/LearnInCode-Content/LearnInCode-Content-Service/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/LearnInCode-Content/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/LearnInCode-Content/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/LearnInCode-Parent/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/LearnInCode-Parent/src/main/resources" charset="UTF-8" />
     <file url="PROJECT" charset="UTF-8" />

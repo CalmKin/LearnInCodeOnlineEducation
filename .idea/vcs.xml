@@ -3,6 +3,8 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/LearnInCode-Base" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/LearnInCode-Content" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/LearnInCode-Content/LearnInCode-Content-Service" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/LearnInCode-Parent" vcs="Git" />
   </component>
 </project>

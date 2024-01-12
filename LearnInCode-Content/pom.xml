@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+<!-- 依赖、版本、插件都由Parent统一管理了
+所以第二级父工程需要只保留坐标、父工程、子模块即可   -->
+
+    <parent>
+        <groupId>com.xuecheng</groupId>
+        <artifactId>LearnInCode-Parent</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <!--  指定父工程为Parent      -->
+        <relativePath>../LearnInCode-Parent</relativePath>
+    </parent>
+
+    <!--  父工程打包方式都为pom      -->
+    <groupId>com.calmkin</groupId>
+    <artifactId>LearnInCode-Content</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <!-- 聚合工程   -->
+    <modules>
+        <module>LearnInCode-Content-Api</module>
+        <module>LearnInCode-Content-Model</module>
+        <module>LearnInCode-Content-Service</module>
+    </modules>
+
+
+</project>

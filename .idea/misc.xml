@@ -10,10 +10,15 @@
       <list>
         <option value="$PROJECT_DIR$/LearnInCode-Parent/pom.xml" />
         <option value="$PROJECT_DIR$/LearnInCode-Base/pom.xml" />
+        <option value="$PROJECT_DIR$/LearnInCode-Content/pom.xml" />
+        <option value="$PROJECT_DIR$/LearnInCode-Content/LearnInCode-Model/pom.xml" />
+        <option value="$PROJECT_DIR$/LearnInCode-Content/LearnInCode-Content-Service/pom.xml" />
+        <option value="$PROJECT_DIR$/LearnInCode-Content/LearnInCode-Content-Model/pom.xml" />
+        <option value="$PROJECT_DIR$/LearnInCode-Content/LearnInCode-Content-Interface/pom.xml" />
       </list>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" project-jdk-name="17" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
 </project>
