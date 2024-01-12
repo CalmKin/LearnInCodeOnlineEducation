@@ -1,7 +1,9 @@
-Javaserver:
+server:
   servlet:
-    context-path: /content
+    context-path: /content  # 配置模块统一请求路径前缀
   port: 63040
+
+
 #微服务配置
 spring:
   application:
@@ -14,3 +16,10 @@ spring:
 # 日志文件配置路径
 logging:
   config: classpath:log4j2-dev.xml
+
+swagger:
+  title: "码上学内容管理系统"
+  description: "对课程相关信息进行管理"
+  base-package: com.learnincode.content
+  enabled: true
+  version: 1.0.0

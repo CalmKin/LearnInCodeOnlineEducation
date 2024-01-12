@@ -9,7 +9,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <java.version>17</java.version>
+        <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <spring-boot.version>2.3.7.RELEASE</spring-boot.version>
@@ -211,9 +211,9 @@
                 <version>3.8.1</version>
                 <configuration>
                     <!--TODO 指定项目源码jdk的版本-->
-                    <source>17</source>
+                    <source>1.8</source>
                     <!--TODO 指定项目编译后的jdk的版本-->
-                    <target>17</target>
+                    <target>1.8</target>
                     <!--配置注解预编译-->
                     <annotationProcessorPaths>
                         <path>
