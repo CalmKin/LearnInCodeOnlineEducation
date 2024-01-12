@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.calmkin</groupId>
+        <groupId>com.learnincode</groupId>
         <artifactId>LearnInCode-Content</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     <!--   不需要指定路径，因为当前工程和父工程的pom同级     -->
@@ -15,7 +15,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.calmkin</groupId>
+            <groupId>com.learnincode</groupId>
             <artifactId>LearnInCode-Base</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>

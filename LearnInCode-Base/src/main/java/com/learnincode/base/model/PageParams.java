@@ -1,4 +1,4 @@
-package com.calmkin.learnincode.base.model;
+package com.learnincode.base.model;
 
 import lombok.Data;
 import lombok.ToString;

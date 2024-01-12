@@ -1,4 +1,4 @@
-package com.calmkin.learnincode.content.model.po;
+package com.learnincode.content.model.po;
 
 import java.io.Serializable;
 import lombok.Data;

@@ -7,7 +7,7 @@
 所以第二级父工程需要只保留坐标、父工程、子模块即可   -->
 
     <parent>
-        <groupId>com.xuecheng</groupId>
+        <groupId>com.learnincode</groupId>
         <artifactId>LearnInCode-Parent</artifactId>
         <version>0.0.1-SNAPSHOT</version>
         <!--  指定父工程为Parent      -->
@@ -15,7 +15,7 @@
     </parent>
 
     <!--  父工程打包方式都为pom      -->
-    <groupId>com.calmkin</groupId>
+    <groupId>com.learnincode</groupId>
     <artifactId>LearnInCode-Content</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
