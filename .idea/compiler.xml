@@ -8,7 +8,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
       </profile>
-      <profile name="Annotation profile for LearnInCode-Content" enabled="true">
+      <profile name="Annotation profile for LearnInCodeOnlineEducation" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -16,12 +16,16 @@
           <entry name="$PROJECT_DIR$/../../Java_Sourse/.m2/EduRepo/org/projectlombok/lombok/1.18.8/lombok-1.18.8.jar" />
         </processorPath>
         <module name="LearnInCode-Base" />
-        <module name="LearnInCode-Content-Model" />
-        <module name="LearnInCode-Content-Service" />
-        <module name="LearnInCode-Content-Api" />
+        <module name="LearnInCode-Content" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="LearnInCode-Content (1)" target="1.8" />
+      <module name="LearnInCode-Content (2)" target="1.5" />
+      <module name="LearnInCode-Content-Api" target="1.5" />
+      <module name="LearnInCode-Content-Model" target="1.5" />
+      <module name="LearnInCode-Content-Service" target="1.5" />
+      <module name="LearnInCode-Parent" target="1.8" />
       <module name="xuecheng-plus-generator" target="1.8" />
       <module name="xuecheng-plus-parent" target="17" />
     </bytecodeTargetLevel>
@@ -30,10 +34,12 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="LearnInCode-Base" options="" />
       <module name="LearnInCode-Content" options="" />
+      <module name="LearnInCode-Content (1)" options="-parameters" />
       <module name="LearnInCode-Content-Api" options="" />
       <module name="LearnInCode-Content-Model" options="" />
       <module name="LearnInCode-Content-Service" options="" />
-      <module name="LearnInCode-Parent" options="" />
+      <module name="LearnInCode-Parent" options="-parameters" />
+      <module name="LearnInCodeOnlineEducation" options="" />
     </option>
   </component>
 </project>

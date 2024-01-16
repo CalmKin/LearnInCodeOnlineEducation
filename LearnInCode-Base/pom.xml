@@ -4,9 +4,8 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.learnincode</groupId>
-        <artifactId>LearnInCode-Parent</artifactId>
+        <artifactId>LearnInCodeOnlineEducation</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath>../LearnInCode-Parent</relativePath>
     </parent>
 
 

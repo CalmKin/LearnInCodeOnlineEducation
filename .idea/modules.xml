@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/LearnInCodeOnlineEducation.iml" filepath="$PROJECT_DIR$/LearnInCodeOnlineEducation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LearnInCode-Content/LearnInCode-Content.iml" filepath="$PROJECT_DIR$/LearnInCode-Content/LearnInCode-Content.iml" />
     </modules>
   </component>
 </project>
