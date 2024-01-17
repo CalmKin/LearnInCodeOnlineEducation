@@ -1,10 +1,10 @@
 package com.learnincode.base.model;
 
+
 import lombok.Data;
 import lombok.ToString;
 
-
- /**
+/**
   * @description 分页查询通用参数
   * @author CalmKin
   * @version 1.0

@@ -1,4 +1,4 @@
-package com.learnincode.model.po;
+package com.learnincode.content.model.po;
 
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;

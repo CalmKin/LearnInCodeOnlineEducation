@@ -7,19 +7,16 @@ server:
 #微服务配置
 spring:
   application:
-    name: content-api
+    name: content
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://192.168.101.65:3306/xcplus_content?serverTimezone=UTC&userUnicode=true&useSSL=false&
     username: root
     password: mysql
-# 日志文件配置路径
-logging:
-  config: classpath:log4j2-dev.xml
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 
-swagger:
-  title: "码上学内容管理系统"
-  description: "对课程相关信息进行管理"
-  base-package: com.learnincode.controller
-  enabled: true
-  version: 1.0.0
+# 日志文件配置路径
+#logging:
+#  config: classpath:log4j2-dev.xml

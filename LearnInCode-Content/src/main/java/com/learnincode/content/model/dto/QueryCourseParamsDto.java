@@ -1,4 +1,4 @@
-package com.learnincode.model.dto;
+package com.learnincode.content.model.dto;
 
 import lombok.Data;
 import lombok.ToString;

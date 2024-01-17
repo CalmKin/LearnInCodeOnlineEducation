@@ -5,34 +5,26 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7b67c6ab-72a9-481c-81b4-bfd15320c6e6" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/LearnInCode-Content/LearnInCode-Content.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/config/Knife4jConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LearnInCode-Base/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Base/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/LearnInCode-Content-Api/pom.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/LearnInCode-Content-Api/src/main/java/com/learnincode/ContentApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/ContentApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/LearnInCode-Content-Api/src/main/java/com/learnincode/content/api/CourseBaseInfoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/controller/CourseBaseInfoController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/LearnInCode-Content-Api/src/main/resources/bootstrap.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/LearnInCode-Content-Api/src/main/resources/log4j2-dev.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/LearnInCode-Content-Model/pom.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/LearnInCode-Content-Model/src/main/java/com/learnincode/content/model/dto/QueryCourseParamsDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/model/dto/QueryCourseParamsDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/LearnInCode-Content-Model/src/main/java/com/learnincode/content/model/po/CourseBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/model/po/CourseBase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/LearnInCode-Content-Model/src/main/java/com/learnincode/content/model/po/CourseCategory.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/model/po/CourseCategory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/LearnInCode-Content-Model/src/main/java/com/learnincode/content/model/po/CourseMarket.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/model/po/CourseMarket.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/LearnInCode-Content-Model/src/main/java/com/learnincode/content/model/po/CoursePub.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/model/po/CoursePub.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/LearnInCode-Content-Model/src/main/java/com/learnincode/content/model/po/CoursePubMsg.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/model/po/CoursePubMsg.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/LearnInCode-Content-Model/src/main/java/com/learnincode/content/model/po/CoursePublish.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/model/po/CoursePublish.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/LearnInCode-Content-Model/src/main/java/com/learnincode/content/model/po/CoursePublishPre.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/model/po/CoursePublishPre.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/LearnInCode-Content-Model/src/main/java/com/learnincode/content/model/po/CourseTeacher.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/model/po/CourseTeacher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/LearnInCode-Content-Model/src/main/java/com/learnincode/content/model/po/Teachplan.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/model/po/Teachplan.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/LearnInCode-Content-Model/src/main/java/com/learnincode/content/model/po/TeachplanMedia.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/model/po/TeachplanMedia.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/LearnInCode-Content-Service/pom.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/pom.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LearnInCode-Parent/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LearnInCode-Base/src/main/java/com/learnincode/base/model/PageParams.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Base/src/main/java/com/learnincode/base/model/PageParams.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/ContentApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/ContentApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/controller/CourseBaseInfoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/controller/CourseBaseInfoController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/model/dto/QueryCourseParamsDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/model/dto/QueryCourseParamsDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/model/po/CourseBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/model/po/CourseBase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/model/po/CourseCategory.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/model/po/CourseCategory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/model/po/CourseMarket.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/model/po/CourseMarket.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/model/po/CoursePub.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/model/po/CoursePub.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/model/po/CoursePubMsg.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/model/po/CoursePubMsg.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/model/po/CoursePublish.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/model/po/CoursePublish.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/model/po/CoursePublishPre.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/model/po/CoursePublishPre.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/model/po/CourseTeacher.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/model/po/CourseTeacher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/model/po/Teachplan.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/model/po/Teachplan.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/model/po/TeachplanMedia.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/model/po/TeachplanMedia.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/resources/bootstrap.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/resources/bootstrap.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,7 +88,7 @@
     "project.structure.last.edited": "模块",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.31954023",
-    "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings",
+    "settings.editor.selected.configurable": "MavenSettings",
     "settings.editor.splitter.proportion": "0.3058104",
     "spring.configuration.checksum": "a104d21ffb4fb6f11f6c084dcfe7f9b6",
     "vue.rearranger.settings.migration": "true"
@@ -129,10 +121,10 @@
     </configuration>
     <configuration name="ContentApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
       <module name="LearnInCode-Content" />
-      <option name="SPRING_BOOT_MAIN_CLASS" value="com.learnincode.ContentApplication" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.learnincode.content.ContentApplication" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.learnincode.*" />
+          <option name="PATTERN" value="com.learnincode.content.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -175,6 +167,16 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration default="true" type="lua.app" factoryName="Lua Application">
+      <option name="program" value="lua.exe" />
+      <option name="file" value="" />
+      <option name="workingDir" value="$PROJECT_DIR$/LearnInCode-Content/src/main/java" />
+      <option name="debuggerType" value="1" />
+      <option name="params" value="" />
+      <option name="charset" value="UTF-8" />
+      <option name="showConsole" value="true" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Spring Boot.ContentApplication" />
@@ -198,7 +200,10 @@
       <workItem from="1705069622310" duration="1582000" />
       <workItem from="1705412662685" duration="900000" />
       <workItem from="1705415879897" duration="895000" />
-      <workItem from="1705416848017" duration="2071000" />
+      <workItem from="1705416848017" duration="2826000" />
+      <workItem from="1705419832199" duration="397000" />
+      <workItem from="1705452593545" duration="2054000" />
+      <workItem from="1705454663645" duration="4442000" />
     </task>
     <servers />
   </component>

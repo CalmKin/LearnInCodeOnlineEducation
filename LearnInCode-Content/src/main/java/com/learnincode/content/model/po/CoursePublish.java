@@ -1,4 +1,4 @@
-package com.learnincode.model.po;
+package com.learnincode.content.model.po;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -16,8 +16,8 @@ import java.time.LocalDateTime;
  * @author itcast
  */
 @Data
-@TableName("course_pub")
-public class CoursePub implements Serializable {
+@TableName("course_publish")
+public class CoursePublish implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -25,11 +25,6 @@ public class CoursePub implements Serializable {
      * 主键
      */
     private Long id;
-
-    /**
-     * 课程标识
-     */
-    private Long courseId;
 
     /**
      * 机构ID
@@ -66,6 +61,9 @@ public class CoursePub implements Serializable {
      */
     private String mt;
 
+    /**
+     * 大分类名称
+     */
     private String mtName;
 
     /**
@@ -73,6 +71,9 @@ public class CoursePub implements Serializable {
      */
     private String st;
 
+    /**
+     * 小分类名称
+     */
     private String stName;
 
     /**
@@ -81,7 +82,7 @@ public class CoursePub implements Serializable {
     private String grade;
 
     /**
-     * 教育模式(common普通，record 录播，live直播等）
+     * 教育模式
      */
     private String teachmode;
 
@@ -106,7 +107,7 @@ public class CoursePub implements Serializable {
     private String teachplan;
 
     /**
-     * 教师信息
+     * 教师信息，json格式
      */
     private String teachers;
 
@@ -117,25 +118,19 @@ public class CoursePub implements Serializable {
     private LocalDateTime createDate;
 
     /**
-     * 修改时间
+     * 上架时间
      */
-    @TableField(fill = FieldFill.INSERT_UPDATE)
-    private LocalDateTime changeDate;
+    private LocalDateTime onlineDate;
 
     /**
-     * 是否最新课程
+     * 下架时间
      */
-    private Integer isLatest;
+    private LocalDateTime offlineDate;
 
     /**
-     * 是否发布(0发布 1取消发布)
+     * 发布状态
      */
-    private Integer isPub;
-
-    /**
-     * 状态（1正常  0删除）
-     */
-    private Integer status;
+    private String status;
 
     /**
      * 备注
@@ -155,27 +150,12 @@ public class CoursePub implements Serializable {
     /**
      * 原价
      */
-    private Float priceOld;
+    private Float originalPrice;
 
     /**
-     * 咨询QQ
+     * 课程有效期天数
      */
-    private String qq;
-
-    /**
-     * 有效性，对应数据字典--204
-     */
-    private String valid;
-
-    /**
-     * 课程有效期-开始时间
-     */
-    private LocalDateTime startTime;
-
-    /**
-     * 课程有效期-结束时间
-     */
-    private LocalDateTime endTime;
+    private Integer validDays;
 
 
 }
