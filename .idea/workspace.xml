@@ -5,25 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7b67c6ab-72a9-481c-81b4-bfd15320c6e6" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/config/Knife4jConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/config/MyBatisPlusConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/mapper/CourseBaseMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/service/CourseBaseService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/service/impl/CourseBaseServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/resources/mapper/CourseBaseMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LearnInCode-Content/src/test/java/com/learnincode/content/LearnInCodeContent2ApplicationTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LearnInCode-Base/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Base/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LearnInCode-Base/src/main/java/com/learnincode/base/model/PageParams.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Base/src/main/java/com/learnincode/base/model/PageParams.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/LearnInCode-Content.iml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/LearnInCode-Content/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/ContentApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/ContentApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/controller/CourseBaseInfoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/controller/CourseBaseInfoController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/model/dto/QueryCourseParamsDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/model/dto/QueryCourseParamsDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/model/po/CourseBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/model/po/CourseBase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/model/po/CourseCategory.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/model/po/CourseCategory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/model/po/CourseMarket.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/model/po/CourseMarket.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/model/po/CoursePub.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/model/po/CoursePub.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/model/po/CoursePubMsg.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/model/po/CoursePubMsg.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/model/po/CoursePublish.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/model/po/CoursePublish.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/model/po/CoursePublishPre.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/model/po/CoursePublishPre.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/model/po/CourseTeacher.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/model/po/CourseTeacher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/model/po/Teachplan.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/model/po/Teachplan.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/model/po/TeachplanMedia.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/model/po/TeachplanMedia.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/resources/bootstrap.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/resources/bootstrap.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/test/java/com/learnincode/LearnInCodeContent2ApplicationTests.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -62,7 +56,6 @@
   <component name="ProjectId" id="2an85yi3kVap3BwHng0AgUdtDnc" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
-    <option name="hideEmptyMiddlePackages" value="true" />
     <option name="openDirectoriesWithSingleClick" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
@@ -92,6 +85,11 @@
     "settings.editor.splitter.proportion": "0.3058104",
     "spring.configuration.checksum": "a104d21ffb4fb6f11f6c084dcfe7f9b6",
     "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql"
+    ]
   }
 }]]></component>
   <component name="RecentsManager">
@@ -105,7 +103,23 @@
       <recent name="D:\Java_Project\LearnInCodeOnlineEducation" />
     </key>
   </component>
-  <component name="RunManager" selected="Spring Boot.ContentApplication">
+  <component name="RunManager" selected="JUnit.LearnInCodeContent2ApplicationTests.testPageContent">
+    <configuration name="LearnInCodeContent2ApplicationTests.testPageContent" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="LearnInCode-Content" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.learnincode.content.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.learnincode.content" />
+      <option name="MAIN_CLASS_NAME" value="com.learnincode.content.LearnInCodeContent2ApplicationTests" />
+      <option name="METHOD_NAME" value="testPageContent" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration default="true" type="JetRunConfigurationType">
       <module name="LearnInCodeOnlineEducation" />
       <method v="2">
@@ -179,6 +193,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.LearnInCodeContent2ApplicationTests.testPageContent" />
         <item itemvalue="Spring Boot.ContentApplication" />
       </list>
     </recent_temporary>
@@ -203,7 +218,7 @@
       <workItem from="1705416848017" duration="2826000" />
       <workItem from="1705419832199" duration="397000" />
       <workItem from="1705452593545" duration="2054000" />
-      <workItem from="1705454663645" duration="4442000" />
+      <workItem from="1705454663645" duration="8581000" />
     </task>
     <servers />
   </component>

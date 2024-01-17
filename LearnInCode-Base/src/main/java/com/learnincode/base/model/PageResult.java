@@ -24,15 +24,15 @@ public class PageResult<T> implements Serializable {
     private long counts;
 
     //当前页码
-    private long page;
+    private long pageNo;
 
     //每页记录数
     private long pageSize;
 
-    public PageResult(List<T> items, long counts, long page, long pageSize) {
+    public PageResult(List<T> items, long counts, long pageNo, long pageSize) {
         this.items = items;
         this.counts = counts;
-        this.page = page;
+        this.pageNo = pageNo;
         this.pageSize = pageSize;
     }
 

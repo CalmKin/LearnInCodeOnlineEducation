@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.learnincode.content.mapper.CourseBaseMapper">
+
+    <resultMap id="BaseResultMap" type="com.learnincode.content.model.po.CourseBase">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="companyId" column="company_id" jdbcType="BIGINT"/>
+            <result property="companyName" column="company_name" jdbcType="VARCHAR"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="users" column="users" jdbcType="VARCHAR"/>
+            <result property="tags" column="tags" jdbcType="VARCHAR"/>
+            <result property="mt" column="mt" jdbcType="VARCHAR"/>
+            <result property="st" column="st" jdbcType="VARCHAR"/>
+            <result property="grade" column="grade" jdbcType="VARCHAR"/>
+            <result property="teachmode" column="teachmode" jdbcType="VARCHAR"/>
+            <result property="description" column="description" jdbcType="VARCHAR"/>
+            <result property="pic" column="pic" jdbcType="VARCHAR"/>
+            <result property="createDate" column="create_date" jdbcType="TIMESTAMP"/>
+            <result property="changeDate" column="change_date" jdbcType="TIMESTAMP"/>
+            <result property="createPeople" column="create_people" jdbcType="VARCHAR"/>
+            <result property="changePeople" column="change_people" jdbcType="VARCHAR"/>
+            <result property="auditStatus" column="audit_status" jdbcType="VARCHAR"/>
+            <result property="status" column="status" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,company_id,company_name,
+        name,users,tags,
+        mt,st,grade,
+        teachmode,description,pic,
+        create_date,change_date,create_people,
+        change_people,audit_status,status
+    </sql>
+</mapper>
