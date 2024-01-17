@@ -16,6 +16,7 @@
           <entry name="$PROJECT_DIR$/../../Java_Sourse/.m2/EduRepo/org/projectlombok/lombok/1.18.8/lombok-1.18.8.jar" />
         </processorPath>
         <module name="LearnInCode-Base" />
+        <module name="LearnInCode-System" />
         <module name="LearnInCode-Content" />
       </profile>
     </annotationProcessing>
