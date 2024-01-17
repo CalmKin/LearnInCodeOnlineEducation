@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module version="4">
+  <component name="FacetManager">
+    <facet type="Spring" name="Spring">
+      <configuration spring_boot_spring_config_custom_files="file://$MODULE_DIR$/src/main/resources/bootstrap.yaml">
+        <fileset id="spring_boot_com.learnincode.system.SystemApplication" profiles="bootstrap.yaml" autodetected="true" />
+      </configuration>
+    </facet>
+  </component>
+</module>

@@ -1,4 +1,4 @@
-package com.learnincode.content.config;
+package com.learnincode.system.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,13 +18,13 @@ public class Knife4jConfig {
     public Docket defaultApi2() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(new ApiInfoBuilder()
-                        .title("内容管理接口文档")
-                        .description("内容管理模块")
+                        .title("系统模块接口文档")
+                        .description("主要管理系统一些通用功能")
                         .version("1.0")
                         .build())
                 .select()
                 // 指定 Controller 扫描包路径(这里要修改成自己项目的controller路径)
-                .apis(RequestHandlerSelectors.basePackage("com.learnincode.content.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.learnincode.system.controller"))
                 .paths(PathSelectors.any())
                 .build();
     }
