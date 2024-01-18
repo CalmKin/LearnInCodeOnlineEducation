@@ -3,6 +3,8 @@ package com.learnincode.content.controller;
 
 import com.learnincode.base.model.PageParams;
 import com.learnincode.base.model.PageResult;
+import com.learnincode.content.model.dto.AddCourseDto;
+import com.learnincode.content.model.dto.CourseBaseInfoDto;
 import com.learnincode.content.model.dto.QueryCourseParamsDto;
 import com.learnincode.content.model.po.CourseBase;
 import com.learnincode.content.service.CourseBaseService;
@@ -40,5 +42,16 @@ public class CourseBaseInfoController {
        return courseBaseService.pageCourseBase(pageParams,queryCourseParamsDto);
     }
 
+    /**
+     * @param addCourseDto 前端提交课程信息表单
+     * @return 课程完整信息
+     */
+    @ApiOperation("新增课程信息接口")
+    @PostMapping
+    public CourseBaseInfoDto addCourseBaseInfo(@RequestBody AddCourseDto addCourseDto)
+    {
+        Long companyId = 1315131351L;
+        return courseBaseService.addCourseBaseInfo(companyId,addCourseDto);
+    }
 
 }

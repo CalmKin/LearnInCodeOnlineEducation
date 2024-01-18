@@ -5,11 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7b67c6ab-72a9-481c-81b4-bfd15320c6e6" name="更改" comment="feat: 添加过滤器解决跨域问题">
-      <change afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/controller/CourseCategoryController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/model/dto/CourseCategoryTreeDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LearnInCode-Content/src/test/java/com/learnincode/content/CourseCategoryMapperTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/model/dto/AddCourseDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/model/dto/CourseBaseInfoDto.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/resources/bootstrap.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/resources/bootstrap.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LearnInCode-Base/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Base/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/ContentApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/ContentApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/controller/CourseBaseInfoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/controller/CourseBaseInfoController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/service/CourseBaseService.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/service/CourseBaseService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/service/impl/CourseBaseServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/service/impl/CourseBaseServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,7 +72,7 @@
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "dev-content",
     "jdk.selected.JAVA_MODULE": "1.8",
-    "last_opened_file_path": "D:/Java_Project/LearnInCodeOnlineEducation/LearnInCode-System/src/main/resources/bootstrap.yaml",
+    "last_opened_file_path": "D:/Java_Project/LearnInCodeOnlineEducation/LearnInCode-Content/src/main/java/com/learnincode/content/model/dto",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -92,11 +95,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Java_Project\LearnInCodeOnlineEducation\LearnInCode-Content\src\main\java\com\learnincode\content\model\dto" />
       <recent name="D:\Java_Project\LearnInCodeOnlineEducation\LearnInCode-System\src\main\resources" />
       <recent name="D:\Java_Project\LearnInCodeOnlineEducation\LearnInCode-System\src\main\java\com\learnincode\system" />
       <recent name="D:\Java_Project\LearnInCodeOnlineEducation\LearnInCode-System\src\main\resources\mapper" />
       <recent name="D:\Java_Project\LearnInCodeOnlineEducation\LearnInCode-Content2\src\main\resources" />
-      <recent name="D:\Java_Project\LearnInCodeOnlineEducation\LearnInCode-Content2\src\main\java\com\learnincode\model" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\Java_Project\LearnInCodeOnlineEducation" />
@@ -253,7 +256,7 @@
       <workItem from="1705454663645" duration="17044000" />
       <workItem from="1705480490266" duration="1450000" />
       <workItem from="1705541156167" duration="4249000" />
-      <workItem from="1705545416546" duration="3045000" />
+      <workItem from="1705545416546" duration="10458000" />
     </task>
     <task id="LOCAL-00001" summary="feat: 添加过滤器解决跨域问题">
       <option name="closed" value="true" />
@@ -296,19 +299,9 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/service/impl/CourseCategoryServiceImpl.java</url>
-          <line>73</line>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/service/impl/CourseCategoryServiceImpl.java</url>
-          <line>50</line>
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/service/impl/CourseCategoryServiceImpl.java</url>
-          <line>31</line>
-          <option name="timeStamp" value="5" />
+          <url>file://$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/service/impl/CourseBaseServiceImpl.java</url>
+          <line>145</line>
+          <option name="timeStamp" value="19" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
