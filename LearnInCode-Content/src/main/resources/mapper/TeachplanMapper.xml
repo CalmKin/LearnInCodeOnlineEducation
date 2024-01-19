@@ -71,7 +71,7 @@
             <result column="two_orderby"   property="orderby" />
             <result column="two_courseId"   property="courseId" />
             <result column="two_coursePubId"   property="coursePubId" />
-
+            <result column="two_courseIsPreview"   property="isPreview" />
         </collection>
 
     </resultMap>
@@ -100,13 +100,14 @@
             two.orderby        two_orderby,
             two.course_id      two_courseId,
             two.course_pub_id  two_coursePubId,
+            two.is_preview two_courseIsPreview,
             m1.media_fileName mediaFilename,
             m1.id teachplanMeidaId,
             m1.media_id mediaId
 
         FROM teachplan one
                  # 左表是右表的父结点
-                 INNER JOIN teachplan two ON one.id = two.parentid
+                 LEFT JOIN teachplan two ON one.id = two.parentid
             # 无论是否有媒资，都要查询出课程计划，所以用左连接
                  LEFT JOIN teachplan_media m1 ON two.id = m1.teachplan_id
 
@@ -114,6 +115,11 @@
         # 大的章节相同，按小的章节排序
         ORDER BY one.orderby, two.orderby
 
+    </select>
+    <select id="selectMaxOrderby" resultType="java.lang.Integer">
+        select max(orderby) as orderby
+        from teachplan
+        where parentid = #{parentid} and course_id = #{course_id}
     </select>
 
 

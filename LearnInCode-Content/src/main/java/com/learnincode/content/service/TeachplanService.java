@@ -1,6 +1,7 @@
 package com.learnincode.content.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.learnincode.content.model.dto.SaveTeachplanDto;
 import com.learnincode.content.model.dto.TeachplanDto;
 import com.learnincode.content.model.po.Teachplan;
 
@@ -14,4 +15,6 @@ import java.util.List;
 public interface TeachplanService extends IService<Teachplan> {
 
     List<TeachplanDto> getTeachPlanTree(Long courseId);
+
+    void saveTeachplan(SaveTeachplanDto teachplanDto);
 }
