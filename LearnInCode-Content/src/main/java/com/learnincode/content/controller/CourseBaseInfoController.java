@@ -7,15 +7,13 @@ import com.learnincode.base.model.PageResult;
 import com.learnincode.content.model.dto.AddCourseDto;
 import com.learnincode.content.model.dto.CourseBaseInfoDto;
 import com.learnincode.content.model.dto.QueryCourseParamsDto;
+import com.learnincode.content.model.dto.UpdateCourseDto;
 import com.learnincode.content.model.po.CourseBase;
 import com.learnincode.content.service.CourseBaseService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 /**
@@ -54,6 +52,22 @@ public class CourseBaseInfoController {
     {
         Long companyId = 1315131351L;
         return courseBaseService.addCourseBaseInfo(companyId,addCourseDto);
+    }
+
+    @ApiOperation("根据课程id查询课程信息")
+    @GetMapping("/{courseId}")
+    public CourseBaseInfoDto getCourseBaseInfoById(@PathVariable Long courseId)
+    {
+        return courseBaseService.getCourseBaseInfoDtoById(courseId);
+    }
+
+
+    @ApiOperation("修改课程信息")
+    @PutMapping
+    public CourseBaseInfoDto updateCourseBaseInfo(@RequestBody @Validated UpdateCourseDto dto)
+    {
+        Long companyId = 1232141425L;
+        return courseBaseService.updateCourseBaseInfo(companyId, dto);
     }
 
 }

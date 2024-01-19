@@ -12,6 +12,7 @@ import com.learnincode.content.mapper.CourseMarketMapper;
 import com.learnincode.content.model.dto.AddCourseDto;
 import com.learnincode.content.model.dto.CourseBaseInfoDto;
 import com.learnincode.content.model.dto.QueryCourseParamsDto;
+import com.learnincode.content.model.dto.UpdateCourseDto;
 import com.learnincode.content.model.po.CourseBase;
 import com.learnincode.content.model.po.CourseCategory;
 import com.learnincode.content.model.po.CourseMarket;
@@ -45,8 +46,6 @@ public class CourseBaseServiceImpl extends ServiceImpl<CourseBaseMapper, CourseB
     private CourseMarketMapper courseMarketMapper;
     @Autowired
     private CourseCategoryMapper categoryMapper;
-
-
 
     /**
      * 课程分页查询接口
@@ -140,7 +139,7 @@ public class CourseBaseServiceImpl extends ServiceImpl<CourseBaseMapper, CourseB
 
 
         // 再次查表，组装CourseBaseInfoDto
-        CourseBaseInfoDto courseBaseInfoDto = getCourseBaseInfoDto(courseId);
+        CourseBaseInfoDto courseBaseInfoDto = getCourseBaseInfoDtoById(courseId);
 
         return courseBaseInfoDto;
     }
@@ -154,18 +153,7 @@ public class CourseBaseServiceImpl extends ServiceImpl<CourseBaseMapper, CourseB
      */
     @Transactional
     public int insertCourseMarketInfo(CourseMarket courseMarketNew) {
-        // 参数合法性校验
-        //收费规则
-        String charge = courseMarketNew.getCharge();
-        if (StringUtils.isBlank(charge)) {
-            throw new BusinessException("收费规则没有选择");
-        }
-        //收费规则为收费
-        if (charge.equals("201001")) {
-            if (courseMarketNew.getPrice() == null || courseMarketNew.getOriginalPrice()<=0 ||courseMarketNew.getPrice().floatValue() <= 0 ) {
-                throw new BusinessException("课程为收费价格不能为空且必须大于0");
-            }
-        }
+        checkCourseMarketInfo(courseMarketNew);
 
         CourseMarket courseMarket = courseMarketMapper.selectById(courseMarketNew.getId());
 
@@ -179,14 +167,14 @@ public class CourseBaseServiceImpl extends ServiceImpl<CourseBaseMapper, CourseB
     }
 
 
-
     /**
      * @author CalmKin
      * @description 根据基本信息和营销信息，组装出一个完整的课程信息
      * @version 1.0
      * @date 2024/1/18 20:34
      */
-    public CourseBaseInfoDto getCourseBaseInfoDto(Long courseId) {
+    @Override
+    public CourseBaseInfoDto getCourseBaseInfoDtoById(Long courseId) {
 
         // 查询基本信息
         CourseBase courseBase = courseBaseMapper.selectById(courseId);
@@ -214,6 +202,62 @@ public class CourseBaseServiceImpl extends ServiceImpl<CourseBaseMapper, CourseB
         courseBaseInfoDto.setStName(stCategory.getName());
 
         return courseBaseInfoDto;
+    }
+
+    @Transactional
+    @Override
+    public CourseBaseInfoDto updateCourseBaseInfo(Long companyId ,UpdateCourseDto dto) {
+        if(companyId < 0 || dto == null) throw new BusinessException("参数有误,无法更新");
+
+        Long courseId = dto.getId();
+        // 查询原有课程信息
+        CourseBase courseBase = getById(courseId);
+        if(courseBase==null){
+            throw new BusinessException("课程不存在,无法更新");
+        }
+
+        // 查询原有课程营销信息
+        CourseMarket courseMarket = courseMarketMapper.selectById(courseId);
+
+        Long _companyId = courseBase.getCompanyId();
+        // 必须是这个机构的课程才能修改
+        if(!companyId.equals(_companyId)) throw new BusinessException("课程所属机构和当前机构不一致,无法修改");
+
+
+        // 属性拷贝
+        BeanUtils.copyProperties(dto, courseBase);
+        updateById(courseBase);
+
+        BeanUtils.copyProperties(dto, courseMarket);
+        // 更新之前先校验营销信息
+        checkCourseMarketInfo(courseMarket);
+        courseMarketMapper.updateById(courseMarket);
+
+
+        return getCourseBaseInfoDtoById(courseId);
+    }
+
+
+
+    /**
+     * @author CalmKin
+     * @description 校验课程营销信息
+     * @version 1.0
+     * @date 2024/1/19 11:01
+     */
+    private void checkCourseMarketInfo(CourseMarket courseMarketNew) {
+        // 参数合法性校验
+        //收费规则
+        String charge = courseMarketNew.getCharge();
+        if (StringUtils.isBlank(charge)) {
+            throw new BusinessException("收费规则没有选择");
+        }
+        //收费规则为收费
+        if (charge.equals("201001")) {
+            if (courseMarketNew.getPrice() == null || courseMarketNew.getOriginalPrice()<=0 || courseMarketNew.getPrice().floatValue() <= 0 ) {
+                throw new BusinessException("课程为收费价格不能为空且必须大于0");
+            }
+        }
     }
 
 }
