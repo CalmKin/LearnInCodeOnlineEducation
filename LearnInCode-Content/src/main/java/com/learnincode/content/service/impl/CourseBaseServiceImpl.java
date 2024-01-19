@@ -3,6 +3,7 @@ package com.learnincode.content.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.learnincode.base.exception.BusinessException;
 import com.learnincode.base.model.PageParams;
 import com.learnincode.base.model.PageResult;
 import com.learnincode.content.mapper.CourseBaseMapper;
@@ -85,31 +86,31 @@ public class CourseBaseServiceImpl extends ServiceImpl<CourseBaseMapper, CourseB
     public CourseBaseInfoDto addCourseBaseInfo(Long companyId, AddCourseDto dto) {
         //合法性校验
         if (StringUtils.isBlank(dto.getName())) {
-            throw new RuntimeException("课程名称为空");
+            throw new BusinessException("课程名称为空");
         }
 
         if (StringUtils.isBlank(dto.getMt())) {
-            throw new RuntimeException("课程分类为空");
+            throw new BusinessException("课程分类为空");
         }
 
         if (StringUtils.isBlank(dto.getSt())) {
-            throw new RuntimeException("课程分类为空");
+            throw new BusinessException("课程分类为空");
         }
 
         if (StringUtils.isBlank(dto.getGrade())) {
-            throw new RuntimeException("课程等级为空");
+            throw new BusinessException("课程等级为空");
         }
 
         if (StringUtils.isBlank(dto.getTeachmode())) {
-            throw new RuntimeException("教育模式为空");
+            throw new BusinessException("教育模式为空");
         }
 
         if (StringUtils.isBlank(dto.getUsers())) {
-            throw new RuntimeException("适应人群为空");
+            throw new BusinessException("适应人群为空");
         }
 
         if (StringUtils.isBlank(dto.getCharge())) {
-            throw new RuntimeException("收费规则为空");
+            throw new BusinessException("收费规则为空");
         }
 
         // 插入courseBase表
@@ -124,7 +125,7 @@ public class CourseBaseServiceImpl extends ServiceImpl<CourseBaseMapper, CourseB
         //添加时间
         courseBaseNew.setCreateDate(LocalDateTime.now());
         int insert = courseBaseMapper.insert(courseBaseNew);
-        if (insert <= 0) throw new RuntimeException("课程信息插入失败");
+        if (insert <= 0) throw new BusinessException("课程信息插入失败");
 
 
         // 插入CourseMarket表
@@ -135,7 +136,7 @@ public class CourseBaseServiceImpl extends ServiceImpl<CourseBaseMapper, CourseB
         // 用代理防止事务失效
         CourseBaseServiceImpl proxy = (CourseBaseServiceImpl)AopContext.currentProxy();
         int ret = proxy.insertCourseMarketInfo(courseMarket);
-        if (ret <= 0) throw new RuntimeException("营销信息插入失败");
+        if (ret <= 0) throw new BusinessException("营销信息插入失败");
 
 
         // 再次查表，组装CourseBaseInfoDto
@@ -157,12 +158,12 @@ public class CourseBaseServiceImpl extends ServiceImpl<CourseBaseMapper, CourseB
         //收费规则
         String charge = courseMarketNew.getCharge();
         if (StringUtils.isBlank(charge)) {
-            throw new RuntimeException("收费规则没有选择");
+            throw new BusinessException("收费规则没有选择");
         }
         //收费规则为收费
         if (charge.equals("201001")) {
-            if (courseMarketNew.getPrice() == null || courseMarketNew.getPrice().floatValue() <= 0) {
-                throw new RuntimeException("课程为收费价格不能为空且必须大于0");
+            if (courseMarketNew.getPrice() == null || courseMarketNew.getOriginalPrice()<=0 ||courseMarketNew.getPrice().floatValue() <= 0 ) {
+                throw new BusinessException("课程为收费价格不能为空且必须大于0");
             }
         }
 
