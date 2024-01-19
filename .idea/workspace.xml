@@ -5,12 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7b67c6ab-72a9-481c-81b4-bfd15320c6e6" name="更改" comment="feat: 添加过滤器解决跨域问题">
-      <change afterPath="$PROJECT_DIR$/LearnInCode-Base/src/main/java/com/learnincode/base/exception/BusinessException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LearnInCode-Base/src/main/java/com/learnincode/base/exception/CommonError.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/LearnInCode-Base/src/main/java/com/learnincode/base/exception/GlobalExceptionHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LearnInCode-Base/src/main/java/com/learnincode/base/exception/RestErrorResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LearnInCode-Base/src/main/java/com/learnincode/base/exception/ValidationGroups.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LearnInCode-Base/src/main/resources/META-INF/spring.factories" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/service/impl/CourseBaseServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/service/impl/CourseBaseServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/controller/CourseBaseInfoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/controller/CourseBaseInfoController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/interceptor/GlobalExceptionHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/model/dto/AddCourseDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/model/dto/AddCourseDto.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -113,7 +114,7 @@
       <recent name="com.learnincode.model" />
     </key>
   </component>
-  <component name="RunManager" selected="Spring Boot.ContentApplication">
+  <component name="RunManager" selected="Spring Boot.SystemApplication">
     <configuration name="generated-requests | #6" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$APPLICATION_CONFIG_DIR$/scratches/generated-requests.http" index="6" requestIdentifier="#6" runType="运行单个请求">
       <method v="2" />
     </configuration>
@@ -225,8 +226,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Spring Boot.ContentApplication" />
         <item itemvalue="Spring Boot.SystemApplication" />
+        <item itemvalue="Spring Boot.ContentApplication" />
         <item itemvalue="JUnit.CourseCategoryMapperTest.testMapper" />
         <item itemvalue="HTTP 请求.generated-requests | #6" />
         <item itemvalue="JUnit.LearnInCodeContent2ApplicationTests.testPageContent" />
@@ -257,7 +258,7 @@
       <workItem from="1705480490266" duration="1450000" />
       <workItem from="1705541156167" duration="4249000" />
       <workItem from="1705545416546" duration="14473000" />
-      <workItem from="1705625581315" duration="305000" />
+      <workItem from="1705625581315" duration="4610000" />
     </task>
     <task id="LOCAL-00001" summary="feat: 添加过滤器解决跨域问题">
       <option name="closed" value="true" />
@@ -295,17 +296,6 @@
     </ignored-roots>
     <MESSAGE value="feat: 添加过滤器解决跨域问题" />
     <option name="LAST_COMMIT_MESSAGE" value="feat: 添加过滤器解决跨域问题" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/service/impl/CourseBaseServiceImpl.java</url>
-          <line>165</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
