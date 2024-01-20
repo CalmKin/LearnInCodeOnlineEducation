@@ -4,14 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7b67c6ab-72a9-481c-81b4-bfd15320c6e6" name="更改" comment="feat: 实现新增课程信息功能">
-      <change afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/model/dto/SaveTeachplanDto.java" afterDir="false" />
+    <list default="true" id="7b67c6ab-72a9-481c-81b4-bfd15320c6e6" name="更改" comment="feat: 实现添加章节、修改章节名称功能">
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/controller/TeachplanController.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/controller/TeachplanController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/mapper/TeachplanMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/mapper/TeachplanMapper.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/service/TeachplanService.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/service/TeachplanService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/service/impl/TeachplanServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/service/impl/TeachplanServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/resources/mapper/TeachplanMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/resources/mapper/TeachplanMapper.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -114,7 +112,7 @@
       <recent name="com.learnincode.model" />
     </key>
   </component>
-  <component name="RunManager" selected="Spring Boot.SystemApplication">
+  <component name="RunManager" selected="Spring Boot.ContentApplication">
     <configuration name="generated-requests | #6" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$APPLICATION_CONFIG_DIR$/scratches/generated-requests.http" index="6" requestIdentifier="#6" runType="运行单个请求">
       <method v="2" />
     </configuration>
@@ -226,8 +224,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Spring Boot.SystemApplication" />
         <item itemvalue="Spring Boot.ContentApplication" />
+        <item itemvalue="Spring Boot.SystemApplication" />
         <item itemvalue="JUnit.CourseCategoryMapperTest.testMapper" />
         <item itemvalue="HTTP 请求.generated-requests | #6" />
         <item itemvalue="JUnit.LearnInCodeContent2ApplicationTests.testPageContent" />
@@ -259,7 +257,8 @@
       <workItem from="1705541156167" duration="4249000" />
       <workItem from="1705545416546" duration="14473000" />
       <workItem from="1705625581315" duration="18326000" />
-      <workItem from="1705670581153" duration="400000" />
+      <workItem from="1705670581153" duration="1651000" />
+      <workItem from="1705711412180" duration="1610000" />
     </task>
     <task id="LOCAL-00001" summary="feat: 添加过滤器解决跨域问题">
       <option name="closed" value="true" />
@@ -293,7 +292,15 @@
       <option name="project" value="LOCAL" />
       <updated>1705634972644</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="feat: 实现添加章节、修改章节名称功能">
+      <option name="closed" value="true" />
+      <created>1705671032040</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1705671032040</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -323,30 +330,36 @@
     <MESSAGE value="fix: 通过spring自动装配,解决异常拦截器不生效的问题" />
     <MESSAGE value="feat: Controller层添加JSR303参数校验" />
     <MESSAGE value="feat: 实现新增课程信息功能" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: 实现新增课程信息功能" />
+    <MESSAGE value="feat: 实现添加章节、修改章节名称功能" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: 实现添加章节、修改章节名称功能" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/service/impl/TeachplanServiceImpl.java</url>
-          <line>48</line>
+          <line>88</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/service/impl/TeachplanServiceImpl.java</url>
-          <line>61</line>
-          <option name="timeStamp" value="3" />
+          <line>92</line>
+          <option name="timeStamp" value="2" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/service/impl/TeachplanServiceImpl.java</url>
-          <line>71</line>
+          <line>114</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/service/impl/TeachplanServiceImpl.java</url>
-          <line>69</line>
+          <line>100</line>
           <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/service/impl/TeachplanServiceImpl.java</url>
+          <line>107</line>
+          <option name="timeStamp" value="7" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

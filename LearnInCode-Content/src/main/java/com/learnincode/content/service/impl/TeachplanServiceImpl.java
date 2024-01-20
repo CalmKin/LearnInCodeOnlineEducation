@@ -2,10 +2,13 @@ package com.learnincode.content.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.learnincode.base.exception.BusinessException;
 import com.learnincode.content.mapper.TeachplanMapper;
+import com.learnincode.content.mapper.TeachplanMediaMapper;
 import com.learnincode.content.model.dto.SaveTeachplanDto;
 import com.learnincode.content.model.dto.TeachplanDto;
 import com.learnincode.content.model.po.Teachplan;
+import com.learnincode.content.model.po.TeachplanMedia;
 import com.learnincode.content.service.TeachplanService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +29,9 @@ public class TeachplanServiceImpl extends ServiceImpl<TeachplanMapper, Teachplan
     @Autowired
     private TeachplanMapper teachplanMapper;
 
+
+    @Autowired
+    private TeachplanMediaMapper teachplanMediaMapper;
 
     /**
      * @author CalmKin
@@ -74,6 +80,46 @@ public class TeachplanServiceImpl extends ServiceImpl<TeachplanMapper, Teachplan
             save(teachplanNew);
         }
 
+    }
+
+    @Override
+    @Transactional
+    public void deleteTeachplan(Long teachplanId) {
+        // 根据id查询课程计划
+        Teachplan teachplan = getById(teachplanId);
+        Integer grade = teachplan.getGrade();
+
+        // 如果是一级章节
+        if(grade == 1)
+        {
+            // 检查是否还有二级章节
+            LambdaQueryWrapper<Teachplan> lqw  =new LambdaQueryWrapper<>();
+            lqw.eq(Teachplan::getParentid, teachplanId);
+            List<Teachplan> list = list(lqw);
+
+            // 可以直接删除
+            if(list == null || list.size() == 0)
+            {
+                removeById(teachplanId);
+            }
+            // 如果还有二级课程，那么不能删除
+            else
+            {
+                throw new BusinessException("课程计划信息还有子级信息，无法操作");
+            }
+        }
+        // 如果是第二章节，直接删除
+        else
+        {
+            // 先删除课程计划
+            removeById(teachplanId);
+            // 再删除媒资关联表里面的信息
+            LambdaQueryWrapper<TeachplanMedia> lqw = new LambdaQueryWrapper<>();
+            lqw.eq(TeachplanMedia::getTeachplanId, teachplanId);
+            teachplanMediaMapper.delete(lqw);
+
+            //TODO 删除媒资信息？
+        }
     }
 }
 
