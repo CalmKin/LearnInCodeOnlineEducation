@@ -4,10 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7b67c6ab-72a9-481c-81b4-bfd15320c6e6" name="更改" comment="feat: 实现课程计划排序功能">
-      <change afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/controller/CourseTeacherController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/model/dto/AddCourseTeacherDto.java" afterDir="false" />
+    <list default="true" id="7b67c6ab-72a9-481c-81b4-bfd15320c6e6" name="更改" comment="feat: 完成对教师信息的增删改功能">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/controller/CourseBaseInfoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/controller/CourseBaseInfoController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/service/CourseBaseService.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/service/CourseBaseService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/service/impl/CourseBaseServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/service/impl/CourseBaseServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -256,7 +257,7 @@
       <workItem from="1705545416546" duration="14473000" />
       <workItem from="1705625581315" duration="18326000" />
       <workItem from="1705670581153" duration="1651000" />
-      <workItem from="1705711412180" duration="7752000" />
+      <workItem from="1705711412180" duration="8730000" />
     </task>
     <task id="LOCAL-00001" summary="feat: 添加过滤器解决跨域问题">
       <option name="closed" value="true" />
@@ -314,7 +315,15 @@
       <option name="project" value="LOCAL" />
       <updated>1705717206046</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="feat: 完成对教师信息的增删改功能">
+      <option name="closed" value="true" />
+      <created>1705719379904</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1705719379904</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -347,7 +356,19 @@
     <MESSAGE value="feat: 实现添加章节、修改章节名称功能" />
     <MESSAGE value="feat: 实现删除课程章节功能" />
     <MESSAGE value="feat: 实现课程计划排序功能" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: 实现课程计划排序功能" />
+    <MESSAGE value="feat: 完成对教师信息的增删改功能" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: 完成对教师信息的增删改功能" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/service/impl/CourseTeacherServiceImpl.java</url>
+          <line>46</line>
+          <option name="timeStamp" value="14" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

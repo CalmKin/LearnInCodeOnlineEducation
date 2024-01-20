@@ -70,4 +70,18 @@ public class CourseBaseInfoController {
         return courseBaseService.updateCourseBaseInfo(companyId, dto);
     }
 
+    
+    /**
+     * @author CalmKin
+     * @description
+     * @version 1.0
+     * @date 2024/1/20 10:57
+     */
+    @ApiOperation("删除课程信息")
+    @DeleteMapping("{id}")
+    public void deleteCourseBase(@PathVariable Long id)
+    {
+        courseBaseService.deleteCourseBase(id);
+    }
+
 }
