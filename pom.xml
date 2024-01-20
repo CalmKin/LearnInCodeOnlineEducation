@@ -19,6 +19,7 @@
         <module>LearnInCode-Base</module>
         <module>LearnInCode-Content</module>
         <module>LearnInCode-System</module>
+        <module>LearnInCode-Gateway</module>
     </modules>
 
     <packaging>pom</packaging>
