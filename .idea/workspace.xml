@@ -5,10 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7b67c6ab-72a9-481c-81b4-bfd15320c6e6" name="更改" comment="feat: 完成对教师信息的增删改功能">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/controller/CourseBaseInfoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/controller/CourseBaseInfoController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/service/CourseBaseService.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/service/CourseBaseService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/service/impl/CourseBaseServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/LearnInCode-Content/src/main/java/com/learnincode/content/service/impl/CourseBaseServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
