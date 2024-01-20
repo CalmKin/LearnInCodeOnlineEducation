@@ -121,6 +121,46 @@ public class TeachplanServiceImpl extends ServiceImpl<TeachplanMapper, Teachplan
             //TODO 删除媒资信息？
         }
     }
+
+    @Override
+    @Transactional
+    public void movedownTeachplan(Long teachPlanId) {
+
+        Teachplan teachplan = getById(teachPlanId);
+        // 找到下一个课程计划
+       Teachplan nextPlan = teachplanMapper.getNextPlan(teachPlanId);
+        // 没有下一个计划，不能下移
+        if(nextPlan == null) return;
+
+        // 交换两个课程的orderBy
+        Integer tmpOrderby = teachplan.getOrderby();
+        teachplan.setOrderby(nextPlan.getOrderby());
+        nextPlan.setOrderby(tmpOrderby);
+
+        // 更新两个课程的信息
+        updateById(teachplan);
+        updateById(nextPlan);
+    }
+
+    @Override
+    @Transactional
+    public void moveupTeachplan(Long teachPlanId) {
+        Teachplan teachplan = getById(teachPlanId);
+        // 找到前一个课程计划
+        Teachplan prePlan = teachplanMapper.getPrePlan(teachPlanId);
+        // 没有前一个计划，不能上移
+        if(prePlan == null) return;
+
+        // 交换两个课程的orderBy
+        Integer tmpOrderby = teachplan.getOrderby();
+        teachplan.setOrderby(prePlan.getOrderby());
+        prePlan.setOrderby(tmpOrderby);
+
+        // 更新两个课程的信息
+        updateById(teachplan);
+        updateById(prePlan);
+    }
+
 }
 
 

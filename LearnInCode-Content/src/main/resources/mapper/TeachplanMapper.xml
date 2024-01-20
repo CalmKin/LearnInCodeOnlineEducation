@@ -122,5 +122,35 @@
         where parentid = #{parentid} and course_id = #{course_id}
     </select>
 
+    <!--  大于的最小值  -->
+    <select id="getNextPlan" resultType="com.learnincode.content.model.po.Teachplan">
+        with parid as (
+            select parentid, orderby
+            from teachplan
+            where id = #{teachPlanId}
+        )
+
+        select *
+        from teachplan
+        where parentid = ( select parentid from parid ) and orderby > ( select orderby from parid)
+        order by orderby
+        limit 1
+    </select>
+    <!--  小于的最大值  -->
+    <select id="getPrePlan" resultType="com.learnincode.content.model.po.Teachplan">
+        with parid as (
+            select parentid, orderby
+            from teachplan
+            where id = #{teachPlanId}
+        )
+
+        select *
+        from teachplan
+        where parentid = ( select parentid from parid ) and orderby &lt; ( select orderby from parid)
+        order by orderby desc
+        limit 1
+
+    </select>
+
 
 </mapper>

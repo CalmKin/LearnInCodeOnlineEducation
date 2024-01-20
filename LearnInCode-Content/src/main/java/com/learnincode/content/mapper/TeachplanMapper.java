@@ -18,6 +18,11 @@ public interface TeachplanMapper extends BaseMapper<Teachplan> {
 
      Integer selectMaxOrderby(@Param("parentid") Long parentId,@Param("course_id") Long courseId);
 
+    Teachplan getNextPlan(@Param("teachPlanId") Long teachPlanId);
+
+
+    Teachplan getPrePlan(@Param("teachPlanId") Long teachPlanId);
+
 }
 
 

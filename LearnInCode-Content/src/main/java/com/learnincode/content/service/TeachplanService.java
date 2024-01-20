@@ -19,4 +19,8 @@ public interface TeachplanService extends IService<Teachplan> {
     void saveTeachplan(SaveTeachplanDto teachplanDto);
 
     void deleteTeachplan(Long teachplanId);
+
+    void movedownTeachplan(Long id);
+
+    void moveupTeachplan(Long id);
 }
