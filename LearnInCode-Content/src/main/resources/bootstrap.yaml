@@ -17,6 +17,10 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
 
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
 # 日志文件配置路径
 #logging:
 #  config: classpath:log4j2-dev.xml

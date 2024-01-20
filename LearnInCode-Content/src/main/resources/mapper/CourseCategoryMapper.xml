@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.learnincode.content.mapper.CourseCategoryMapper">
+
+    <resultMap id="BaseResultMap" type="com.learnincode.content.model.po.CourseCategory">
+            <id property="id" column="id" jdbcType="VARCHAR"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="label" column="label" jdbcType="VARCHAR"/>
+            <result property="parentid" column="parentid" jdbcType="VARCHAR"/>
+            <result property="isShow" column="is_show" jdbcType="TINYINT"/>
+            <result property="orderby" column="orderby" jdbcType="INTEGER"/>
+            <result property="isLeaf" column="is_leaf" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,name,label,
+        parentid,is_show,orderby,
+        is_leaf
+    </sql>
+    <select id="selectTreeNodes" resultType="com.learnincode.content.model.dto.CourseCategoryTreeDto" parameterType="string">
+        with recursive t1 as (
+            select * from  course_category p where  id= #{id}
+            union all
+            select t.* from course_category t inner join t1 on t1.id = t.parentid
+        )
+        select *  from t1 order by t1.id, t1.orderby
+
+
+    </select>
+</mapper>
