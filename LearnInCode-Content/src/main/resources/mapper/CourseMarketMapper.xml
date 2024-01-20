@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.learnincode.content.mapper.CourseMarketMapper">
+
+    <resultMap id="BaseResultMap" type="com.learnincode.content.model.po.CourseMarket">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="charge" column="charge" jdbcType="VARCHAR"/>
+            <result property="price" column="price" jdbcType="FLOAT"/>
+            <result property="originalPrice" column="original_price" jdbcType="FLOAT"/>
+            <result property="qq" column="qq" jdbcType="VARCHAR"/>
+            <result property="wechat" column="wechat" jdbcType="VARCHAR"/>
+            <result property="phone" column="phone" jdbcType="VARCHAR"/>
+            <result property="validDays" column="valid_days" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,charge,price,
+        original_price,qq,wechat,
+        phone,valid_days
+    </sql>
+</mapper>

@@ -30,4 +30,5 @@ logs/
 
 ### VS Code ###
 .vscode/
-/.idea/
+.idea
+.idea/workspace.xml

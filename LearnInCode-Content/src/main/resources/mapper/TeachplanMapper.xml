@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.learnincode.content.mapper.TeachplanMapper">
+
+    <resultMap id="BaseResultMap" type="com.learnincode.content.model.po.Teachplan">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="pname" column="pname" jdbcType="VARCHAR"/>
+            <result property="parentid" column="parentid" jdbcType="BIGINT"/>
+            <result property="grade" column="grade" jdbcType="SMALLINT"/>
+            <result property="mediaType" column="media_type" jdbcType="VARCHAR"/>
+            <result property="startTime" column="start_time" jdbcType="TIMESTAMP"/>
+            <result property="endTime" column="end_time" jdbcType="TIMESTAMP"/>
+            <result property="description" column="description" jdbcType="VARCHAR"/>
+            <result property="timelength" column="timelength" jdbcType="VARCHAR"/>
+            <result property="orderby" column="orderby" jdbcType="INTEGER"/>
+            <result property="courseId" column="course_id" jdbcType="BIGINT"/>
+            <result property="coursePubId" column="course_pub_id" jdbcType="BIGINT"/>
+            <result property="status" column="status" jdbcType="INTEGER"/>
+            <result property="isPreview" column="is_preview" jdbcType="CHAR"/>
+            <result property="createDate" column="create_date" jdbcType="TIMESTAMP"/>
+            <result property="changeDate" column="change_date" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,pname,parentid,
+        grade,media_type,start_time,
+        end_time,description,timelength,
+        orderby,course_id,course_pub_id,
+        status,is_preview,create_date,
+        change_date
+    </sql>
+
+    <!-- 课程分类树型结构查询映射结果 -->
+    <!-- id唯一标识，type表示要映射的类 -->
+    <resultMap id="treeNodeResultMap" type="com.learnincode.content.model.dto.TeachplanDto">
+        <!-- 一级数据映射 -->
+        <id     column="one_id"        property="id" />
+        <result column="one_pname"      property="pname" />
+        <result column="one_parentid"     property="parentid" />
+        <result column="one_grade"  property="grade" />
+        <result column="one_mediaType"   property="mediaType" />
+        <result column="one_stratTime"   property="startTime" />
+        <result column="one_endTime"   property="endTime" />
+        <result column="one_orderby"   property="orderby" />
+        <result column="one_courseId"   property="courseId" />
+        <result column="one_coursePubId"   property="coursePubId" />
+
+        <!-- association ：配置一对一属性，一个二级章节只会关联一个媒资信息 -->
+        <!-- javaType:关联的属性类型 -->
+        <association property="teachplanMedia" javaType="com.learnincode.content.model.po.TeachplanMedia">
+            <result column="teachplanMeidaId"   property="id" />
+            <result column="mediaFilename"   property="mediaFilename" />
+            <result column="mediaId"   property="mediaId" />
+            <result column="two_id"   property="teachplanId" />
+            <result column="two_courseId"   property="courseId" />
+            <result column="two_coursePubId"   property="coursePubId" />
+        </association>
+        <!--   ofType指定集合里面的元素类型     -->
+        <collection property="teachPlanTreeNodes" javaType="list" ofType="com.learnincode.content.model.dto.TeachplanDto">
+            <!-- 二级数据映射 -->
+            <!-- id标签声明主键 -->
+            <id     column="two_id"        property="id" />
+            <result column="two_pname"      property="pname" />
+            <result column="two_parentid"     property="parentid" />
+            <result column="two_grade"  property="grade" />
+            <result column="two_mediaType"   property="mediaType" />
+            <result column="two_stratTime"   property="startTime" />
+            <result column="two_endTime"   property="endTime" />
+            <result column="two_orderby"   property="orderby" />
+            <result column="two_courseId"   property="courseId" />
+            <result column="two_coursePubId"   property="coursePubId" />
+            <result column="two_courseIsPreview"   property="isPreview" />
+        </collection>
+
+    </resultMap>
+    
+
+    <select id="selectTreeNodes" parameterType="long" resultMap="treeNodeResultMap">
+
+        SELECT
+            one.id             one_id,
+            one.pname          one_pname,
+            one.parentid       one_parentid,
+            one.grade          one_grade,
+            one.media_type     one_mediaType,
+            one.start_time     one_stratTime,
+            one.end_time       one_endTime,
+            one.orderby        one_orderby,
+            one.course_id      one_courseId,
+            one.course_pub_id  one_coursePubId,
+            two.id             two_id,
+            two.pname          two_pname,
+            two.parentid       two_parentid,
+            two.grade          two_grade,
+            two.media_type     two_mediaType,
+            two.start_time     two_stratTime,
+            two.end_time       two_endTime,
+            two.orderby        two_orderby,
+            two.course_id      two_courseId,
+            two.course_pub_id  two_coursePubId,
+            two.is_preview two_courseIsPreview,
+            m1.media_fileName mediaFilename,
+            m1.id teachplanMeidaId,
+            m1.media_id mediaId
+
+        FROM teachplan one
+                 # 左表是右表的父结点
+                 LEFT JOIN teachplan two ON one.id = two.parentid
+            # 无论是否有媒资，都要查询出课程计划，所以用左连接
+                 LEFT JOIN teachplan_media m1 ON two.id = m1.teachplan_id
+
+        WHERE one.parentid = 0 and one.course_id = #{courseId}
+        # 大的章节相同，按小的章节排序
+        ORDER BY one.orderby, two.orderby
+
+    </select>
+    <select id="selectMaxOrderby" resultType="java.lang.Integer">
+        select max(orderby) as orderby
+        from teachplan
+        where parentid = #{parentid} and course_id = #{course_id}
+    </select>
+
+    <!--  大于的最小值  -->
+    <select id="getNextPlan" resultType="com.learnincode.content.model.po.Teachplan">
+        with parid as (
+            select parentid, orderby
+            from teachplan
+            where id = #{teachPlanId}
+        )
+
+        select *
+        from teachplan
+        where parentid = ( select parentid from parid ) and orderby > ( select orderby from parid)
+        order by orderby
+        limit 1
+    </select>
+    <!--  小于的最大值  -->
+    <select id="getPrePlan" resultType="com.learnincode.content.model.po.Teachplan">
+        with parid as (
+            select parentid, orderby
+            from teachplan
+            where id = #{teachPlanId}
+        )
+
+        select *
+        from teachplan
+        where parentid = ( select parentid from parid ) and orderby &lt; ( select orderby from parid)
+        order by orderby desc
+        limit 1
+
+    </select>
+
+
+</mapper>
