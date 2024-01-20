@@ -52,6 +52,13 @@
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
+        <!--cloud的基础环境包-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-context</artifactId>
+        </dependency>
+
+
         <!-- nacos依赖（上报服务） -->
         <dependency>
             <groupId>com.alibaba.cloud</groupId>

@@ -1,0 +1,28 @@
+#微服务配置
+spring:
+  application:
+    name: media # 服务名称
+  cloud:
+    nacos:
+      server-addr: 192.168.101.65:8848
+      discovery:
+        namespace: ${spring.profiles.active}
+        group: learn-in-code-project
+      config:
+        namespace: ${spring.profiles.active}
+        group: learn-in-code-project
+        file-extension: yaml
+        refresh-enabled: true
+        extension-configs:
+          - data-id: media-service-${spring.profiles.active}.yaml
+            group: learn-in-code-project
+            refresh: true
+#        shared-configs:
+#          - data-id: swagger-${spring.profiles.active}.yaml
+#            group: learn-in-code-common
+#            refresh: true
+#          - data-id: logging-${spring.profiles.active}.yaml
+#            group: learn-in-code-common
+#            refresh: true
+  profiles:
+    active: dev

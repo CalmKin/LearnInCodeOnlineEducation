@@ -20,6 +20,7 @@
         <module>LearnInCode-Content</module>
         <module>LearnInCode-System</module>
         <module>LearnInCode-Gateway</module>
+        <module>LearnInCode-Media</module>
     </modules>
 
     <packaging>pom</packaging>
