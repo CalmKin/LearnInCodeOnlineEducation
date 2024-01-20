@@ -1,25 +1,46 @@
-server:
-  servlet:
-    context-path: /content  # 配置模块统一请求路径前缀
-  port: 63040
+# 抽取到配置中心
+#server:
+#  servlet:
+#    context-path: /content  # 配置模块统一请求路径前缀
+#  port: 63040
 
 
 #微服务配置
 spring:
-  application:
-    name: content
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.101.65:3306/xcplus_content?serverTimezone=UTC&userUnicode=true&useSSL=false&
-    username: root
-    password: mysql
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+  application:
+    name: content
 
-mybatis-plus:
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  cloud:
+    nacos:
+      server-addr: 192.168.101.65:8848  # nacos地址
+      discovery:
+        namespace: dev  # 选择命名空间
+        group: learn-in-code-project  # 项目组
+
+      config:
+        namespace: dev  # 选择命名空间
+        group: learn-in-code-project  # 项目组
+        file-extension: yaml  # 指定文件扩展名
+        refresh-enabled: true
+  profiles:
+    active: dev
+
+
+# 抽取到配置中心
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://192.168.101.65:3306/xcplus_content?serverTimezone=UTC&userUnicode=true&useSSL=false&
+#    username: root
+#    password: mysql
+
+#
+# mybatis-plus:
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
 
 # 日志文件配置路径
 #logging:
