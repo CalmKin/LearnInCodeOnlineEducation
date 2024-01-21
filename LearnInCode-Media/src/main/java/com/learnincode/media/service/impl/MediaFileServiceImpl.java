@@ -96,16 +96,21 @@ public class MediaFileServiceImpl implements MediaFileService {
         if(!file.exists()) throw new BusinessException("文件不存在");
 
         // 第一部分，上传到MinIO
+        String md5Hex = FILE_UTILS.getMd5Hex(filePath);
         String objectName = FILE_UTILS.getBucketObjectName(filePath);
         String mimeType = FILE_UTILS.getMimeType(filePath);
-        boolean step1 = uploadFileToMinIO(file_bucket, objectName, filePath, mimeType);
-        // 第一步失败,抛异常回滚事务
-        if(!step1) throw new BusinessException("文件上传失败,请稍后重试");
 
-        // 第二部分，保存到数据库
-        String md5Hex = FILE_UTILS.getMd5Hex(filePath);
-        MediaFiles mediaFiles = saveFileToDB(companyId, md5Hex, paramsDto, file_bucket, objectName);
+        MediaFiles mediaFiles = mediaFilesMapper.selectById(md5Hex);
 
+        // 如果文件已经上传过了，就不再上传和入库了
+       if(mediaFiles == null)
+       {
+           // 第一步失败,抛异常回滚事务
+           boolean step1 = uploadFileToMinIO(file_bucket, objectName, filePath, mimeType);
+           if(!step1) throw new BusinessException("文件上传失败,请稍后重试");
+           // 第二部分，保存到数据库
+           mediaFiles = saveFileToDB(companyId, md5Hex, paramsDto, file_bucket, objectName);
+       }
         // 拷贝属性返回
         UploadFileResultDto ret = new UploadFileResultDto();
         BeanUtils.copyProperties(mediaFiles, ret);
