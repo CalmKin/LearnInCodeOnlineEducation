@@ -14,7 +14,7 @@ spring:
         file-extension: yaml
         refresh-enabled: true
         extension-configs:
-          - data-id: media-service-${spring.profiles.active}.yaml
+          - data-id: media-${spring.profiles.active}.yaml
             group: learn-in-code-project
             refresh: true
 #        shared-configs:
