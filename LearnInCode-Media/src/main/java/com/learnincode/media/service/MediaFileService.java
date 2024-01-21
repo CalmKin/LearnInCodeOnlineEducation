@@ -4,6 +4,8 @@ package com.learnincode.media.service;
 import com.learnincode.base.model.PageParams;
 import com.learnincode.base.model.PageResult;
 import com.learnincode.media.dto.QueryMediaParamsDto;
+import com.learnincode.media.dto.UploadFileParamsDto;
+import com.learnincode.media.dto.UploadFileResultDto;
 import com.learnincode.media.po.MediaFiles;
 
 
@@ -23,4 +25,5 @@ public interface MediaFileService {
  public PageResult<MediaFiles> queryMediaFiles(Long companyId, PageParams pageParams, QueryMediaParamsDto queryMediaParamsDto);
 
 
+ UploadFileResultDto uploadFile(Long companyId, UploadFileParamsDto paramsDto, String filePath);
 }
