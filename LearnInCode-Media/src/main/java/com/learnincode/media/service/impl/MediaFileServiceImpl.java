@@ -31,16 +31,12 @@ import java.util.List;
 @Slf4j
 public class MediaFileServiceImpl implements MediaFileService {
 
-  @Autowired
-  MediaFilesMapper mediaFilesMapper;
     @Autowired
     private MediaFilesMapper mediaFilesMapper;
 
     @Autowired
     private MinioClient minioClient;
 
- @Override
- public PageResult<MediaFiles> queryMediaFiles(Long companyId, PageParams pageParams, QueryMediaParamsDto queryMediaParamsDto) {
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     // 普通文件桶
@@ -61,30 +57,100 @@ public class MediaFileServiceImpl implements MediaFileService {
     @Override
     public PageResult<MediaFiles> queryMediaFiles(Long companyId, PageParams pageParams, QueryMediaParamsDto queryMediaParamsDto) {
 
-  //构建查询条件对象
-  LambdaQueryWrapper<MediaFiles> queryWrapper = new LambdaQueryWrapper<>();
+        //构建查询条件对象
+        LambdaQueryWrapper<MediaFiles> queryWrapper = new LambdaQueryWrapper<>();
 
-  String filename = queryMediaParamsDto.getFilename();
-  String fileType = queryMediaParamsDto.getFileType();
-  String auditStatus = queryMediaParamsDto.getAuditStatus();
+        String filename = queryMediaParamsDto.getFilename();
+        String fileType = queryMediaParamsDto.getFileType();
+        String auditStatus = queryMediaParamsDto.getAuditStatus();
 
-  queryWrapper.like(StringUtils.isNotEmpty(filename),MediaFiles::getFilename, filename);
-  queryWrapper.like(StringUtils.isNotEmpty(fileType),MediaFiles::getFilename, fileType);
-  queryWrapper.like(StringUtils.isNotEmpty(auditStatus),MediaFiles::getFilename, auditStatus);
+        queryWrapper.like(StringUtils.isNotEmpty(filename), MediaFiles::getFilename, filename);
+        queryWrapper.like(StringUtils.isNotEmpty(fileType), MediaFiles::getFilename, fileType);
+        queryWrapper.like(StringUtils.isNotEmpty(auditStatus), MediaFiles::getFilename, auditStatus);
 
-  //分页对象
-  Page<MediaFiles> page = new Page<>(pageParams.getPageNo(), pageParams.getPageSize());
-  // 查询数据内容获得结果
-  Page<MediaFiles> pageResult = mediaFilesMapper.selectPage(page, queryWrapper);
-  // 获取数据列表
-  List<MediaFiles> list = pageResult.getRecords();
-  // 获取数据总数
-  long total = pageResult.getTotal();
-  // 构建结果集
-  PageResult<MediaFiles> mediaListResult = new PageResult<>(list, total, pageParams.getPageNo(), pageParams.getPageSize());
-  return mediaListResult;
+        //分页对象
+        Page<MediaFiles> page = new Page<>(pageParams.getPageNo(), pageParams.getPageSize());
+        // 查询数据内容获得结果
+        Page<MediaFiles> pageResult = mediaFilesMapper.selectPage(page, queryWrapper);
+        // 获取数据列表
+        List<MediaFiles> list = pageResult.getRecords();
+        // 获取数据总数
+        long total = pageResult.getTotal();
+        // 构建结果集
+        PageResult<MediaFiles> mediaListResult = new PageResult<>(list, total, pageParams.getPageNo(), pageParams.getPageSize());
+        return mediaListResult;
 
- }
+    }
+
+    /**
+     * @param companyId 机构Id
+     * @param paramsDto 上传文件的参数
+     * @param filePath  文件路径
+     * @return
+     */
+    @Override
+    @Transactional
+    public UploadFileResultDto uploadFile(Long companyId, UploadFileParamsDto paramsDto, String filePath) {
+        // 先判断文件是否存在
+        File file = new File(filePath);
+        if(!file.exists()) throw new BusinessException("文件不存在");
+
+        // 第一部分，上传到MinIO
+        String objectName = FILE_UTILS.getBucketObjectName(filePath);
+        String mimeType = FILE_UTILS.getMimeType(filePath);
+        boolean step1 = uploadFileToMinIO(file_bucket, objectName, filePath, mimeType);
+        // 第一步失败,抛异常回滚事务
+        if(!step1) throw new BusinessException("文件上传失败,请稍后重试");
+
+        // 第二部分，保存到数据库
+        String md5Hex = FILE_UTILS.getMd5Hex(filePath);
+        MediaFiles mediaFiles = saveFileToDB(companyId, md5Hex, paramsDto, file_bucket, objectName);
+
+        // 拷贝属性返回
+        UploadFileResultDto ret = new UploadFileResultDto();
+        BeanUtils.copyProperties(mediaFiles, ret);
+        return ret;
+    }
+
+    /**
+     * @description 将文件信息添加到文件表
+     * @param companyId  机构id
+     * @param fileMd5  文件md5值
+     * @param uploadFileParamsDto  上传文件的信息
+     * @param bucket  桶
+     * @param objectName 对象名称
+     */
+    @Transactional
+    public MediaFiles saveFileToDB(Long companyId,String fileMd5,UploadFileParamsDto uploadFileParamsDto,String bucket,String objectName){
+        //从数据库查询文件
+        MediaFiles mediaFiles = mediaFilesMapper.selectById(fileMd5);
+        if (mediaFiles == null) {
+            mediaFiles = new MediaFiles();
+            //拷贝基本信息
+            BeanUtils.copyProperties(uploadFileParamsDto, mediaFiles);
+            mediaFiles.setId(fileMd5);
+            mediaFiles.setFileId(fileMd5);
+
+            mediaFiles.setCompanyId(companyId);
+            // 文件访问路径 = host/桶名/objectName
+            mediaFiles.setUrl("/" + bucket + "/" + objectName);
+            mediaFiles.setBucket(bucket);
+            // 这个是在MinIO中的文件路径
+            mediaFiles.setFilePath(objectName);
+            mediaFiles.setCreateDate(LocalDateTime.now());
+            mediaFiles.setAuditStatus("002003");
+            mediaFiles.setStatus("1");
+            //保存文件信息到文件表
+            int insert = mediaFilesMapper.insert(mediaFiles);
+            if (insert < 0) {
+                log.error("保存文件信息到数据库失败,{}",mediaFiles.toString());
+                throw new BusinessException("保存文件信息失败");
+            }
+            log.debug("保存文件信息到数据库成功,{}",mediaFiles.toString());
+        }
+        return mediaFiles;
+    }
+
     /**
      * 将文件上传到MinIO
      * @param bucket
