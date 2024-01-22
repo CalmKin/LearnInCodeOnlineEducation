@@ -30,7 +30,7 @@ public class BigFileController {
     @ApiOperation(value = "文件上传前检查文件")
     @PostMapping("/checkfile")
     public RestResponse<Boolean> checkfile(@RequestParam("fileMd5") String fileMd5)
-            throws Exception {
+    {
         return fileService.checkfile(fileMd5);
     }
 
@@ -39,7 +39,7 @@ public class BigFileController {
     @PostMapping("/checkchunk")
     public RestResponse<Boolean> checkchunk(@RequestParam("fileMd5") String fileMd5,
                                             @RequestParam("chunk") int chunk) throws Exception {
-        return null;
+        return fileService.checkchunk(fileMd5, chunk);
     }
 
     @ApiOperation(value = "上传分块文件")

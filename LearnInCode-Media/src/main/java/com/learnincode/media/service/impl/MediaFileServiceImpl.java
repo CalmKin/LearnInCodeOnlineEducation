@@ -222,6 +222,34 @@ public class MediaFileServiceImpl extends ServiceImpl<MediaFilesMapper, MediaFil
     }
 
 
+    /**
+     * @author CalmKin
+     * @description 大文件不存在，则需要上传分块，上传分块之前，也需要先检查是否存在,分块不存在时,前端才会请求上传分块的接口
+     * @param fileMd5 大文件的md5
+     * @version 1.0
+     * @date 2024/1/22 16:09
+     */
+    @Override
+    public RestResponse<Boolean> checkchunk(String fileMd5, int chunk) {
+        // 分块文件夹路径
+        String chunkPath = FILE_UTILS.getBigFilePath(fileMd5) + "/chunk/" + chunk;
+
+
+        try {
+            GetObjectResponse object = minioClient.getObject(GetObjectArgs.builder()
+                    .bucket(video_bucket)
+                    .object(chunkPath)
+                    .build());
+            // 分块存在
+            if(object != null) return RestResponse.success(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // 分块不存在
+        return RestResponse.success(false);
+    }
+
+
 
 
 }

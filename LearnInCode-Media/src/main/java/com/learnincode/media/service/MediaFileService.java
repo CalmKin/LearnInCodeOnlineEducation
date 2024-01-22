@@ -34,4 +34,6 @@ public interface MediaFileService extends IService<MediaFiles> {
     MediaFiles saveFileToDB(Long companyId, String fileMd5, UploadFileParamsDto uploadFileParamsDto, String bucket, String objectName);
 
     RestResponse<Boolean> checkfile(String fileMd5);
+
+    RestResponse<Boolean> checkchunk(String fileMd5, int chunk);
 }
