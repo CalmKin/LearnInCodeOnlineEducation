@@ -12,20 +12,21 @@ import java.text.SimpleDateFormat;
 @Slf4j
 public class FileUtils {
 
-    private FileUtils(){}
+    private FileUtils() {
+    }
 
     /**
      * 根据文件路径获取对应ContentType
+     *
      * @param
      * @return
      */
-    public String getMimeType(String filePath)
-    {
+    public String getMimeType(String filePath) {
         // 获取文件扩展名
         String fileExtension = filePath.substring(filePath.lastIndexOf('.'));
 
         // 防止空指针
-        if(fileExtension == null) fileExtension = "";
+        if (fileExtension == null) fileExtension = "";
 
         //根据扩展名取出mimeType
         ContentInfo extensionMatch = ContentInfoUtil.findExtensionMatch(fileExtension);
@@ -40,10 +41,11 @@ public class FileUtils {
     /**
      * 获取文件对象的完整名
      * 年/月/日/md5.扩展名
+     *
      * @param filePath 文件路径
      * @return
      */
-    public String getBucketObjectName(String filePath)  {
+    public String getBucketObjectName(String filePath) {
 
         String md5Hex = getMd5Hex(filePath);
 
@@ -53,18 +55,19 @@ public class FileUtils {
         // 获取文件扩展名
         String extName = filePath.substring(filePath.lastIndexOf('.'));
 
-        return datePath + md5Hex +  extName;
+        return datePath + md5Hex + extName;
     }
 
 
     /**
      * 根据文件路径获取md5值
+     *
      * @param filePath
      * @return
      */
     public String getMd5Hex(String filePath) {
         String md5Hex = "";
-        try( FileInputStream fis = new FileInputStream(filePath) ) {
+        try (FileInputStream fis = new FileInputStream(filePath)) {
             md5Hex = DigestUtils.md5Hex(fis);
         } catch (Exception e) {
             e.printStackTrace();
@@ -73,12 +76,25 @@ public class FileUtils {
         return md5Hex;
     }
 
+
+    /**
+     * @author CalmKin
+     * @description 获取大文件在minio里面的存储路径
+     * @version 1.0
+     * @date 2024/1/22 15:57
+     */
+    public String getBigFilePath(String md5Hex)
+    {
+
+        return md5Hex.substring(0,1) + "/" + md5Hex.substring(1,1) + "/" + md5Hex;
+    }
+
+
     static class UtilFactory {
         private static final FileUtils UTILS = new FileUtils();
     }
 
-    public static FileUtils getFileUtils()
-    {
+    public static FileUtils getFileUtils() {
         return UtilFactory.UTILS;
     }
 

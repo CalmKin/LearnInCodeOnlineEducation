@@ -25,14 +25,14 @@ import java.io.IOException;
  */
 @Api(value = "媒资文件管理接口", tags = "媒资文件管理接口")
 @RestController
-public class MediaFilesController {
+public class SimpleFilesController {
 
 
     @Autowired
     MediaFileService mediaFileService;
 
 
-    @ApiOperation("媒资列表查询接口")
+    @ApiOperation("媒资列表分页查询接口")
     @PostMapping("/files")
     public PageResult<MediaFiles> list(PageParams pageParams, @RequestBody QueryMediaParamsDto queryMediaParamsDto) {
         Long companyId = 1232141425L;
@@ -47,7 +47,7 @@ public class MediaFilesController {
      * @version 1.0
      * @date 2024/1/21 11:42
      */
-    @ApiOperation("上传文件接口")
+    @ApiOperation("上传小型文件接口")
     @RequestMapping(value = "/upload/coursefile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public UploadFileResultDto uploadFile(@RequestPart("filedata") MultipartFile file) throws IOException {
 
@@ -70,5 +70,9 @@ public class MediaFilesController {
 
         return mediaFileService.uploadFile(companyId, paramsDto, absolutePath);
     }
+
+
+
+
 
 }

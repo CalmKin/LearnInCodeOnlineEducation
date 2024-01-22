@@ -2,9 +2,11 @@ package com.learnincode.media.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.learnincode.base.exception.BusinessException;
 import com.learnincode.base.model.PageParams;
 import com.learnincode.base.model.PageResult;
+import com.learnincode.base.model.RestResponse;
 import com.learnincode.media.dto.QueryMediaParamsDto;
 import com.learnincode.media.dto.UploadFileParamsDto;
 import com.learnincode.media.dto.UploadFileResultDto;
@@ -12,6 +14,8 @@ import com.learnincode.media.mapper.MediaFilesMapper;
 import com.learnincode.media.po.MediaFiles;
 import com.learnincode.media.service.MediaFileService;
 import com.learnincode.media.utils.FileUtils;
+import io.minio.GetObjectArgs;
+import io.minio.GetObjectResponse;
 import io.minio.MinioClient;
 import io.minio.UploadObjectArgs;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +34,7 @@ import java.util.List;
 
 @Service
 @Slf4j
-public class MediaFileServiceImpl implements MediaFileService {
+public class MediaFileServiceImpl extends ServiceImpl<MediaFilesMapper, MediaFiles> implements MediaFileService {
 
     @Autowired
     private MediaFilesMapper mediaFilesMapper;
@@ -94,7 +98,7 @@ public class MediaFileServiceImpl implements MediaFileService {
     public UploadFileResultDto uploadFile(Long companyId, UploadFileParamsDto paramsDto, String filePath) {
         // 先判断文件是否存在
         File file = new File(filePath);
-        if(!file.exists()) throw new BusinessException("文件不存在");
+        if (!file.exists()) throw new BusinessException("文件不存在");
 
         // 第一部分，上传到MinIO
         String md5Hex = FILE_UTILS.getMd5Hex(filePath);
@@ -104,16 +108,15 @@ public class MediaFileServiceImpl implements MediaFileService {
         MediaFiles mediaFiles = mediaFilesMapper.selectById(md5Hex);
 
         // 如果文件已经上传过了，就不再上传和入库了
-       if(mediaFiles == null)
-       {
-           // 第一步失败,抛异常回滚事务
-           boolean step1 = uploadFileToMinIO(file_bucket, objectName, filePath, mimeType);
-           if(!step1) throw new BusinessException("文件上传失败,请稍后重试");
-           // 为了防止事务失效,获取代理对象
-           MediaFileService serviceProxy = (MediaFileService) AopContext.currentProxy();
-           // 第二部分，保存到数据库
-           mediaFiles = serviceProxy.saveFileToDB(companyId, md5Hex, paramsDto, file_bucket, objectName);
-       }
+        if (mediaFiles == null) {
+            // 第一步失败,抛异常回滚事务
+            boolean step1 = uploadFileToMinIO(file_bucket, objectName, filePath, mimeType);
+            if (!step1) throw new BusinessException("文件上传失败,请稍后重试");
+            // 为了防止事务失效,获取代理对象
+            MediaFileService serviceProxy = (MediaFileService) AopContext.currentProxy();
+            // 第二部分，保存到数据库
+            mediaFiles = serviceProxy.saveFileToDB(companyId, md5Hex, paramsDto, file_bucket, objectName);
+        }
         // 拷贝属性返回
         UploadFileResultDto ret = new UploadFileResultDto();
         BeanUtils.copyProperties(mediaFiles, ret);
@@ -121,16 +124,16 @@ public class MediaFileServiceImpl implements MediaFileService {
     }
 
     /**
+     * @param companyId           机构id
+     * @param fileMd5             文件md5值
+     * @param uploadFileParamsDto 上传文件的信息
+     * @param bucket              桶
+     * @param objectName          对象名称
      * @description 将文件信息添加到文件表
-     * @param companyId  机构id
-     * @param fileMd5  文件md5值
-     * @param uploadFileParamsDto  上传文件的信息
-     * @param bucket  桶
-     * @param objectName 对象名称
      */
     @Transactional
     @Override
-    public MediaFiles saveFileToDB(Long companyId,String fileMd5,UploadFileParamsDto uploadFileParamsDto,String bucket,String objectName){
+    public MediaFiles saveFileToDB(Long companyId, String fileMd5, UploadFileParamsDto uploadFileParamsDto, String bucket, String objectName) {
         //从数据库查询文件
         MediaFiles mediaFiles = mediaFilesMapper.selectById(fileMd5);
         if (mediaFiles == null) {
@@ -152,24 +155,24 @@ public class MediaFileServiceImpl implements MediaFileService {
             //保存文件信息到文件表
             int insert = mediaFilesMapper.insert(mediaFiles);
             if (insert < 0) {
-                log.error("保存文件信息到数据库失败,{}",mediaFiles.toString());
+                log.error("保存文件信息到数据库失败,{}", mediaFiles.toString());
                 throw new BusinessException("保存文件信息失败");
             }
-            log.debug("保存文件信息到数据库成功,{}",mediaFiles.toString());
+            log.debug("保存文件信息到数据库成功,{}", mediaFiles.toString());
         }
         return mediaFiles;
     }
 
     /**
      * 将文件上传到MinIO
+     *
      * @param bucket
      * @param objectName
      * @param filePath
      * @param mimeType
      * @return
      */
-    public boolean uploadFileToMinIO(String bucket, String objectName,String filePath, String mimeType)
-    {
+    public boolean uploadFileToMinIO(String bucket, String objectName, String filePath, String mimeType) {
         try {
             UploadObjectArgs uploadObjectArgs = UploadObjectArgs.builder()
                     .bucket(bucket)   // 指定桶
@@ -180,10 +183,45 @@ public class MediaFileServiceImpl implements MediaFileService {
             minioClient.uploadObject(uploadObjectArgs);
         } catch (Exception e) {
             e.printStackTrace();
-            log.error("文件上传出错,bucket{},objectName{},出错信息{}",bucket,objectName,e.getMessage());
+            log.error("文件上传出错,bucket{},objectName{},出错信息{}", bucket, objectName, e.getMessage());
             return false;
         }
-        log.error("文件上传成功,bucket{},objectName{},出错信息{}",bucket,objectName);
+        log.error("文件上传成功,bucket{},objectName{},出错信息{}", bucket, objectName);
         return true;
     }
+
+    /**
+     * @author CalmKin
+     * @description 上传大型文件之前，检查文件是否存在
+     * @version 1.0
+     * @date 2024/1/22 15:35
+     */
+    @Override
+    public RestResponse<Boolean> checkfile(String fileMd5) {
+        MediaFiles files = getById(fileMd5);
+        // 数据库里面已经存在，再去minio里面检查是否存在
+        if (files != null) {
+            //桶
+            String bucket = files.getBucket();
+            //存储目录
+            String filePath = files.getFilePath();
+
+            try {
+                GetObjectResponse object = minioClient.getObject(GetObjectArgs.builder()
+                        .bucket(bucket)
+                        .object(filePath)
+                        .build());
+
+                // minio里面已经存在了
+                if(object != null) return RestResponse.success(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return RestResponse.success(false);
+    }
+
+
+
+
 }
