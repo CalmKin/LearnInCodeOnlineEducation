@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+
 
 /**
  * @author CalmKin
@@ -31,6 +33,7 @@ public class BigFileController {
     @PostMapping("/checkfile")
     public RestResponse<Boolean> checkfile(@RequestParam("fileMd5") String fileMd5)
     {
+
         return fileService.checkfile(fileMd5);
     }
 
@@ -46,9 +49,13 @@ public class BigFileController {
     @PostMapping("/uploadchunk")
     public RestResponse uploadchunk(@RequestParam("file") MultipartFile file,
                                     @RequestParam("fileMd5") String fileMd5,
-                                    @RequestParam("chunk") int chunk) throws Exception {
+                                    @RequestParam("chunk") int chunkOrder) throws Exception {
+        // 先把前端传过来的文件保存到临时文件
+        File tmpFile = File.createTempFile(fileMd5.substring(0,10) + chunkOrder , "tmp");
+        file.transferTo(tmpFile);
 
-        return null;
+        String absolutePath = tmpFile.getAbsolutePath();
+        return fileService.uploadchunk(fileMd5, chunkOrder, absolutePath);
     }
 
     @ApiOperation(value = "合并文件")

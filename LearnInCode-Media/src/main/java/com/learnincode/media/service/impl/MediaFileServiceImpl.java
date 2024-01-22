@@ -249,7 +249,24 @@ public class MediaFileServiceImpl extends ServiceImpl<MediaFilesMapper, MediaFil
         return RestResponse.success(false);
     }
 
+    @Override
+    public RestResponse uploadchunk(String fileMd5, int chunkOrder,  String tmpFilePath) {
 
+        String chunkPath = FILE_UTILS.getBigFilePath(fileMd5) + "/chunk/" + chunkOrder;
+
+       String mimeType = FILE_UTILS.getMimeType(tmpFilePath);
+
+        try {
+            //将分块存储至minIO
+            uploadFileToMinIO(video_bucket, chunkPath, tmpFilePath, mimeType);
+            return RestResponse.success(true);
+        }catch (Exception ex)
+        {
+            ex.printStackTrace();
+            log.debug("上传分块文件:{},失败:{}",tmpFilePath,ex.getMessage());
+        }
+        return RestResponse.validfail(false,"上传分块失败");
+    }
 
 
 }
