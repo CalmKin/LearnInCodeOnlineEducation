@@ -6,23 +6,19 @@ spring:
     nacos:
       server-addr: 192.168.101.65:8848
       discovery:
-        namespace: ${spring.profiles.active}
+        namespace: dev
         group: learn-in-code-project
       config:
-        namespace: ${spring.profiles.active}
+        namespace: dev
         group: learn-in-code-project
         file-extension: yaml
         refresh-enabled: true
-        extension-configs:
-          - data-id: media-${spring.profiles.active}.yaml
-            group: learn-in-code-project
-            refresh: true
-#        shared-configs:
-#          - data-id: swagger-${spring.profiles.active}.yaml
-#            group: learn-in-code-common
-#            refresh: true
+        shared-configs:
+  profiles:
+    active: dev
 #          - data-id: logging-${spring.profiles.active}.yaml
 #            group: learn-in-code-common
 #            refresh: true
-  profiles:
-    active: dev
+#          - data-id: swagger-${spring.profiles.active}.yaml
+#            group: learn-in-code-common
+#            refresh: true

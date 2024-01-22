@@ -7,6 +7,7 @@ import com.learnincode.media.dto.QueryMediaParamsDto;
 import com.learnincode.media.dto.UploadFileParamsDto;
 import com.learnincode.media.dto.UploadFileResultDto;
 import com.learnincode.media.po.MediaFiles;
+import org.springframework.transaction.annotation.Transactional;
 
 
 /**
@@ -26,4 +27,7 @@ public interface MediaFileService {
 
 
  UploadFileResultDto uploadFile(Long companyId, UploadFileParamsDto paramsDto, String filePath);
+
+    @Transactional
+    MediaFiles saveFileToDB(Long companyId, String fileMd5, UploadFileParamsDto uploadFileParamsDto, String bucket, String objectName);
 }

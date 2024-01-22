@@ -16,6 +16,7 @@ import io.minio.MinioClient;
 import io.minio.UploadObjectArgs;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -89,7 +90,7 @@ public class MediaFileServiceImpl implements MediaFileService {
      * @return
      */
     @Override
-    @Transactional
+//    @Transactional        // 包含网络请求，比较耗时
     public UploadFileResultDto uploadFile(Long companyId, UploadFileParamsDto paramsDto, String filePath) {
         // 先判断文件是否存在
         File file = new File(filePath);
@@ -108,8 +109,10 @@ public class MediaFileServiceImpl implements MediaFileService {
            // 第一步失败,抛异常回滚事务
            boolean step1 = uploadFileToMinIO(file_bucket, objectName, filePath, mimeType);
            if(!step1) throw new BusinessException("文件上传失败,请稍后重试");
+           // 为了防止事务失效,获取代理对象
+           MediaFileService serviceProxy = (MediaFileService) AopContext.currentProxy();
            // 第二部分，保存到数据库
-           mediaFiles = saveFileToDB(companyId, md5Hex, paramsDto, file_bucket, objectName);
+           mediaFiles = serviceProxy.saveFileToDB(companyId, md5Hex, paramsDto, file_bucket, objectName);
        }
         // 拷贝属性返回
         UploadFileResultDto ret = new UploadFileResultDto();
@@ -126,6 +129,7 @@ public class MediaFileServiceImpl implements MediaFileService {
      * @param objectName 对象名称
      */
     @Transactional
+    @Override
     public MediaFiles saveFileToDB(Long companyId,String fileMd5,UploadFileParamsDto uploadFileParamsDto,String bucket,String objectName){
         //从数据库查询文件
         MediaFiles mediaFiles = mediaFilesMapper.selectById(fileMd5);
