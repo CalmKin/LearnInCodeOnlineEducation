@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -126,7 +127,7 @@ class MediaApplicationTests {
         long length = raf_r.length();
 
         // 分块大小
-        int chunkSize = 1024 * 1024 * 1;
+        int chunkSize = 1024 * 1024 * 5;
         // 分块数量
         long chunkCount = (length + chunkSize - 1) / chunkSize;
 
@@ -233,8 +234,66 @@ class MediaApplicationTests {
     }
 
 
+    /**
+     * @author CalmKin
+     * @description 测试上传分块
+     * @version 1.0
+     * @date 2024/1/22 11:53
+     */
+    @Test
+    void uploadChunk() throws Exception {
+
+        // 分块文件存放目录
+        String chunkDir = "C:\\Users\\86158\\Desktop\\文件中转站\\chunk\\";
+
+        File file = new File(chunkDir);
+        File[] chunks = file.listFiles();
+
+        for (int i = 0; i < chunks.length; i++) {
+
+            UploadObjectArgs uploadObjectArgs = UploadObjectArgs.builder()
+                    .bucket("testbucket")   // 指定桶
+                    .object("/chunk/" + i)    //指定对象名（可以随便取）
+                    .filename(chunks[i].getAbsolutePath())   // 指定本地文件路径
+                    .build();
+
+            minioClient.uploadObject(uploadObjectArgs);
+
+            System.out.println("分块" + i + " 上传成功");
+        }
+
+    }
 
 
+    /**
+     * @author CalmKin
+     * @description 合并MinIO上的文件
+     * @version 1.0
+     * @date 2024/1/22 12:01
+     */
+    @Test
+    void mergeMinIOChunk() throws Exception {
+
+        // 获取分块列表
+        ArrayList<ComposeSource> args = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            ComposeSource arg = ComposeSource.builder()
+                    .bucket("testbucket")
+                    .object("/chunk/" + i)
+                    .build();
+            args.add(arg);
+        }
+
+
+        ComposeObjectArgs res = ComposeObjectArgs.builder()
+                .bucket("testbucket")
+                .object("target.mp4")   // 合并之后的文件名
+                .sources(args)
+                .build();
+
+        // 调用MinIO方法合并文件
+        minioClient.composeObject(res);
+    }
 
 
 }
