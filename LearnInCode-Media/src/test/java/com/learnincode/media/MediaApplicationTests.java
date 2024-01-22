@@ -10,6 +10,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 
 import java.io.*;
+import java.util.Arrays;
+import java.util.Comparator;
 
 @SpringBootTest
 class MediaApplicationTests {
@@ -168,7 +170,67 @@ class MediaApplicationTests {
         raf_r.close();
     }
 
+    @Test
+    void mergeChunck() throws Exception {
+        // 源文件路径
+        String sourceFile = "C:\\Users\\86158\\Desktop\\文件中转站\\点餐.mp4";
+        // 分块文件存放目录
+        String chunkDirPath = "C:\\Users\\86158\\Desktop\\文件中转站\\chunk\\";
+        // 目标合并文件
+        String targetFile = "C:\\Users\\86158\\Desktop\\文件中转站\\点餐2.mp4";
 
+        File file = new File(targetFile);
+        // 如果目标文件已经存在，先删掉
+        if(file.exists()) file.delete();
+        // 创建新的合并文件
+        file.createNewFile();
+
+
+        // 获取分块列表
+        File chunkDir = new File(chunkDirPath);
+        File[] chunks = chunkDir.listFiles();
+
+
+        // 对分块排序，保证顺序合并
+        Arrays.sort(chunks, new Comparator<File>() {
+            @Override
+            public int compare(File o1, File o2) {
+                return o1.getName().compareTo(o2.getName());
+            }
+        });
+
+        RandomAccessFile raf_write = new RandomAccessFile(targetFile, "rw");
+        // 将文件记录指针定位到初始位置
+        raf_write.seek(0);
+        byte[] buf = new byte[1024];
+
+        for(int i=0; i<chunks.length; i++)
+        {
+            // 读取第i个chunk
+            RandomAccessFile raf_read = new RandomAccessFile(chunks[i], "r");
+            int size = -1;
+
+            while((size = raf_read.read(buf)) != -1)
+            {
+                raf_write.write(buf, 0 , size);
+            }
+
+            // 单个chunk读完了，关闭流
+            raf_read.close();
+        }
+
+        // 整个文件写完了，关闭流
+        raf_write.close();
+
+        // 校验文件完整性
+        FileInputStream ori_fis = new FileInputStream(sourceFile);
+        FileInputStream tar_fis = new FileInputStream(targetFile);
+        if(DigestUtils.md5Hex(ori_fis).equals(  DigestUtils.md5Hex(tar_fis) ))
+        {
+            System.out.println("文件合并成功");
+        }
+
+    }
 
 
 
