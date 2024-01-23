@@ -2,6 +2,7 @@ package com.learnincode.media.controller;
 
 
 import com.learnincode.base.model.RestResponse;
+import com.learnincode.media.dto.UploadFileParamsDto;
 import com.learnincode.media.service.MediaFileService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -29,11 +30,10 @@ public class BigFileController {
     @Autowired
     private MediaFileService fileService;
 
-    @ApiOperation(value = "文件上传前检查文件")
+    @ApiOperation(value = "文件上传前检查大文件是否已经存在")
     @PostMapping("/checkfile")
     public RestResponse<Boolean> checkfile(@RequestParam("fileMd5") String fileMd5)
     {
-
         return fileService.checkfile(fileMd5);
     }
 
@@ -58,13 +58,30 @@ public class BigFileController {
         return fileService.uploadchunk(fileMd5, chunkOrder, absolutePath);
     }
 
+
+    /**
+     * @author CalmKin
+     * @description 合并minio中所有分块
+     * @version 1.0
+     * @param chunkTotal 这个字段是为了方便后端遍历minio分块列表的时候，提供一个循环边界
+     * @date 2024/1/22 16:52
+     */
     @ApiOperation(value = "合并文件")
     @PostMapping("/mergechunks")
     public RestResponse mergechunks(@RequestParam("fileMd5") String fileMd5,
                                     @RequestParam("fileName") String fileName,
                                     @RequestParam("chunkTotal") int chunkTotal) throws Exception {
-        return null;
 
+       Long companyId =1232141425L;
+        UploadFileParamsDto dto = new UploadFileParamsDto();
+
+        dto.setFileType("001002");
+        dto.setTags("课程视频");
+        dto.setRemark("");
+        dto.setFilename(fileName);
+
+
+        return fileService.mergechunks(companyId, fileMd5, chunkTotal, dto );
     }
 
 }

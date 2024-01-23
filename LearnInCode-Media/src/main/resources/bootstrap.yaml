@@ -1,4 +1,9 @@
 #微服务配置
+server:
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
 spring:
   application:
     name: media # 服务名称
@@ -13,10 +18,5 @@ spring:
         group: learn-in-code-project
         file-extension: yaml
         refresh-enabled: true
-#        shared-configs:
-#          - data-id: logging-${spring.profiles.active}.yaml
-#            group: learn-in-code-common
-#            refresh: true
-
   profiles:
     active: dev
