@@ -9,6 +9,8 @@ public interface MediaProcessService extends IService<MediaProcess> {
 
     List<MediaProcess> getTask(int executorId,int totalExecutor, int taskCnt);
 
+    boolean startTask(long taskId);
+
     /**
      * 任务执行结束之后，更新任务状态
      * @param TaskId 任务id

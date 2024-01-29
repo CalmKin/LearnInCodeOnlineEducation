@@ -366,6 +366,7 @@ public class MediaFileServiceImpl extends ServiceImpl<MediaFilesMapper, MediaFil
      * @param mimeType
      * @return
      */
+    @Override
     public boolean uploadFileToMinIO(String bucket, String objectName, String filePath, String mimeType) {
         try {
             UploadObjectArgs uploadObjectArgs = UploadObjectArgs.builder()
@@ -390,6 +391,7 @@ public class MediaFileServiceImpl extends ServiceImpl<MediaFilesMapper, MediaFil
      * @param objectName 对象名称
      * @return 下载后的文件
      */
+    @Override
     public File downloadFileFromMinIO(String bucket,String objectName){
         //临时文件
         File minioFile = null;

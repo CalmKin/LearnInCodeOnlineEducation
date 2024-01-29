@@ -37,6 +37,7 @@ public class MediaProcessServiceImpl extends ServiceImpl<MediaProcessMapper, Med
      * @param taskId
      * @return
      */
+    @Override
     public boolean startTask(long taskId)
     {
         int cnt = mediaProcessMapper.tryLock(taskId);

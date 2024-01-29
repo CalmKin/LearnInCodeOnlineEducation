@@ -11,6 +11,8 @@ import com.learnincode.media.dto.UploadFileResultDto;
 import com.learnincode.media.po.MediaFiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
+
 
 /**
  * @author CalmKin
@@ -42,4 +44,8 @@ public interface MediaFileService extends IService<MediaFiles> {
     RestResponse mergechunks(Long companyId,String fileMd5,int chunkTotal,UploadFileParamsDto uploadFileParamsDto);
 
     void addWaitingTask(MediaFiles mediaFiles);
+
+    boolean uploadFileToMinIO(String bucket, String objectName, String filePath, String mimeType);
+
+    File downloadFileFromMinIO(String bucket, String objectName);
 }
