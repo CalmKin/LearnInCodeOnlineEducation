@@ -40,4 +40,6 @@ public interface MediaFileService extends IService<MediaFiles> {
     RestResponse uploadchunk( String fileMd5, int chunkOrder, String fileLocalPath);
 
     RestResponse mergechunks(Long companyId,String fileMd5,int chunkTotal,UploadFileParamsDto uploadFileParamsDto);
+
+    void addWaitingTask(MediaFiles mediaFiles);
 }

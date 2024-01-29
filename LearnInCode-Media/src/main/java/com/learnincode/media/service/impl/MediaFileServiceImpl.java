@@ -11,7 +11,9 @@ import com.learnincode.media.dto.QueryMediaParamsDto;
 import com.learnincode.media.dto.UploadFileParamsDto;
 import com.learnincode.media.dto.UploadFileResultDto;
 import com.learnincode.media.mapper.MediaFilesMapper;
+import com.learnincode.media.mapper.MediaProcessMapper;
 import com.learnincode.media.po.MediaFiles;
+import com.learnincode.media.po.MediaProcess;
 import com.learnincode.media.service.MediaFileService;
 import com.learnincode.media.utils.FileUtils;
 import io.minio.*;
@@ -41,6 +43,9 @@ public class MediaFileServiceImpl extends ServiceImpl<MediaFilesMapper, MediaFil
 
     @Autowired
     private MinioClient minioClient;
+
+    @Autowired
+    private MediaProcessMapper mediaProcessMapper;
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
@@ -159,9 +164,40 @@ public class MediaFileServiceImpl extends ServiceImpl<MediaFilesMapper, MediaFil
                 throw new BusinessException("保存文件信息失败");
             }
             log.debug("保存文件信息到数据库成功,{}", mediaFiles.toString());
+            MediaFileService proxy = (MediaFileService) AopContext.currentProxy();
+            proxy.addWaitingTask(mediaFiles);
+            log.debug("保存待处理任务成功,{}", mediaFiles.toString());
         }
         return mediaFiles;
     }
+    public void addWaitingTask(MediaFiles mediaFiles)
+    {
+        // 根据文件mimeType判断是否需要转码
+        String mimeType = FILE_UTILS.getMimeType(mediaFiles.getFilePath());
+
+        // todo 后续通过在配置文件，以列表的形式指定需要转码的文件mimetype类型，业务层判断当前文件mimetype是否在列表里面
+        // 如果是avi类型
+        if(mimeType.equals("video/x-msvideo"))
+        {
+            // 创建待处理任务对象
+            MediaProcess mediaProcess = new MediaProcess();
+            BeanUtils.copyProperties(mediaFiles,mediaProcess);
+
+            // 设置任务状态(未处理)
+            mediaProcess.setStatus("1");
+            mediaProcess.setCreateDate(LocalDateTime.now());
+            // 初始失败次数为0
+            mediaProcess.setFailCount(0);
+            // url是转码后的，现在还没转码，设置为空
+            mediaProcess.setUrl(null);
+
+            //插入待处理任务表
+            mediaProcessMapper.insert(mediaProcess);
+        }
+
+    }
+
+
 
     /**
      * @author CalmKin
