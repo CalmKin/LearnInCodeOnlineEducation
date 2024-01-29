@@ -32,6 +32,17 @@ public class MediaProcessServiceImpl extends ServiceImpl<MediaProcessMapper, Med
         return mediaProcessMapper.getTaskList(executorId, totalExecutor, taskCnt);
     }
 
+    /**
+     *
+     * @param taskId
+     * @return
+     */
+    public boolean startTask(long taskId)
+    {
+        int cnt = mediaProcessMapper.tryLock(taskId);
+        return cnt<=0 ? false : true;
+    }
+
     @Override
     @Transactional
     public void saveStatusAfterProcess(Long TaskId, String status, String fileId, String Url, String errMsg) {

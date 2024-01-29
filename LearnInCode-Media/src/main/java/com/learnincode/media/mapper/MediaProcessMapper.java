@@ -26,5 +26,5 @@ public interface MediaProcessMapper extends BaseMapper<MediaProcess> {
      * @return
      */
     @Update("update xcplus_media.media_process t set t.status = 4 where t.id = #{id} and (t.status = '1' or (t.status = '3' and t.fail_count < 3 ) )")
-    boolean tryLock(@Param("id") long id);
+    int tryLock(@Param("id") long id);
 }
