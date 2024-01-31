@@ -25,6 +25,11 @@ spring:
         group: learn-in-code-project  # 项目组
         file-extension: yaml  # 指定文件扩展名
         refresh-enabled: true
+        shared-configs:
+          - data-id: freemarker-config-dev.yaml
+            group: learn-in-code-project
+            refresh: true
+
   profiles:
     active: dev
 
