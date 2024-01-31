@@ -51,7 +51,7 @@ public class BigFileController {
                                     @RequestParam("fileMd5") String fileMd5,
                                     @RequestParam("chunk") int chunkOrder) throws Exception {
         // 先把前端传过来的文件保存到临时文件
-        File tmpFile = File.createTempFile(fileMd5.substring(0,10) + chunkOrder , "tmp");
+        File tmpFile = File.createTempFile(fileMd5.substring(0,10) + chunkOrder , ".tmp");
         file.transferTo(tmpFile);
 
         String absolutePath = tmpFile.getAbsolutePath();

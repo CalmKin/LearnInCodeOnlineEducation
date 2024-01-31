@@ -248,18 +248,18 @@ public class MediaFileServiceImpl extends ServiceImpl<MediaFilesMapper, MediaFil
     public RestResponse<Boolean> checkchunk(String fileMd5, int chunkOrder) {
         // 分块文件夹路径
         String chunkPath = FILE_UTILS.getBigFilePath(fileMd5) + "/chunk/" + chunkOrder;
-
+        GetObjectResponse object = null;
         try {
-            GetObjectResponse object = minioClient.getObject(GetObjectArgs.builder()
+             object = minioClient.getObject(GetObjectArgs.builder()
                     .bucket(video_bucket)
                     .object(chunkPath)
                     .build());
-            // 分块存在
-            if(object != null) return RestResponse.success(true);
         } catch (Exception e) {
             e.printStackTrace();
-            log.debug("分块  {} 已经存在，无需上传", chunkOrder);
+            log.error("分块文件不存在", chunkOrder);
         }
+        // 分块存在
+        if(object != null) return RestResponse.success(true);
         // 分块不存在
         return RestResponse.success(false);
     }
