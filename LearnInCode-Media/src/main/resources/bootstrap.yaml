@@ -1,0 +1,22 @@
+#微服务配置
+server:
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+spring:
+  application:
+    name: media # 服务名称
+  cloud:
+    nacos:
+      server-addr: 192.168.101.65:8848
+      discovery:
+        namespace: dev
+        group: learn-in-code-project
+      config:
+        namespace: dev
+        group: learn-in-code-project
+        file-extension: yaml
+        refresh-enabled: true
+  profiles:
+    active: dev
