@@ -70,6 +70,7 @@ public class GlobalExceptionHandler {
     public RestErrorResponse unknownException(Exception ex)
     {
         log.error("系统异常{}",ex.getMessage());
+        ex.printStackTrace();
         return new RestErrorResponse(CommonError.UNKOWN_ERROR.getErrMessage());
     }
 
