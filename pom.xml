@@ -19,6 +19,8 @@
         <module>LearnInCode-Base</module>
         <module>LearnInCode-Content</module>
         <module>LearnInCode-System</module>
+        <module>LearnInCode-Gateway</module>
+        <module>LearnInCode-Media</module>
     </modules>
 
     <packaging>pom</packaging>
@@ -54,6 +56,18 @@
                 <artifactId>knife4j-spring-boot-starter</artifactId>
                 <version>${knife4j.version}</version>
             </dependency>
+
+
+
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring-cloud-alibaba.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+
 
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
