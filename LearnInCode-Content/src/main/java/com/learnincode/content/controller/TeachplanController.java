@@ -1,5 +1,6 @@
 package com.learnincode.content.controller;
 
+import com.learnincode.content.model.dto.BindTeachplanMediaDto;
 import com.learnincode.content.model.dto.SaveTeachplanDto;
 import com.learnincode.content.model.dto.TeachplanDto;
 import com.learnincode.content.service.TeachplanService;
@@ -66,6 +67,12 @@ public class TeachplanController {
         teachplanService.moveupTeachplan(id);
     }
 
+
+    @ApiOperation(value = "课程计划和媒资信息绑定")
+    @PostMapping("/association/media")
+    public void associationMedia(@RequestBody BindTeachplanMediaDto bindTeachplanMediaDto){
+        teachplanService.attachMedia(bindTeachplanMediaDto);
+    }
 
 
 }
