@@ -11,6 +11,8 @@ import com.learnincode.content.model.dto.CoursePreviewDto;
  * @date 2024/1/31 14:26
  */
 public interface CoursePublishService  {
+     void commitAudit(Long companyId, Long courseId);
+
     /**
      * 根据课程id获取课程预览信息
      * @param courseId
