@@ -1,19 +1,25 @@
 package com.learnincode.content.service.handler;
 
+import com.learnincode.content.service.CoursePublishService;
 import com.learnincode.messagesdk.model.po.MqMessage;
 import com.learnincode.messagesdk.service.MessageProcessAbstract;
 import com.learnincode.messagesdk.service.MqMessageService;
 import com.xxl.job.core.context.XxlJobHelper;
 import com.xxl.job.core.handler.annotation.XxlJob;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 
 @Component
 @Slf4j
 public class CoursePublishTask extends MessageProcessAbstract {
+
+    @Autowired
+    private CoursePublishService coursePublishService;
 
     //任务调度入口
     @XxlJob("CoursePublishJobHandler")
@@ -62,11 +68,16 @@ public class CoursePublishTask extends MessageProcessAbstract {
             log.debug("课程静态化已处理直接返回，课程id:{}",courseId);
             return ;
         }
-        try {
-            TimeUnit.SECONDS.sleep(10);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+
+        // 生成静态页面
+        File file = coursePublishService.generateCourseHtml(courseId);
+        // 上传到Minio
+        if(file!=null)
+        {
+            // 如果执行失败，会抛异常，不会执行下面的保存状态
+            coursePublishService.uploadCourseHtml(courseId,file);
         }
+
         //保存第一阶段状态
         mqMessageService.completedStageOne(id);
 

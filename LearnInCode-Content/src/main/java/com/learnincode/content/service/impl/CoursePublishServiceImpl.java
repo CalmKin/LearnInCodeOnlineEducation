@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.learnincode.base.exception.BusinessException;
 import com.learnincode.base.exception.CommonError;
+import com.learnincode.content.config.MultipartSupportConfig;
+import com.learnincode.content.feignclient.MediaFeignClient;
 import com.learnincode.content.mapper.CourseMarketMapper;
 import com.learnincode.content.mapper.CoursePublishMapper;
 import com.learnincode.content.mapper.CoursePublishPreMapper;
@@ -19,16 +21,28 @@ import com.learnincode.content.service.CoursePublishService;
 import com.learnincode.content.service.TeachplanService;
 import com.learnincode.messagesdk.model.po.MqMessage;
 import com.learnincode.messagesdk.service.MqMessageService;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
+@Slf4j
 public class CoursePublishServiceImpl  extends ServiceImpl<CoursePublishMapper, CoursePublish>
         implements CoursePublishService {
 
@@ -49,6 +63,9 @@ public class CoursePublishServiceImpl  extends ServiceImpl<CoursePublishMapper, 
 
     @Autowired
     private MqMessageService mqMessageService;
+
+    @Autowired
+    MediaFeignClient mediaFeignClient;
 
     @Override
     public void commitAudit(Long companyId, Long courseId) {
@@ -167,6 +184,64 @@ public class CoursePublishServiceImpl  extends ServiceImpl<CoursePublishMapper, 
 
         // 删除预发布表对应记录
         coursePublishPreMapper.deleteById(courseId);
+
+    }
+
+    @Override
+    public File generateCourseHtml(Long courseId) {
+
+        File htmlFile = null;
+
+        try {
+            //配置freemarker
+            Configuration configuration = new Configuration(Configuration.getVersion());
+
+            //加载模板
+            //选指定模板路径,classpath下templates下
+            //得到classpath路径
+            String classpath = this.getClass().getResource("/").getPath();
+            configuration.setDirectoryForTemplateLoading(new File(classpath + "/template/"));
+            //设置字符编码
+            configuration.setDefaultEncoding("utf-8");
+
+            //指定模板文件名称
+            Template template = configuration.getTemplate("course_template.ftl");
+
+            //准备数据
+            CoursePreviewDto coursePreviewInfo = getCoursePreviewInfo(2L);
+
+            Map<String, Object> map = new HashMap<>();
+            map.put("model", coursePreviewInfo);
+
+            //静态化
+            //参数1：模板，参数2：数据模型
+            String content = FreeMarkerTemplateUtils.processTemplateIntoString(template, map);
+            //将静态化内容输出到文件中
+            InputStream inputStream = IOUtils.toInputStream(content);
+            //输出流
+            htmlFile = File.createTempFile(String.valueOf(courseId),".html");
+            log.debug("课程静态化，生成静态文件:{}",htmlFile.getAbsolutePath());
+            FileOutputStream outputStream = new FileOutputStream(htmlFile);
+            IOUtils.copy(inputStream, outputStream);
+        } catch (Exception e) {
+            log.error("课程静态化异常:{}",e.toString());
+            // 一定要往外抛异常，否则调用方(调度任务)会将这个子任务标记为已完成
+            throw new BusinessException("课程静态化异常");
+        }
+
+        return htmlFile;
+    }
+
+    @Override
+    public void uploadCourseHtml(Long courseId, File file) {
+        MultipartFile multipartFile = MultipartSupportConfig.getMultipartFile(new File("D:\\Java_Sourse\\test.html"));
+        String result = mediaFeignClient.uploadFile(multipartFile, "course/test.html");
+
+        // 如果走了降级逻辑,一定要及时抛异常
+        if(result == null)
+        {
+            throw new BusinessException("静态页面上传失败");
+        }
 
     }
 
