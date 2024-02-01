@@ -104,14 +104,17 @@ public class MediaFileServiceImpl extends ServiceImpl<MediaFilesMapper, MediaFil
      */
     @Override
 //    @Transactional        // 包含网络请求，比较耗时
-    public UploadFileResultDto uploadFile(Long companyId, UploadFileParamsDto paramsDto, String filePath) {
+    public UploadFileResultDto uploadFile(Long companyId, UploadFileParamsDto paramsDto, String filePath, String objectName) {
         // 先判断文件是否存在
         File file = new File(filePath);
         if (!file.exists()) throw new BusinessException("文件不存在");
 
         // 第一部分，上传到MinIO
         String md5Hex = FILE_UTILS.getMd5Hex(filePath);
-        String objectName = FILE_UTILS.getBucketObjectName(filePath);
+
+        // 如果没有传objectName，默认用年月日
+        if(StringUtils.isEmpty(objectName))  objectName = FILE_UTILS.getBucketObjectName(filePath);
+
         String mimeType = FILE_UTILS.getMimeType(filePath);
 
         MediaFiles mediaFiles = mediaFilesMapper.selectById(md5Hex);

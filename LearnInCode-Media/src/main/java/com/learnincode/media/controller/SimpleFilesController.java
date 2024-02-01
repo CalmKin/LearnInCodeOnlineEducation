@@ -49,7 +49,7 @@ public class SimpleFilesController {
      */
     @ApiOperation("上传小型文件接口")
     @RequestMapping(value = "/upload/coursefile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public UploadFileResultDto uploadFile(@RequestPart("filedata") MultipartFile file) throws IOException {
+    public UploadFileResultDto uploadFile(@RequestPart("filedata") MultipartFile file, @RequestParam(value= "objectName",required=false) String objectName) throws IOException {
 
         UploadFileParamsDto paramsDto = new UploadFileParamsDto();
         // 文件大小
@@ -68,7 +68,7 @@ public class SimpleFilesController {
 
         Long companyId = 1232141425L;
 
-        return mediaFileService.uploadFile(companyId, paramsDto, absolutePath);
+        return mediaFileService.uploadFile(companyId, paramsDto, absolutePath, objectName);
     }
 
 
