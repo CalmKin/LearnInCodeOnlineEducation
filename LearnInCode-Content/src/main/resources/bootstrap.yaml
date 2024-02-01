@@ -30,6 +30,9 @@ spring:
           - data-id: freemarker-config-dev.yaml
             group: learn-in-code-project
             refresh: true
+          - data-id: feign-${spring.profiles.active}.yaml
+            group: learn-in-code-common
+            refresh: true
 
   profiles:
     active: dev
