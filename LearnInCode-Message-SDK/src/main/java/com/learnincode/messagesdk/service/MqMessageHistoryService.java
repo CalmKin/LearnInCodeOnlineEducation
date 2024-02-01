@@ -1,7 +1,7 @@
-package com.xuecheng.messagesdk.service;
+package com.learnincode.messagesdk.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.xuecheng.messagesdk.model.po.MqMessageHistory;
+import com.learnincode.messagesdk.model.po.MqMessageHistory;
 
 /**
  *  服务类

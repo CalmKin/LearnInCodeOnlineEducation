@@ -1,7 +1,7 @@
-package com.xuecheng.messagesdk.mapper;
+package com.learnincode.messagesdk.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.xuecheng.messagesdk.model.po.MqMessage;
+import com.learnincode.messagesdk.model.po.MqMessage;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 

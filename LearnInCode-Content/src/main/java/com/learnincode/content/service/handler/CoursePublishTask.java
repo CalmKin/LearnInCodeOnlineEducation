@@ -1,8 +1,8 @@
 package com.learnincode.content.service.handler;
 
-import com.xuecheng.messagesdk.model.po.MqMessage;
-import com.xuecheng.messagesdk.service.MessageProcessAbstract;
-import com.xuecheng.messagesdk.service.MqMessageService;
+import com.learnincode.messagesdk.model.po.MqMessage;
+import com.learnincode.messagesdk.service.MessageProcessAbstract;
+import com.learnincode.messagesdk.service.MqMessageService;
 import com.xxl.job.core.context.XxlJobHelper;
 import com.xxl.job.core.handler.annotation.XxlJob;
 import lombok.extern.slf4j.Slf4j;

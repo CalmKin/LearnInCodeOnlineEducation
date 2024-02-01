@@ -1,4 +1,4 @@
-package com.xuecheng.messagesdk.model.po;
+package com.learnincode.messagesdk.model.po;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;

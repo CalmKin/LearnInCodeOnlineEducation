@@ -1,9 +1,9 @@
-package com.xuecheng.messagesdk.service.impl;
+package com.learnincode.messagesdk.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.xuecheng.messagesdk.mapper.MqMessageHistoryMapper;
-import com.xuecheng.messagesdk.model.po.MqMessageHistory;
-import com.xuecheng.messagesdk.service.MqMessageHistoryService;
+import com.learnincode.messagesdk.mapper.MqMessageHistoryMapper;
+import com.learnincode.messagesdk.model.po.MqMessageHistory;
+import com.learnincode.messagesdk.service.MqMessageHistoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

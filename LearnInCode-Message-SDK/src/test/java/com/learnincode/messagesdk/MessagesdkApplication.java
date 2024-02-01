@@ -1,4 +1,4 @@
-package com.xuecheng.messagesdk;
+package com.learnincode.messagesdk;
 
 
 import org.springframework.boot.SpringApplication;
