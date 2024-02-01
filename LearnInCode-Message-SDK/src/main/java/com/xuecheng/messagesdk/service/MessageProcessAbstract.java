@@ -18,7 +18,6 @@ public abstract class MessageProcessAbstract {
     @Autowired
     MqMessageService mqMessageService;
 
-
     /**
      * @param mqMessage 执行任务内容
      * @return boolean true:处理成功，false处理失败
@@ -31,7 +30,7 @@ public abstract class MessageProcessAbstract {
      * @description 扫描消息表多线程执行任务
      * @param shardIndex 分片序号
      * @param shardTotal 分片总数
-     * @param messageType  消息类型
+     * @param messageType  消息类型(用来标识不同服务)
      * @param count  一次取出任务总数
      * @param timeout 预估任务执行时间,到此时间如果任务还没有结束则强制结束 单位秒
      * @return void
@@ -57,6 +56,8 @@ public abstract class MessageProcessAbstract {
                     log.debug("开始任务:{}",message);
                     //处理任务
                     try {
+                        // 调用抽象方法
+                        // 只有这个消息的所有子阶段都执行成功之后，才会返回true
                         boolean result = execute(message);
                         if(result){
                             log.debug("任务执行成功:{})",message);

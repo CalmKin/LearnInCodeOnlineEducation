@@ -50,6 +50,13 @@ public class MqMessageServiceImpl extends ServiceImpl<MqMessageMapper, MqMessage
 
     }
 
+    /**
+     * 1. 将任务状态标记为
+     * 2. 添加到历史消息表
+     * 3. 删除原来表中的记录
+     * @param id 消息id
+     * @return
+     */
     @Transactional
     @Override
     public int completed(long id) {
