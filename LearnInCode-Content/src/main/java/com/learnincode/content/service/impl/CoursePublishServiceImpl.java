@@ -3,6 +3,7 @@ package com.learnincode.content.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.learnincode.base.exception.BusinessException;
+import com.learnincode.base.exception.CommonError;
 import com.learnincode.content.mapper.CourseMarketMapper;
 import com.learnincode.content.mapper.CoursePublishMapper;
 import com.learnincode.content.mapper.CoursePublishPreMapper;
@@ -16,6 +17,8 @@ import com.learnincode.content.model.po.CoursePublishPre;
 import com.learnincode.content.service.CourseBaseService;
 import com.learnincode.content.service.CoursePublishService;
 import com.learnincode.content.service.TeachplanService;
+import com.xuecheng.messagesdk.model.po.MqMessage;
+import com.xuecheng.messagesdk.service.MqMessageService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,6 +46,9 @@ public class CoursePublishServiceImpl  extends ServiceImpl<CoursePublishMapper, 
 
     @Autowired
     private CoursePublishMapper coursePublishMapper;
+
+    @Autowired
+    private MqMessageService mqMessageService;
 
     @Override
     public void commitAudit(Long companyId, Long courseId) {
@@ -156,10 +162,24 @@ public class CoursePublishServiceImpl  extends ServiceImpl<CoursePublishMapper, 
         courseBase.setStatus("203002");
         courseBaseService.updateById(courseBase);
 
-        // todo 向消息表写入消息
+        // 向消息表写入消息
+        saveCoursePublishMessage(courseId);
 
         // 删除预发布表对应记录
         coursePublishPreMapper.deleteById(courseId);
 
     }
+
+    /**
+     * @description 保存消息表记录
+     * @param courseId  课程id
+     */
+    private void saveCoursePublishMessage(Long courseId){
+        MqMessage mqMessage = mqMessageService.addMessage("course_publish", String.valueOf(courseId), null, null);
+        if(mqMessage==null){
+            throw new BusinessException(CommonError.UNKOWN_ERROR.toString());
+        }
+
+    }
+
 }

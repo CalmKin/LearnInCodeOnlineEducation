@@ -3,6 +3,7 @@ package com.learnincode.content.controller;
 
 import com.learnincode.content.model.dto.CoursePreviewDto;
 import com.learnincode.content.service.CoursePublishService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,6 +56,19 @@ public class CoursePublishController {
     public void commitAudit(@PathVariable("courseId") Long courseId){
         Long companyId = 1232141425L;
         coursePublishService.commitAudit(companyId,courseId);
+    }
+
+    /**
+     *
+     * @param courseId
+     */
+    @ApiOperation("课程发布")
+    @ResponseBody
+    @PostMapping ("/coursepublish/{courseId}")
+    public void coursepublish(@PathVariable("courseId") Long courseId){
+        Long companyId = 1232141425L;
+        coursePublishService.coursepublish(companyId, courseId);
+
     }
 
 
