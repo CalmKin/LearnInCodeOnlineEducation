@@ -3,12 +3,14 @@ package com.learnincode.ucenter.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.learnincode.base.exception.BusinessException;
+import com.learnincode.ucenter.feignclient.CheckCodeFeignClient;
 import com.learnincode.ucenter.mapper.UserMapper;
 import com.learnincode.ucenter.model.dto.AuthParamsDto;
 import com.learnincode.ucenter.model.dto.UserExt;
 import com.learnincode.ucenter.model.po.User;
 import com.learnincode.ucenter.service.AuthService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,8 +34,28 @@ public class PasswordAuthService implements AuthService {
     @Autowired
     private PasswordEncoder encoder;
 
+    @Autowired
+    private CheckCodeFeignClient checkCodeFeignClient;
+
     @Override
     public UserExt execute(AuthParamsDto authParamsDto) {
+
+        // 先进行验证码校验
+        String codekey = authParamsDto.getCheckcodekey();
+        String code = authParamsDto.getCheckcode();
+
+        // 合法性校验
+        if(StringUtils.isAnyBlank(codekey,code))
+        {
+            throw new BusinessException("验证码不能为空");
+        }
+
+        Boolean verify = checkCodeFeignClient.verify(codekey, code);
+
+        if(verify == null ||  !verify)
+        {
+            throw new BusinessException("验证码错误");
+        }
 
         String userName = authParamsDto.getUsername();
         User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUsername, userName));
