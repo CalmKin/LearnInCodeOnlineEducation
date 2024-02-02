@@ -12,13 +12,6 @@ spring:
         group: learn-in-code-project
         file-extension: yaml
         refresh-enabled: true
-        shared-configs:
-          - data-id: swagger-${spring.profiles.active}.yaml
-            group: learn-in-code-common
-            refresh: true
-          - data-id: logging-${spring.profiles.active}.yaml
-            group: learn-in-code-common
-            refresh: true
 
   profiles:
     active: dev

@@ -1,0 +1,11 @@
+POST http://localhost:80/api/item
+Content-Type: application/json
+
+{}
+
+###
+POST http://127.0.0.1:63070/auth/oauth/token?client_id=WebApp&client_secret=WebApp&grant_type=password&username=zhangsan&password=123
+
+
+###
+POST http://127.0.0.1:63070/auth/oauth/check_token?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsibGVhcm4taW4tY29kZSJdLCJ1c2VyX25hbWUiOiJ6aGFuZ3NhbiIsInNjb3BlIjpbImFsbCJdLCJleHAiOjE3MDY4NjI3NTMsImF1dGhvcml0aWVzIjpbInAxIl0sImp0aSI6IjZmMDA2OTY4LTdhZGYtNGI3Mi05NGMwLWM3YjM4ZTYwN2RhZSIsImNsaWVudF9pZCI6IldlYkFwcCJ9.x1MotzoB50u3S0Fh02cnxdyvHSzSMCn90WInsLe3b_Q
