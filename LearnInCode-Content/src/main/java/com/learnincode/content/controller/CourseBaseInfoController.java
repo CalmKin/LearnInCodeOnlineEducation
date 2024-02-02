@@ -10,6 +10,7 @@ import com.learnincode.content.model.dto.QueryCourseParamsDto;
 import com.learnincode.content.model.dto.UpdateCourseDto;
 import com.learnincode.content.model.po.CourseBase;
 import com.learnincode.content.service.CourseBaseService;
+import com.learnincode.content.utils.SecurityUtil;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -50,7 +51,8 @@ public class CourseBaseInfoController {
     @PostMapping
     public CourseBaseInfoDto addCourseBaseInfo(@RequestBody @Validated(ValidationGroups.Inster.class) AddCourseDto addCourseDto)
     {
-        Long companyId = 1315131351L;
+        SecurityUtil.User user = SecurityUtil.getUser();
+        Long companyId = Long.valueOf(user.getCompanyId());
         return courseBaseService.addCourseBaseInfo(companyId,addCourseDto);
     }
 
@@ -66,7 +68,8 @@ public class CourseBaseInfoController {
     @PutMapping
     public CourseBaseInfoDto updateCourseBaseInfo(@RequestBody @Validated UpdateCourseDto dto)
     {
-        Long companyId = 1232141425L;
+                SecurityUtil.User user = SecurityUtil.getUser();
+        Long companyId = Long.valueOf(user.getCompanyId());
         return courseBaseService.updateCourseBaseInfo(companyId, dto);
     }
 

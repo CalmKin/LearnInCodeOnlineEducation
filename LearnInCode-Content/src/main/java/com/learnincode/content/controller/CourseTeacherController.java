@@ -3,6 +3,7 @@ package com.learnincode.content.controller;
 import com.learnincode.content.model.dto.AddCourseTeacherDto;
 import com.learnincode.content.model.po.CourseTeacher;
 import com.learnincode.content.service.CourseTeacherService;
+import com.learnincode.content.utils.SecurityUtil;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +29,8 @@ public class CourseTeacherController {
     public CourseTeacher addCourseTeacher(@RequestBody AddCourseTeacherDto dto)
     {
 
-        Long companyId = 1232141425L;
+                SecurityUtil.User user = SecurityUtil.getUser();
+        Long companyId = Long.valueOf(user.getCompanyId());
 
         CourseTeacher courseTeacher = courseTeacherService.addCourseTeacher(companyId,dto);
         return courseTeacher;
@@ -46,7 +48,8 @@ public class CourseTeacherController {
     @DeleteMapping("/course/{courseId}/{teacherId}")
     public void deleteCourseTeacher(@PathVariable Long courseId, @PathVariable Long teacherId)
     {
-        Long companyId = 1232141425L;
+                SecurityUtil.User user = SecurityUtil.getUser();
+        Long companyId = Long.valueOf(user.getCompanyId());
         courseTeacherService.deleteCourseTeacher(companyId,courseId, teacherId);
     }
 

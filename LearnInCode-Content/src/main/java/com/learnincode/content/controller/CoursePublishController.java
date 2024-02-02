@@ -3,6 +3,7 @@ package com.learnincode.content.controller;
 
 import com.learnincode.content.model.dto.CoursePreviewDto;
 import com.learnincode.content.service.CoursePublishService;
+import com.learnincode.content.utils.SecurityUtil;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -54,7 +55,8 @@ public class CoursePublishController {
     @ResponseBody
     @PostMapping("/courseaudit/commit/{courseId}")
     public void commitAudit(@PathVariable("courseId") Long courseId){
-        Long companyId = 1232141425L;
+                SecurityUtil.User user = SecurityUtil.getUser();
+        Long companyId = Long.valueOf(user.getCompanyId());
         coursePublishService.commitAudit(companyId,courseId);
     }
 
@@ -66,7 +68,8 @@ public class CoursePublishController {
     @ResponseBody
     @PostMapping ("/coursepublish/{courseId}")
     public void coursepublish(@PathVariable("courseId") Long courseId){
-        Long companyId = 1232141425L;
+                SecurityUtil.User user = SecurityUtil.getUser();
+        Long companyId = Long.valueOf(user.getCompanyId());
         coursePublishService.coursepublish(companyId, courseId);
 
     }
