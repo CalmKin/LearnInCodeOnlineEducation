@@ -24,6 +24,7 @@
         <module>LearnInCode-Message-SDK</module>
         <module>LearnInCode-Search</module>
         <module>LearnInCode-Auth</module>
+        <module>LearnInCode-CheckCode</module>
     </modules>
 
     <packaging>pom</packaging>
