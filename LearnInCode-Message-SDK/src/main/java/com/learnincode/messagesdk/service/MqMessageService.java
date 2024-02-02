@@ -2,12 +2,14 @@ package com.learnincode.messagesdk.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.learnincode.messagesdk.model.po.MqMessage;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
  *  服务类
  */
+@Service
 public interface MqMessageService extends IService<MqMessage> {
 
     /**

@@ -3,9 +3,15 @@ Content-Type: application/json
 
 {}
 
-###
+### 生成jwt令牌
 POST http://127.0.0.1:63070/auth/oauth/token?client_id=WebApp&client_secret=WebApp&grant_type=password&username=zhangsan&password=123
 
 
-###
+### 校验jwt
 POST http://127.0.0.1:63070/auth/oauth/check_token?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsibGVhcm4taW4tY29kZSJdLCJ1c2VyX25hbWUiOiJ6aGFuZ3NhbiIsInNjb3BlIjpbImFsbCJdLCJleHAiOjE3MDY4NjI3NTMsImF1dGhvcml0aWVzIjpbInAxIl0sImp0aSI6IjZmMDA2OTY4LTdhZGYtNGI3Mi05NGMwLWM3YjM4ZTYwN2RhZSIsImNsaWVudF9pZCI6IldlYkFwcCJ9.x1MotzoB50u3S0Fh02cnxdyvHSzSMCn90WInsLe3b_Q
+
+
+### 携带token访问资源服务
+GET http://127.0.0.1:63040/content/course/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsibGVhcm4taW4tY29kZSJdLCJ1c2VyX25hbWUiOiJ6aGFuZ3NhbiIsInNjb3BlIjpbImFsbCJdLCJleHAiOjE3MDY4NjQ3MDgsImF1dGhvcml0aWVzIjpbInAxIl0sImp0aSI6IjhlMTUxMDIyLTgwNjktNGVhNy05YzBmLTgxNDg0MzY1N2MxOSIsImNsaWVudF9pZCI6IldlYkFwcCJ9.Fb0rAruZXA3XrvmX3zkzijX6vrqtDxL4mqGuc3ObaXI
+
