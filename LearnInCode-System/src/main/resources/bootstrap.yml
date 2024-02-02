@@ -1,7 +1,8 @@
-#server:
-#  servlet:
-#    context-path: /system
-#  port: 63110
+server:
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
 
 
 #微服务配置
