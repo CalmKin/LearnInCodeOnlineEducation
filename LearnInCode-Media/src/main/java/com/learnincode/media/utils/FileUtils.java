@@ -86,7 +86,7 @@ public class FileUtils {
     public String getBigFilePath(String md5Hex)
     {
 
-        return md5Hex.substring(0,1) + "/" + md5Hex.substring(1,1) + "/" + md5Hex;
+        return md5Hex.charAt(0) + "/" + md5Hex.charAt(1) + "/" + md5Hex;
     }
 
 

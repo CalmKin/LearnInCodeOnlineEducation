@@ -104,14 +104,17 @@ public class MediaFileServiceImpl extends ServiceImpl<MediaFilesMapper, MediaFil
      */
     @Override
 //    @Transactional        // 包含网络请求，比较耗时
-    public UploadFileResultDto uploadFile(Long companyId, UploadFileParamsDto paramsDto, String filePath) {
+    public UploadFileResultDto uploadFile(Long companyId, UploadFileParamsDto paramsDto, String filePath, String objectName) {
         // 先判断文件是否存在
         File file = new File(filePath);
         if (!file.exists()) throw new BusinessException("文件不存在");
 
         // 第一部分，上传到MinIO
         String md5Hex = FILE_UTILS.getMd5Hex(filePath);
-        String objectName = FILE_UTILS.getBucketObjectName(filePath);
+
+        // 如果没有传objectName，默认用年月日
+        if(StringUtils.isEmpty(objectName))  objectName = FILE_UTILS.getBucketObjectName(filePath);
+
         String mimeType = FILE_UTILS.getMimeType(filePath);
 
         MediaFiles mediaFiles = mediaFilesMapper.selectById(md5Hex);
@@ -248,18 +251,18 @@ public class MediaFileServiceImpl extends ServiceImpl<MediaFilesMapper, MediaFil
     public RestResponse<Boolean> checkchunk(String fileMd5, int chunkOrder) {
         // 分块文件夹路径
         String chunkPath = FILE_UTILS.getBigFilePath(fileMd5) + "/chunk/" + chunkOrder;
-
+        GetObjectResponse object = null;
         try {
-            GetObjectResponse object = minioClient.getObject(GetObjectArgs.builder()
+             object = minioClient.getObject(GetObjectArgs.builder()
                     .bucket(video_bucket)
                     .object(chunkPath)
                     .build());
-            // 分块存在
-            if(object != null) return RestResponse.success(true);
         } catch (Exception e) {
             e.printStackTrace();
-            log.debug("分块  {} 已经存在，无需上传", chunkOrder);
+            log.error("分块文件不存在", chunkOrder);
         }
+        // 分块存在
+        if(object != null) return RestResponse.success(true);
         // 分块不存在
         return RestResponse.success(false);
     }

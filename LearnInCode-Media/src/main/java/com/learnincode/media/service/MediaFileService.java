@@ -30,7 +30,7 @@ public interface MediaFileService extends IService<MediaFiles> {
  public PageResult<MediaFiles> queryMediaFiles(Long companyId, PageParams pageParams, QueryMediaParamsDto queryMediaParamsDto);
 
 
- UploadFileResultDto uploadFile(Long companyId, UploadFileParamsDto paramsDto, String filePath);
+ UploadFileResultDto uploadFile(Long companyId, UploadFileParamsDto paramsDto, String filePath,String objectName);
 
     @Transactional
     MediaFiles saveFileToDB(Long companyId, String fileMd5, UploadFileParamsDto uploadFileParamsDto, String bucket, String objectName);

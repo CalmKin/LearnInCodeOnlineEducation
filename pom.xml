@@ -21,6 +21,8 @@
         <module>LearnInCode-System</module>
         <module>LearnInCode-Gateway</module>
         <module>LearnInCode-Media</module>
+        <module>LearnInCode-Message-SDK</module>
+        <module>LearnInCode-Search</module>
     </modules>
 
     <packaging>pom</packaging>

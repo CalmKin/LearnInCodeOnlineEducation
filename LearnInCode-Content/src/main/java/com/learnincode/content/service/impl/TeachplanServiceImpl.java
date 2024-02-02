@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.learnincode.base.exception.BusinessException;
 import com.learnincode.content.mapper.TeachplanMapper;
 import com.learnincode.content.mapper.TeachplanMediaMapper;
+import com.learnincode.content.model.dto.BindTeachplanMediaDto;
 import com.learnincode.content.model.dto.SaveTeachplanDto;
 import com.learnincode.content.model.dto.TeachplanDto;
 import com.learnincode.content.model.po.Teachplan;
@@ -159,6 +160,41 @@ public class TeachplanServiceImpl extends ServiceImpl<TeachplanMapper, Teachplan
         // 更新两个课程的信息
         updateById(teachplan);
         updateById(prePlan);
+    }
+
+    /**
+     * 将视频文件和教学计划关联
+     * @param bindTeachplanMediaDto
+     */
+    @Override
+    @Transactional
+    public void attachMedia(BindTeachplanMediaDto bindTeachplanMediaDto) {
+        // 根据教学计划查找对应课程Id
+        Teachplan teachplan = teachplanMapper.selectOne(new LambdaQueryWrapper<Teachplan>().eq(Teachplan::getId, bindTeachplanMediaDto
+                .getTeachplanId()));
+        if(teachplan == null)
+        {
+            throw new BusinessException("教学计划不存在");
+        }
+
+        Integer grade = teachplan.getGrade();
+        if(grade!=2){
+            throw new BusinessException("只允许第二级教学计划绑定媒资文件");
+        }
+
+        Long courseId = teachplan.getCourseId();
+
+        TeachplanMedia teachplanMedia = new TeachplanMedia();
+        BeanUtils.copyProperties(bindTeachplanMediaDto, teachplanMedia);
+        teachplanMedia.setCourseId(courseId);
+
+        // 先删除原来的绑定关系
+        teachplanMediaMapper.delete(new LambdaQueryWrapper<TeachplanMedia>()
+                .eq(TeachplanMedia::getTeachplanId,bindTeachplanMediaDto.getTeachplanId()));
+
+        // 再添加新的绑定关系
+        teachplanMediaMapper.insert(teachplanMedia);
+
     }
 
 }

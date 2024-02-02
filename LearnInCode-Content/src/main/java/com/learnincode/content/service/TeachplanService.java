@@ -1,6 +1,7 @@
 package com.learnincode.content.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.learnincode.content.model.dto.BindTeachplanMediaDto;
 import com.learnincode.content.model.dto.SaveTeachplanDto;
 import com.learnincode.content.model.dto.TeachplanDto;
 import com.learnincode.content.model.po.Teachplan;
@@ -23,4 +24,6 @@ public interface TeachplanService extends IService<Teachplan> {
     void movedownTeachplan(Long id);
 
     void moveupTeachplan(Long id);
+
+    void attachMedia(BindTeachplanMediaDto bindTeachplanMediaDto);
 }
