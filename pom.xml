@@ -23,6 +23,7 @@
         <module>LearnInCode-Media</module>
         <module>LearnInCode-Message-SDK</module>
         <module>LearnInCode-Search</module>
+        <module>LearnInCode-Auth</module>
     </modules>
 
     <packaging>pom</packaging>
