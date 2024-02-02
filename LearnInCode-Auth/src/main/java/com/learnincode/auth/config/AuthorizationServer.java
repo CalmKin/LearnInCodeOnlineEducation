@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -33,8 +34,8 @@ import javax.annotation.Resource;
           throws Exception {
         clients.inMemory()// 使用in-memory存储
                 .withClient("WebApp")// client_id
-                .secret("WebApp") //客户端密钥
-//                .secret(new BCryptPasswordEncoder().encode("WebApp"))//客户端密钥
+//                .secret("WebApp")  //客户端密钥
+                .secret(new BCryptPasswordEncoder().encode("WebApp"))  //客户端密钥
                 .resourceIds("learn-in-code") //资源列表
                 .authorizedGrantTypes("authorization_code", "password","client_credentials","implicit","refresh_token")// 该client允许的授权类型authorization_code,password,refresh_token,implicit,client_credentials
                 .scopes("all")// 允许的授权范围
