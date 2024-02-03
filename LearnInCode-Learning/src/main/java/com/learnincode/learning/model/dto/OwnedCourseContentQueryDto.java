@@ -1,6 +1,6 @@
 package com.learnincode.learning.model.dto;
 
-import com.learnincode.learning.model.po.CourseTables;
+import com.learnincode.learning.model.po.OwnedCourse;
 import lombok.Data;
 import lombok.ToString;
 
@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @ToString
-public class MyCourseTableItemDto extends CourseTables {
+public class OwnedCourseContentQueryDto extends OwnedCourse {
 
     /**
      * 最近学习时间

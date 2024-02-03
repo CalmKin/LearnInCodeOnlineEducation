@@ -8,7 +8,7 @@ import lombok.ToString;
  */
  @Data
  @ToString
-public class MyCourseTableParams {
+public class OwnedCourseQueryParams {
 
      String userId;
 

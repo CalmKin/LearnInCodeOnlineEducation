@@ -1,10 +1,10 @@
 package com.learnincode.learning.controller;
 
 import com.learnincode.base.model.PageResult;
-import com.learnincode.learning.model.dto.ChooseCourseDto;
-import com.learnincode.learning.model.dto.CourseTablesDto;
-import com.learnincode.learning.model.dto.MyCourseTableParams;
-import com.learnincode.learning.model.po.CourseTables;
+import com.learnincode.learning.model.dto.ChoosedCourseDto;
+import com.learnincode.learning.model.dto.OwnedCourseStatusDto;
+import com.learnincode.learning.model.dto.OwnedCourseQueryParams;
+import com.learnincode.learning.model.po.OwnedCourse;
 import com.learnincode.learning.service.MyCourseTablesService;
 import com.learnincode.learning.utils.SecurityUtil;
 import io.swagger.annotations.Api;
@@ -30,7 +30,7 @@ public class MyCourseTablesController {
 
     @ApiOperation("添加选课")
     @PostMapping("/choosecourse/{courseId}")
-    public ChooseCourseDto addChooseCourse(@PathVariable("courseId") Long courseId) {
+    public ChoosedCourseDto addChooseCourse(@PathVariable("courseId") Long courseId) {
 
         SecurityUtil.XcUser user = SecurityUtil.getUser();
         String userId = user.getId();
@@ -40,15 +40,17 @@ public class MyCourseTablesController {
 
     @ApiOperation("查询学习资格")
     @PostMapping("/choosecourse/learnstatus/{courseId}")
-    public CourseTablesDto getLearnstatus(@PathVariable("courseId") Long courseId) {
+    public OwnedCourseStatusDto getLearnstatus(@PathVariable("courseId") Long courseId) {
 
-        return null;
+        SecurityUtil.XcUser user = SecurityUtil.getUser();
+        String userId = user.getId();
 
+        return myCourseTablesService.getLearningStatus(userId, courseId);
     }
 
     @ApiOperation("我的课程表")
     @GetMapping("/mycoursetable")
-    public PageResult<CourseTables> mycoursetable(MyCourseTableParams params) {
+    public PageResult<OwnedCourse> mycoursetable(OwnedCourseQueryParams params) {
         return null;
     }
 

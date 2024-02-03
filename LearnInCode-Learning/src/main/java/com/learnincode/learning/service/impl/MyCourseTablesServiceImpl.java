@@ -4,14 +4,16 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.learnincode.base.exception.BusinessException;
 import com.learnincode.learning.feignclient.ContentServiceClient;
 import com.learnincode.learning.mapper.ChooseCourseMapper;
-import com.learnincode.learning.mapper.CourseTablesMapper;
-import com.learnincode.learning.model.dto.ChooseCourseDto;
-import com.learnincode.learning.model.po.ChooseCourse;
+import com.learnincode.learning.mapper.OwnedCourseMapper;
+import com.learnincode.learning.model.dto.ChoosedCourseDto;
+import com.learnincode.learning.model.dto.OwnedCourseStatusDto;
+import com.learnincode.learning.model.po.ChoosedCourse;
 import com.learnincode.learning.model.po.CoursePublish;
-import com.learnincode.learning.model.po.CourseTables;
+import com.learnincode.learning.model.po.OwnedCourse;
 import com.learnincode.learning.service.MyCourseTablesService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,16 +28,17 @@ public class MyCourseTablesServiceImpl implements MyCourseTablesService {
     ChooseCourseMapper chooseCourseMapper;
 
     @Autowired
-    CourseTablesMapper courseTablesMapper;
-    
+    OwnedCourseMapper ownedCourseMapper;
+
     /**
      * @author CalmKin
-     * @description 添加课程到我的选课表中,
+     * @description 添加课程到我的选课表中
      * @version 1.0
      * @date 2024/2/3 17:44
      */
     @Override
-    public ChooseCourseDto addChooseCourse(String userId, Long courseId) {
+    @Transactional
+    public ChoosedCourseDto addChooseCourse(String userId, Long courseId) {
 
         // 先从已发布课程表里面查询对应课程信息
         CoursePublish coursepublish = contentServiceClient.getCoursepublish(courseId);
@@ -45,102 +48,147 @@ public class MyCourseTablesServiceImpl implements MyCourseTablesService {
         // 获取收费信息
         String charge = coursepublish.getCharge();
 
+        ChoosedCourse choosedCourse = null;
         // 如果是免费课程
-        if("201000".equals(charge))
-        {
+        if ("201000".equals(charge)) {
             // 添加免费课程
-            ChooseCourse chooseCourse = addFreeCoruse(userId, coursepublish);
+            choosedCourse = addCoruse(userId, coursepublish, false);
             // 添加我的课程表
 
-        }
-        else
-        {
+        } else {
             // 添加收费课程到选课记录表
+            choosedCourse = addCoruse(userId, coursepublish, true);
         }
 
-        return null;
+        ChoosedCourseDto choosedCourseDto = new ChoosedCourseDto();
+        OwnedCourseStatusDto learningStatus = getLearningStatus(userId, courseId);
+        BeanUtils.copyProperties(learningStatus, choosedCourseDto);
+
+        return choosedCourseDto;
     }
 
 
     /**
      * @author CalmKin
-     * @description 添加免费课程,免费课程加入选课记录表、我的课程表
+     * @description 判断学习资格
+     * 学习资格状态 [{"code":"702001","desc":"正常学习"},
+     * {"code":"702002","desc":"没有选课或选课后没有支付"},
+     * {"code":"702003","desc":"已过期需要申请续期或重新支付"}]
      * @version 1.0
-     * @date 2024/2/3 17:52
+     * @date 2024/2/3 18:54
      */
-    public ChooseCourse addFreeCoruse(String userId, CoursePublish coursepublish) {
+    @Override
+    public OwnedCourseStatusDto getLearningStatus(String userId, Long courseId) {
 
-        // 因为没有主键约束，所以先查询是否存在免费且选课成功的记录
-        LambdaQueryWrapper<ChooseCourse> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper = queryWrapper.eq(ChooseCourse::getUserId, userId)
-                .eq(ChooseCourse::getCourseId, coursepublish.getId())
-                .eq(ChooseCourse::getOrderType, "700001")//免费课程
-                .eq(ChooseCourse::getStatus, "701001");//选课成功
+        // 查询我的课程表,因为有些课程是拥有过但是过期了的
+        OwnedCourse ownedCourse = getOwnedCourse(userId, courseId);
 
-        List<ChooseCourse> chooseCourses = chooseCourseMapper.selectList(queryWrapper);
-
-        // 已经有了，直接返回，不进行插入
-        if(chooseCourses != null && chooseCourses.size()>0)
-        {
-            return chooseCourses.get(0);
+        OwnedCourseStatusDto ownedCourseStatus = null;
+        // 如果查不到，说明没有选或者选完后没有支付
+        if (ownedCourse == null) {
+            ownedCourseStatus = new OwnedCourseStatusDto();
+            //没有选课或选课后没有支付
+            ownedCourseStatus.setLearnStatus("702002");
+            return ownedCourseStatus;
         }
 
-        // 往选课记录插入
-        ChooseCourse chooseCourse = new ChooseCourse();
-        chooseCourse.setCourseId(coursepublish.getId());    // 设置课程id
-        chooseCourse.setCourseName(coursepublish.getName());//课程名称
-        chooseCourse.setCoursePrice(0f);//免费课程价格为0
-        chooseCourse.setUserId(userId); // 用户id
-        chooseCourse.setCompanyId(coursepublish.getCompanyId()); // 课程所属机构id
-        chooseCourse.setOrderType("700001");//免费课程
-        LocalDateTime now = LocalDateTime.now();
-        chooseCourse.setCreateDate(now);
-        chooseCourse.setStatus("701001");//选课状态：选课成功
+        // 如果能查到，还要检查课程有没有过期
+        BeanUtils.copyProperties(ownedCourse, ownedCourseStatus);
+        // 如果已经过期
+        boolean expired = ownedCourse.getValidtimeEnd().isBefore(LocalDateTime.now());
 
-        chooseCourse.setValidDays(365);//免费课程默认365
-        chooseCourse.setValidtimeStart(now); // 生效时间
-        chooseCourse.setValidtimeEnd(now.plusDays(365)); // 结束时间
-        chooseCourseMapper.insert(chooseCourse);
+        String learnStatus = expired ? "702003" : "702001";
 
-        return chooseCourse;
+        ownedCourseStatus.setLearnStatus(learnStatus);
+
+        return ownedCourseStatus;
     }
 
 
     /**
-     *  添加到我的课程表
-     * @param chooseCourse 选课记录
+     * @author CalmKin
+     * @description 添加课程加入选课记录表
+     * @version 1.0
+     * @date 2024/2/3 17:52
+     */
+    public ChoosedCourse addCoruse(String userId, CoursePublish coursepublish, boolean isCharge) {
+
+        String orderType = isCharge ? "700002" : "700001";
+        String courseInitStatus = isCharge ? "701002" : "701001";
+
+        // 因为没有主键约束，所以先查询是否存在免费且选课成功的记录
+        LambdaQueryWrapper<ChoosedCourse> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper = queryWrapper.eq(ChoosedCourse::getUserId, userId)
+                .eq(ChoosedCourse::getCourseId, coursepublish.getId())
+                .eq(ChoosedCourse::getOrderType, orderType)//免费课程
+                .eq(ChoosedCourse::getStatus, courseInitStatus);//选课成功
+
+        List<ChoosedCourse> choosedCours = chooseCourseMapper.selectList(queryWrapper);
+
+        // 已经有了，直接返回，不进行插入
+        if (choosedCours != null && choosedCours.size() > 0) {
+            return choosedCours.get(0);
+        }
+
+        // 往选课记录插入
+        ChoosedCourse choosedCourse = new ChoosedCourse();
+        choosedCourse.setCourseId(coursepublish.getId());    // 设置课程id
+        choosedCourse.setCourseName(coursepublish.getName());//课程名称
+        choosedCourse.setCoursePrice(0f);//免费课程价格为0
+        choosedCourse.setUserId(userId); // 用户id
+        choosedCourse.setCompanyId(coursepublish.getCompanyId()); // 课程所属机构id
+        choosedCourse.setOrderType(orderType);//免费课程
+        LocalDateTime now = LocalDateTime.now();
+        choosedCourse.setCreateDate(now);
+        choosedCourse.setStatus(courseInitStatus);//选课状态：选课成功
+
+        choosedCourse.setValidDays(365);//免费课程默认365
+        choosedCourse.setValidtimeStart(now); // 生效时间
+        choosedCourse.setValidtimeEnd(now.plusDays(365)); // 结束时间
+        chooseCourseMapper.insert(choosedCourse);
+
+        return choosedCourse;
+    }
+
+
+    /**
+     * 添加到我的课程表
+     *
+     * @param choosedCourse 选课记录
      * @return
      */
-    public CourseTables addMyCourseTables(ChooseCourse chooseCourse)
-    {
+    public OwnedCourse addMyCourseTables(ChoosedCourse choosedCourse) {
         // 先进行判断，只有选课成功且没有过期的课程才能添加
-        String status = chooseCourse.getStatus();
-        if(!"701001".equals(status))
-        {
+        String status = choosedCourse.getStatus();
+        if (!"701001".equals(status)) {
             throw new BusinessException("选课未成功,无法添加到课程表");
         }
 
-        String userId = chooseCourse.getUserId();
-        Long courseId = chooseCourse.getCourseId();
+        String userId = choosedCourse.getUserId();
+        Long courseId = choosedCourse.getCourseId();
 
         // 因为有主键约束，所以需要先查询是否已经存在，没有再执行插入
-        CourseTables courseTables = courseTablesMapper.
-                selectOne(new LambdaQueryWrapper<CourseTables>()
-                        .eq(CourseTables::getUserId, userId)
-                        .eq(CourseTables::getCourseId, courseId));
-        if(courseTables != null) return courseTables;
+        OwnedCourse ownedCourse = getOwnedCourse(userId, courseId);
+        if (ownedCourse != null) return ownedCourse;
 
 
-        CourseTables courseTablesNew = new CourseTables();
-        BeanUtils.copyProperties(chooseCourse, courseTablesNew);
+        OwnedCourse ownedCourseNew = new OwnedCourse();
+        BeanUtils.copyProperties(choosedCourse, ownedCourseNew);
         // 补全字段
-        courseTablesNew.setChooseCourseId(chooseCourse.getId());    // 选课
-        courseTablesNew.setCourseType(chooseCourse.getOrderType()); // 选课类型
-        courseTablesNew.setUpdateDate(LocalDateTime.now());
+        ownedCourseNew.setChooseCourseId(choosedCourse.getId());    // 选课
+        ownedCourseNew.setCourseType(choosedCourse.getOrderType()); // 选课类型
+        ownedCourseNew.setUpdateDate(LocalDateTime.now());
 
-        return courseTablesNew;
+        return ownedCourseNew;
 
 
+    }
+
+    private OwnedCourse getOwnedCourse(String userId, Long courseId) {
+        return ownedCourseMapper.
+                selectOne(new LambdaQueryWrapper<OwnedCourse>()
+                        .eq(OwnedCourse::getUserId, userId)
+                        .eq(OwnedCourse::getCourseId, courseId));
     }
 
 }

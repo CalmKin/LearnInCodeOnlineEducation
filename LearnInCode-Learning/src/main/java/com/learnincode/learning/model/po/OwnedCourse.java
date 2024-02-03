@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Data
 @TableName("xc_course_tables")
-public class CourseTables implements Serializable {
+public class OwnedCourse implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

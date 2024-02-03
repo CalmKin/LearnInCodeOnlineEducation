@@ -1,7 +1,7 @@
 package com.learnincode.learning.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.learnincode.learning.model.po.CourseTables;
+import com.learnincode.learning.model.po.OwnedCourse;
 
 /**
  * <p>
@@ -10,6 +10,6 @@ import com.learnincode.learning.model.po.CourseTables;
  *
  * @author itcast
  */
-public interface CourseTablesMapper extends BaseMapper<CourseTables> {
+public interface OwnedCourseMapper extends BaseMapper<OwnedCourse> {
 
 }

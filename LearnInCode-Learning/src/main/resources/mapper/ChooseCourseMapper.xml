@@ -3,7 +3,7 @@
 <mapper namespace="com.learnincode.learning.mapper.ChooseCourseMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.learnincode.learning.model.po.ChooseCourse">
+    <resultMap id="BaseResultMap" type="com.learnincode.learning.model.po.ChoosedCourse">
         <id column="id" property="id" />
         <result column="course_id" property="courseId" />
         <result column="course_name" property="courseName" />
