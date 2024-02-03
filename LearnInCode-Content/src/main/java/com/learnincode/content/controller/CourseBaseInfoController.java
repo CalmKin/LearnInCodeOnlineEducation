@@ -1,6 +1,7 @@
 package com.learnincode.content.controller;
 
 
+import com.learnincode.base.exception.BusinessException;
 import com.learnincode.base.exception.ValidationGroups;
 import com.learnincode.base.model.PageParams;
 import com.learnincode.base.model.PageResult;
@@ -12,6 +13,7 @@ import com.learnincode.content.model.po.CourseBase;
 import com.learnincode.content.service.CourseBaseService;
 import com.learnincode.content.utils.SecurityUtil;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -40,7 +42,17 @@ public class CourseBaseInfoController {
     @PostMapping("/list")
     public PageResult<CourseBase> list(PageParams pageParams, @RequestBody(required = false) QueryCourseParamsDto queryCourseParamsDto)
     {
-       return courseBaseService.pageCourseBase(pageParams,queryCourseParamsDto);
+        SecurityUtil.User user = SecurityUtil.getUser();
+
+        String companyId = user.getCompanyId();
+        if(StringUtils.isEmpty(companyId))
+        {
+            throw new BusinessException("没有权限访问");
+        }
+
+
+
+        return courseBaseService.pageCourseBase(Long.valueOf(companyId),pageParams,queryCourseParamsDto);
     }
 
     /**

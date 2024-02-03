@@ -17,7 +17,7 @@ import com.learnincode.content.model.po.CourseBase;
 */
 public interface CourseBaseService extends IService<CourseBase> {
 
-    PageResult<CourseBase> pageCourseBase(PageParams pageParams, QueryCourseParamsDto queryCourseParamsDto);
+    PageResult<CourseBase> pageCourseBase(Long companyId,PageParams pageParams, QueryCourseParamsDto queryCourseParamsDto);
 
     CourseBaseInfoDto addCourseBaseInfo(Long companyId , AddCourseDto addCourseDto);
 
