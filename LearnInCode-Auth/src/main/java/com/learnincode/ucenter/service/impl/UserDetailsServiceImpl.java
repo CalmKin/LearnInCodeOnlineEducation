@@ -2,9 +2,11 @@ package com.learnincode.ucenter.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.learnincode.base.exception.BusinessException;
+import com.learnincode.ucenter.mapper.MenuMapper;
 import com.learnincode.ucenter.mapper.UserMapper;
 import com.learnincode.ucenter.model.dto.AuthParamsDto;
 import com.learnincode.ucenter.model.dto.UserExt;
+import com.learnincode.ucenter.model.po.Menu;
 import com.learnincode.ucenter.model.po.User;
 import com.learnincode.ucenter.service.AuthService;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +16,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -24,6 +30,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     ApplicationContext applicationContext;
+
+    @Autowired
+    MenuMapper menuMapper;
 
     /**
      * @author CalmKin
@@ -61,9 +70,24 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     private UserDetails getUserPrincipal(UserExt userExt) {
         //用户权限,如果不加报Cannot pass a null GrantedAuthority collection
-        String[] authorities = {"test"};
+//        String[] authorities = {"test"};
 
         String password = userExt.getPassword();
+
+        List<Menu> menus = menuMapper.selectPermissionByUserId(userExt.getId());
+        List<String> permission = new ArrayList<>();
+
+        if(!CollectionUtils.isEmpty(menus))
+        {
+            menus.forEach(item -> {
+                permission.add(item.getCode());
+            });
+        }
+
+        //将用户权限放在UserExt中
+        userExt.setPermissions(permission);
+        // 转化成数组,方便保存在security上下文
+        String[] authorities = permission.toArray(new String[0]);
 
         // 排除敏感信息
         excludeSensitiveInfo(userExt);
