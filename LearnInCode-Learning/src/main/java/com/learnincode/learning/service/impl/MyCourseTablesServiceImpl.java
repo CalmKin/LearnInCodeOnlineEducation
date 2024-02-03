@@ -4,10 +4,13 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.learnincode.base.exception.BusinessException;
 import com.learnincode.learning.feignclient.ContentServiceClient;
 import com.learnincode.learning.mapper.ChooseCourseMapper;
+import com.learnincode.learning.mapper.CourseTablesMapper;
 import com.learnincode.learning.model.dto.ChooseCourseDto;
 import com.learnincode.learning.model.po.ChooseCourse;
 import com.learnincode.learning.model.po.CoursePublish;
+import com.learnincode.learning.model.po.CourseTables;
 import com.learnincode.learning.service.MyCourseTablesService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
@@ -22,6 +25,9 @@ public class MyCourseTablesServiceImpl implements MyCourseTablesService {
     @Autowired
     ChooseCourseMapper chooseCourseMapper;
 
+    @Autowired
+    CourseTablesMapper courseTablesMapper;
+    
     /**
      * @author CalmKin
      * @description 添加课程到我的选课表中,
@@ -99,5 +105,42 @@ public class MyCourseTablesServiceImpl implements MyCourseTablesService {
         return chooseCourse;
     }
 
+
+    /**
+     *  添加到我的课程表
+     * @param chooseCourse 选课记录
+     * @return
+     */
+    public CourseTables addMyCourseTables(ChooseCourse chooseCourse)
+    {
+        // 先进行判断，只有选课成功且没有过期的课程才能添加
+        String status = chooseCourse.getStatus();
+        if(!"701001".equals(status))
+        {
+            throw new BusinessException("选课未成功,无法添加到课程表");
+        }
+
+        String userId = chooseCourse.getUserId();
+        Long courseId = chooseCourse.getCourseId();
+
+        // 因为有主键约束，所以需要先查询是否已经存在，没有再执行插入
+        CourseTables courseTables = courseTablesMapper.
+                selectOne(new LambdaQueryWrapper<CourseTables>()
+                        .eq(CourseTables::getUserId, userId)
+                        .eq(CourseTables::getCourseId, courseId));
+        if(courseTables != null) return courseTables;
+
+
+        CourseTables courseTablesNew = new CourseTables();
+        BeanUtils.copyProperties(chooseCourse, courseTablesNew);
+        // 补全字段
+        courseTablesNew.setChooseCourseId(chooseCourse.getId());    // 选课
+        courseTablesNew.setCourseType(chooseCourse.getOrderType()); // 选课类型
+        courseTablesNew.setUpdateDate(LocalDateTime.now());
+
+        return courseTablesNew;
+
+
+    }
 
 }
