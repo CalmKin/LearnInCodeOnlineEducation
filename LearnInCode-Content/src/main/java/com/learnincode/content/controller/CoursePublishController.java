@@ -2,6 +2,7 @@ package com.learnincode.content.controller;
 
 
 import com.learnincode.content.model.dto.CoursePreviewDto;
+import com.learnincode.content.model.po.CoursePublish;
 import com.learnincode.content.service.CoursePublishService;
 import com.learnincode.content.utils.SecurityUtil;
 import io.swagger.annotations.ApiOperation;
@@ -72,6 +73,21 @@ public class CoursePublishController {
         Long companyId = Long.valueOf(user.getCompanyId());
         coursePublishService.coursepublish(companyId, courseId);
 
+    }
+
+
+    /**
+     * @author CalmKin
+     * @description 对其他服务暴露的查询课程发布信息接口，r前缀标识为内部服务，不受权限控制
+     * @version 1.0
+     * @date 2024/2/3 16:26
+     */
+    @ApiOperation("查询课程发布信息")
+    @ResponseBody
+    @GetMapping("/r/coursepublish/{courseId}")
+    public CoursePublish getCoursepublish(@PathVariable("courseId") Long courseId) {
+        CoursePublish coursePublish = coursePublishService.getCoursePublish(courseId);
+        return coursePublish;
     }
 
 
