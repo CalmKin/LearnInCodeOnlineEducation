@@ -39,12 +39,6 @@ public class OrderServiceImpl implements OrderService {
     PayRecordMapper payRecordMapper;
 
     @Override
-    public PayRecordDto generatePayCode(String userId, CreateOrderDto createOrderDto) {
-
-        return null;
-    }
-
-    @Override
     @Transactional
     public PayRecordDto createOrder(String userId, CreateOrderDto createOrderDto) {
 
@@ -79,9 +73,18 @@ public class OrderServiceImpl implements OrderService {
         return payRecordDto;
     }
 
+    @Override
+    public PayRecord getPayRecordByPayno(String payNo) {
+        return payRecordMapper.selectOne(new LambdaQueryWrapper<PayRecord>().eq(PayRecord::getPayNo,payNo));
+    }
 
 
-
+    /**
+     * @author CalmKin
+     * @description 保存支付记录
+     * @version 1.0
+     * @date 2024/2/4 14:32
+     */
     public PayRecord createPayRecord(Orders orders){
         
         if(orders==null){
@@ -111,6 +114,13 @@ public class OrderServiceImpl implements OrderService {
     }
     
 
+
+    /**
+     * @author CalmKin
+     * @description 保存订单
+     * @version 1.0
+     * @date 2024/2/4 14:32
+     */
     @Transactional
     public Orders saveOrders(String userId,  CreateOrderDto createOrderDto)
     {

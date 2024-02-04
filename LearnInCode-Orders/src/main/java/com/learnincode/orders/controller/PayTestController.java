@@ -55,10 +55,11 @@ public class PayTestController {
         alipayRequest.setBizContent("{" +
                 "    \"out_trade_no\":\"202210100010101002\"," +    // 自己业务的订单号
                 "    \"total_amount\":0.1," +   // 支付金额
-                "    \"subject\":\"Iphone6 16G\"," +
-                "    \"product_code\":\"QUICK_WAP_WAY\"" +
+                "    \"subject\":\"Iphone6 16G\"," +    // 商品名称
+                "    \"product_code\":\"QUICK_WAP_WAY\"" +  // 固定
                 "  }");//填充业务参数
 
+        // 请求得到html页面
         String form = alipayClient.pageExecute(alipayRequest).getBody(); //调用SDK生成表单
         httpResponse.setContentType("text/html;charset=" + AlipayConfig.CHARSET);
         httpResponse.getWriter().write(form);//直接将完整的表单html输出到页面
