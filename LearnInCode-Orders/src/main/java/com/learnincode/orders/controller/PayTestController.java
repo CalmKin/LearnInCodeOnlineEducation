@@ -74,7 +74,7 @@ public class PayTestController {
      * @version 1.0
      * @date 2024/2/4 10:52
      */
-    @PostMapping("/paynotify")
+    @PostMapping("/paynotifytest")
     public void paynotify(HttpServletRequest request,HttpServletResponse response) throws Exception {
         Map<String,String> params = new HashMap<String,String>();
         Map requestParams = request.getParameterMap();

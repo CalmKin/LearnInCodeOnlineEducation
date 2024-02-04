@@ -104,8 +104,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
-     * 查询支付结果，并保存支付状态
-     *
+     * 主动查询支付结果，并保存支付状态
      * @param payNo
      * @return
      */
