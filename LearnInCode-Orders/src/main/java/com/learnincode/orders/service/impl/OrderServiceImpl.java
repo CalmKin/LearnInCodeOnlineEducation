@@ -13,8 +13,10 @@ import com.learnincode.orders.model.po.OrdersGoods;
 import com.learnincode.orders.model.po.PayRecord;
 import com.learnincode.orders.service.OrderService;
 import com.learnincode.orders.utils.IdWorkerUtils;
+import com.learnincode.orders.utils.QRCodeUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +26,8 @@ import java.util.List;
 @Service
 public class OrderServiceImpl implements OrderService {
 
+    @Value("${pay.qrcodeurl}")  // 需要生成二维码的url
+    String qrcodeurl;
 
     @Autowired
     OrdersMapper ordersMapper;
@@ -47,13 +51,36 @@ public class OrderServiceImpl implements OrderService {
         //添加商品订单
         Orders orders = saveOrders(userId, createOrderDto);
 
+        if(orders.getStatus().equals("600002"))
+        {
+            throw new BusinessException("订单已支付");
+        }
+
         //添加支付交易记录
+        PayRecord payRecord = createPayRecord(orders);
 
+        //根据支付记录id,生成二维码
+        String qrCode = null;
+        QRCodeUtil qrCodeUtil = new QRCodeUtil();
 
-        //生成二维码
+        // 将支付id填入url中，发送给支付宝
+        try {
+            String url  = String.format(qrcodeurl, payRecord.getPayNo());
+            qrCode = qrCodeUtil.createQRCode(url, 200, 200);
+        } catch (Exception e) {
+            throw new BusinessException("生成二维码失败");
+        }
 
-        return null;
+        // 将生成的二维码包装在支付记录,返回给前端
+        PayRecordDto payRecordDto = new PayRecordDto();
+        BeanUtils.copyProperties(payRecord, payRecordDto);
+        payRecordDto.setQrcode(qrCode);
+
+        return payRecordDto;
     }
+
+
+
 
     public PayRecord createPayRecord(Orders orders){
         
@@ -111,7 +138,12 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderDetail(orderDetail);  // 订单明细
         order.setOrderDescrip(createOrderDto.getOrderDescrip());    // 订单描述
         order.setOutBusinessId(createOrderDto.getOutBusinessId());//选课记录id
-        ordersMapper.insert(order);
+        int insert = ordersMapper.insert(order);
+        if(insert <=0 )
+        {
+            throw new BusinessException("保存订单失败");
+        }
+
 
         // ======================= 插入订单明细表 =======================
         // 获取订单id
