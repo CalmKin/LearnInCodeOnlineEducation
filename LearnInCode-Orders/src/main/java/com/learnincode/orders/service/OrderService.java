@@ -10,4 +10,5 @@ public interface OrderService {
 
     PayRecord getPayRecordByPayno(String payNo);
 
+    PayRecordDto payresult(String payNo);
 }

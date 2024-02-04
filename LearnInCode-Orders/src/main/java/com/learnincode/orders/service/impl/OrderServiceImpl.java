@@ -1,19 +1,28 @@
 package com.learnincode.orders.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.alipay.api.AlipayApiException;
+import com.alipay.api.AlipayClient;
+import com.alipay.api.DefaultAlipayClient;
+import com.alipay.api.request.AlipayTradeQueryRequest;
+import com.alipay.api.response.AlipayTradeQueryResponse;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.learnincode.base.exception.BusinessException;
+import com.learnincode.orders.config.AlipayConfig;
 import com.learnincode.orders.mapper.OrdersGoodsMapper;
 import com.learnincode.orders.mapper.OrdersMapper;
 import com.learnincode.orders.mapper.PayRecordMapper;
 import com.learnincode.orders.model.dto.CreateOrderDto;
 import com.learnincode.orders.model.dto.PayRecordDto;
+import com.learnincode.orders.model.dto.PayStatusDto;
 import com.learnincode.orders.model.po.Orders;
 import com.learnincode.orders.model.po.OrdersGoods;
 import com.learnincode.orders.model.po.PayRecord;
 import com.learnincode.orders.service.OrderService;
 import com.learnincode.orders.utils.IdWorkerUtils;
 import com.learnincode.orders.utils.QRCodeUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,12 +31,22 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Service
+@Slf4j
 public class OrderServiceImpl implements OrderService {
 
     @Value("${pay.qrcodeurl}")  // 需要生成二维码的url
     String qrcodeurl;
+    @Value("${pay.alipay.APP_ID}")
+    String APP_ID;
+    @Value("${pay.alipay.APP_PRIVATE_KEY}")
+    String APP_PRIVATE_KEY;
+
+    @Value("${pay.alipay.ALIPAY_PUBLIC_KEY}")
+    String ALIPAY_PUBLIC_KEY;
+
 
     @Autowired
     OrdersMapper ordersMapper;
@@ -73,9 +92,105 @@ public class OrderServiceImpl implements OrderService {
         return payRecordDto;
     }
 
+    /**
+     * 根据支付流水号查询支付记录
+     * @param payNo
+     * @return
+     */
     @Override
     public PayRecord getPayRecordByPayno(String payNo) {
         return payRecordMapper.selectOne(new LambdaQueryWrapper<PayRecord>().eq(PayRecord::getPayNo,payNo));
+    }
+
+    /**
+     * 查询支付结果，并保存支付状态
+     * @param payNo
+     * @return
+     */
+    @Override
+    public PayRecordDto payresult(String payNo) {
+        // =====================健壮性判断=====================
+        PayRecord payRecord = getPayRecordByPayno(payNo);
+        if (payRecord == null) {
+            throw new BusinessException("请重新点击支付获取二维码");
+        }
+
+        // ===================== 业务幂等性判断=====================
+        //支付状态
+        String status = payRecord.getStatus();
+        //如果支付成功直接返回
+        if ("601002".equals(status)) {
+            PayRecordDto payRecordDto = new PayRecordDto();
+            BeanUtils.copyProperties(payRecord, payRecordDto);
+            return payRecordDto;
+        }
+
+        // 向支付宝查询结果
+
+
+        return null;
+    }
+
+
+    /**
+     * 请求支付宝查询支付结果
+     * @param payNo 支付交易号
+     * @return 支付结果
+     */
+    public PayStatusDto queryPayResultFromAlipay(String payNo){
+
+        //========发起http请求支付宝查询支付结果=============
+        AlipayClient alipayClient = new DefaultAlipayClient(AlipayConfig.URL, APP_ID, APP_PRIVATE_KEY, "json", AlipayConfig.CHARSET, ALIPAY_PUBLIC_KEY, AlipayConfig.SIGNTYPE); //获得初始化的AlipayClient
+        AlipayTradeQueryRequest request = new AlipayTradeQueryRequest();
+
+        // 带上订单号
+        JSONObject bizContent = new JSONObject();
+        bizContent.put("out_trade_no", payNo);
+        request.setBizContent(bizContent.toString());
+        AlipayTradeQueryResponse response = null;
+        try {
+            // 发起请求
+            response = alipayClient.execute(request);
+            if (!response.isSuccess()) {
+                throw new BusinessException("请求支付查询查询失败");
+            }
+        } catch (AlipayApiException e) {
+            log.error("请求支付宝查询支付结果异常:{}", e.toString(), e);
+            throw new BusinessException("请求支付查询查询失败");
+        }
+
+        //==========解析响应结果,获取关键字段=============
+        String resultJson = response.getBody();
+        //响应结果转map
+        Map resultMap = JSON.parseObject(resultJson, Map.class);
+        Map alipay_trade_query_response = (Map) resultMap.get("alipay_trade_query_response");
+
+        //获取支付结果
+        String trade_status = (String) alipay_trade_query_response.get("trade_status");
+        String total_amount = (String) alipay_trade_query_response.get("total_amount");
+        String trade_no = (String) alipay_trade_query_response.get("trade_no");
+
+        // ======================== 保存支付结果========================
+        PayStatusDto payStatusDto = new PayStatusDto();
+        payStatusDto.setApp_id(APP_ID);
+        payStatusDto.setTrade_status(trade_status); // 订单状态
+        payStatusDto.setTrade_no(trade_no); // 支付宝的订单号
+        payStatusDto.setTotal_amount(total_amount); // 总金额
+        payStatusDto.setOut_trade_no(payNo);    // 自己服务的订单号
+
+        return payStatusDto;
+    }
+
+    /**
+     * @description 保存支付宝支付结果
+     * @param payStatusDto  支付结果信息
+     * @return void
+     * @author Mr.M
+     * @date 2022/10/4 16:52
+     */
+    public void saveAliPayStatus(PayStatusDto payStatusDto) {
+
+
     }
 
 

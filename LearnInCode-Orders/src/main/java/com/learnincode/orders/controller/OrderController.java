@@ -105,4 +105,14 @@ public class OrderController {
     }
 
 
+    @ApiOperation("根据支付流水号，主动向支付宝查询支付状态")
+    @GetMapping("/payresult")
+    @ResponseBody
+    public PayRecordDto payresult(String payNo) throws IOException {
+
+        //查询支付结果
+        return orderService.payresult(payNo);
+    }
+
+
 }
