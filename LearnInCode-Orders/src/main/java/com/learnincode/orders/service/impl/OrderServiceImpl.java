@@ -2,12 +2,15 @@ package com.learnincode.orders.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.learnincode.base.exception.BusinessException;
 import com.learnincode.orders.mapper.OrdersGoodsMapper;
 import com.learnincode.orders.mapper.OrdersMapper;
+import com.learnincode.orders.mapper.PayRecordMapper;
 import com.learnincode.orders.model.dto.CreateOrderDto;
 import com.learnincode.orders.model.dto.PayRecordDto;
 import com.learnincode.orders.model.po.Orders;
 import com.learnincode.orders.model.po.OrdersGoods;
+import com.learnincode.orders.model.po.PayRecord;
 import com.learnincode.orders.service.OrderService;
 import com.learnincode.orders.utils.IdWorkerUtils;
 import org.springframework.beans.BeanUtils;
@@ -27,6 +30,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     OrdersGoodsMapper goodsMapper;
+
+    @Autowired
+    PayRecordMapper payRecordMapper;
 
     @Override
     public PayRecordDto generatePayCode(String userId, CreateOrderDto createOrderDto) {
@@ -49,6 +55,34 @@ public class OrderServiceImpl implements OrderService {
         return null;
     }
 
+    public PayRecord createPayRecord(Orders orders){
+        
+        if(orders==null){
+            throw new BusinessException("订单不存在");
+        }
+        // 业务幂等性，防止重复插入支付记录
+        if(orders.getStatus().equals("600002")){
+            throw new BusinessException("订单已支付");
+        }
+        PayRecord payRecord = new PayRecord();
+
+        //生成支付交易流水号
+        long payNo = IdWorkerUtils.getInstance().nextId();
+        payRecord.setPayNo(payNo);
+        payRecord.setOrderId(orders.getId());  //支付对应的订单号
+        payRecord.setOrderName(orders.getOrderName());
+        payRecord.setTotalPrice(orders.getTotalPrice());
+        payRecord.setCurrency("CNY");
+        payRecord.setCreateDate(LocalDateTime.now());
+        payRecord.setStatus("601001");  //支付状态未支付
+        payRecord.setUserId(orders.getUserId());
+
+        // 插入支付记录
+        payRecordMapper.insert(payRecord);
+        return payRecord;
+
+    }
+    
 
     @Transactional
     public Orders saveOrders(String userId,  CreateOrderDto createOrderDto)
