@@ -23,6 +23,7 @@ import com.learnincode.orders.service.OrderService;
 import com.learnincode.orders.utils.IdWorkerUtils;
 import com.learnincode.orders.utils.QRCodeUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -64,8 +65,7 @@ public class OrderServiceImpl implements OrderService {
         //添加商品订单
         Orders orders = saveOrders(userId, createOrderDto);
 
-        if(orders.getStatus().equals("600002"))
-        {
+        if (orders.getStatus().equals("600002")) {
             throw new BusinessException("订单已支付");
         }
 
@@ -78,7 +78,7 @@ public class OrderServiceImpl implements OrderService {
 
         // 将支付id填入url中，发送给支付宝
         try {
-            String url  = String.format(qrcodeurl, payRecord.getPayNo());
+            String url = String.format(qrcodeurl, payRecord.getPayNo());
             qrCode = qrCodeUtil.createQRCode(url, 200, 200);
         } catch (Exception e) {
             throw new BusinessException("生成二维码失败");
@@ -94,21 +94,23 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 根据支付流水号查询支付记录
+     *
      * @param payNo
      * @return
      */
     @Override
     public PayRecord getPayRecordByPayno(String payNo) {
-        return payRecordMapper.selectOne(new LambdaQueryWrapper<PayRecord>().eq(PayRecord::getPayNo,payNo));
+        return payRecordMapper.selectOne(new LambdaQueryWrapper<PayRecord>().eq(PayRecord::getPayNo, payNo));
     }
 
     /**
      * 查询支付结果，并保存支付状态
+     *
      * @param payNo
      * @return
      */
     @Override
-    public PayRecordDto payresult(String payNo) {
+    public PayRecordDto queryPayResult(String payNo) {
         // =====================健壮性判断=====================
         PayRecord payRecord = getPayRecordByPayno(payNo);
         if (payRecord == null) {
@@ -118,26 +120,38 @@ public class OrderServiceImpl implements OrderService {
         // ===================== 业务幂等性判断=====================
         //支付状态
         String status = payRecord.getStatus();
+
         //如果支付成功直接返回
+        PayRecordDto payRecordDto = new PayRecordDto();
         if ("601002".equals(status)) {
-            PayRecordDto payRecordDto = new PayRecordDto();
             BeanUtils.copyProperties(payRecord, payRecordDto);
             return payRecordDto;
         }
 
         // 向支付宝查询结果
+        PayStatusDto payStatusDto = queryPayResultFromAlipay(payNo);
 
+        //==================== 将支付状态保存到数据库====================
 
-        return null;
+        // 保存支付结果,防止事务失效
+        OrderService proxy = (OrderService) AopContext.currentProxy();
+        proxy.saveAliPayStatus(payStatusDto);
+
+        // 重新查询支付记录
+        PayRecord ret = payRecordMapper.selectOne(new LambdaQueryWrapper<PayRecord>().eq(PayRecord::getPayNo, payNo));
+        BeanUtils.copyProperties(ret, payRecordDto);
+
+        return payRecordDto;
     }
 
 
     /**
      * 请求支付宝查询支付结果
+     *
      * @param payNo 支付交易号
      * @return 支付结果
      */
-    public PayStatusDto queryPayResultFromAlipay(String payNo){
+    public PayStatusDto queryPayResultFromAlipay(String payNo) {
 
         //========发起http请求支付宝查询支付结果=============
         AlipayClient alipayClient = new DefaultAlipayClient(AlipayConfig.URL, APP_ID, APP_PRIVATE_KEY, "json", AlipayConfig.CHARSET, ALIPAY_PUBLIC_KEY, AlipayConfig.SIGNTYPE); //获得初始化的AlipayClient
@@ -182,13 +196,73 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
-     * @description 保存支付宝支付结果
-     * @param payStatusDto  支付结果信息
+     * @param payStatusDto 支付宝返回的支付结果信息
      * @return void
-     * @author Mr.M
-     * @date 2022/10/4 16:52
+     * @description 保存支付宝支付结果
      */
+    @Transactional
     public void saveAliPayStatus(PayStatusDto payStatusDto) {
+
+        //================业务健壮性判断================
+
+        // 获取订单的payNo
+        String payNo = payStatusDto.getOut_trade_no();
+        // 健壮性判断: 查询支付订单是否存在
+        PayRecord payRecord = payRecordMapper.selectOne(new LambdaQueryWrapper<PayRecord>().eq(PayRecord::getPayNo, payNo));
+        if (payRecord == null) throw new BusinessException("支付记录不存在");
+
+        // 健壮性判断,查询关联的订单是否存在
+        Long orderId = payRecord.getOrderId();
+        Orders orders = ordersMapper.selectOne(new LambdaQueryWrapper<Orders>().eq(Orders::getId, orderId));
+        if (orders == null) throw new BusinessException("关联订单不存在");
+
+        //================幂等性判断================
+
+        // 已经支付成功,后面操作无需进行
+        if ("601002".equals(payRecord.getStatus())) {
+            return;
+        }
+
+        // 如果支付宝回调支付成功
+        String tradeStatus = payStatusDto.getTrade_status();
+        if ("TRADE_SUCCESS".equals(tradeStatus)) {
+            // ================ 订单校验 ================
+            //支付金额变为分
+            Float totalPrice = payRecord.getTotalPrice() * 100;     // 系统支付记录记录的总金额
+            Float total_amount = Float.parseFloat(payStatusDto.getTotal_amount()) * 100;    // 支付宝返回的支付记录总金额
+            //校验总金额是否一致
+            if (!payStatusDto.getApp_id().equals(APP_ID) || totalPrice.intValue() != total_amount.intValue()) {
+                //校验失败
+                log.info("校验支付结果失败,支付记录:{},APP_ID:{},totalPrice:{}", payRecord.toString(), payStatusDto.getApp_id(), total_amount.intValue());
+                throw new BusinessException("校验支付结果失败");
+            }
+
+            //================ 保存状态到支付记录表================
+
+            log.debug("更新支付结果,支付交易流水号:{},支付结果:{}", payNo, tradeStatus);
+            payRecord.setOutPayChannel("AliPay");   // 支付渠道
+            payRecord.setPaySuccessTime(LocalDateTime.now());   // 支付成功时间
+            payRecord.setTotalPrice(totalPrice);    // 总金额
+            payRecord.setStatus("601002");  // 支付状态为支付成功
+
+            // 根据payNo更新支付记录
+            int update = payRecordMapper.update(payRecord,
+                    new LambdaQueryWrapper<PayRecord>().eq(PayRecord::getPayNo,payNo));
+
+            if (update <= 0) throw new BusinessException("更新支付记录状态失败");
+
+            log.info("更新支付记录状态成功:{}", payRecord.toString());
+
+            // 更新关联订单状态
+            orders.setStatus("600002");
+            update = ordersMapper.updateById(orders);
+            if(update <= 0 )
+            {
+                log.info("更新订单表状态失败,订单号:{}", orderId);
+                throw new BusinessException("更新订单表状态失败");
+            }
+            log.info("更新订单表状态成功,订单号:{}", orderId);
+        }
 
 
     }
@@ -200,13 +274,13 @@ public class OrderServiceImpl implements OrderService {
      * @version 1.0
      * @date 2024/2/4 14:32
      */
-    public PayRecord createPayRecord(Orders orders){
-        
-        if(orders==null){
+    public PayRecord createPayRecord(Orders orders) {
+
+        if (orders == null) {
             throw new BusinessException("订单不存在");
         }
         // 业务幂等性，防止重复插入支付记录
-        if(orders.getStatus().equals("600002")){
+        if (orders.getStatus().equals("600002")) {
             throw new BusinessException("订单已支付");
         }
         PayRecord payRecord = new PayRecord();
@@ -227,7 +301,6 @@ public class OrderServiceImpl implements OrderService {
         return payRecord;
 
     }
-    
 
 
     /**
@@ -237,14 +310,13 @@ public class OrderServiceImpl implements OrderService {
      * @date 2024/2/4 14:32
      */
     @Transactional
-    public Orders saveOrders(String userId,  CreateOrderDto createOrderDto)
-    {
+    public Orders saveOrders(String userId, CreateOrderDto createOrderDto) {
         // 幂等性处理（订单表有out_business_id唯一主键约束）
         String outBusinessId = createOrderDto.getOutBusinessId();
 
         Orders order = ordersMapper.selectOne(new LambdaQueryWrapper<Orders>().eq(Orders::getOutBusinessId, outBusinessId));
 
-        if(order != null) return order;
+        if (order != null) return order;
 
         order = new Orders();
 
@@ -264,8 +336,7 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderDescrip(createOrderDto.getOrderDescrip());    // 订单描述
         order.setOutBusinessId(createOrderDto.getOutBusinessId());//选课记录id
         int insert = ordersMapper.insert(order);
-        if(insert <=0 )
-        {
+        if (insert <= 0) {
             throw new BusinessException("保存订单失败");
         }
 
@@ -277,7 +348,7 @@ public class OrderServiceImpl implements OrderService {
         List<OrdersGoods> ordersGoods = JSON.parseArray(orderDetail, OrdersGoods.class);
         // 给每一个订单明细拷贝订单
         for (OrdersGoods ordersGood : ordersGoods) {
-            BeanUtils.copyProperties(order,ordersGood);
+            BeanUtils.copyProperties(order, ordersGood);
             ordersGood.setOrderId(id); // 设置明细对应的订单id
             goodsMapper.insert(ordersGood); // 插入到明细表
         }

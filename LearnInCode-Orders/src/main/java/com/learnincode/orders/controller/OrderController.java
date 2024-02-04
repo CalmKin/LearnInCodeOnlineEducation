@@ -109,9 +109,8 @@ public class OrderController {
     @GetMapping("/payresult")
     @ResponseBody
     public PayRecordDto payresult(String payNo) throws IOException {
-
         //查询支付结果
-        return orderService.payresult(payNo);
+        return orderService.queryPayResult(payNo);
     }
 
 
