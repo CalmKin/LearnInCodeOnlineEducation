@@ -13,17 +13,12 @@ spring:
         group: learn-in-code-project
         file-extension: yaml
         refresh-enabled: true
-        extension-configs:
-          - data-id: orders-service-${spring.profiles.active}.yaml
-            group: learn-in-code-project
-            refresh: true
-        shared-configs:
-          - data-id: swagger-${spring.profiles.active}.yaml
-            group: learn-in-code-common
-            refresh: true
-          - data-id: logging-${spring.profiles.active}.yaml
-            group: learn-in-code-common
-            refresh: true
-
+#        shared-configs:
+#          - data-id: swagger-${spring.profiles.active}.yaml
+#            group: learn-in-code-common
+#            refresh: true
+#          - data-id: logging-${spring.profiles.active}.yaml
+#            group: learn-in-code-common
+#            refresh: true
   profiles:
     active: dev
