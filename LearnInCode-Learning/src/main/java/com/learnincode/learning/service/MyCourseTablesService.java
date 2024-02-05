@@ -1,7 +1,10 @@
 package com.learnincode.learning.service;
 
+import com.learnincode.base.model.PageResult;
 import com.learnincode.learning.model.dto.ChoosedCourseDto;
+import com.learnincode.learning.model.dto.OwnedCourseQueryParams;
 import com.learnincode.learning.model.dto.OwnedCourseStatusDto;
+import com.learnincode.learning.model.po.OwnedCourse;
 import org.springframework.stereotype.Service;
 
 
@@ -21,4 +24,6 @@ public interface MyCourseTablesService {
 
     boolean saveChooseCourseStauts(String courseId);
 
+
+    PageResult<OwnedCourse> getMyCourseTable(OwnedCourseQueryParams params);
 }

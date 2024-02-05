@@ -1,11 +1,14 @@
 package com.learnincode.learning.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.learnincode.base.exception.BusinessException;
+import com.learnincode.base.model.PageResult;
 import com.learnincode.learning.feignclient.ContentServiceClient;
 import com.learnincode.learning.mapper.ChooseCourseMapper;
 import com.learnincode.learning.mapper.OwnedCourseMapper;
 import com.learnincode.learning.model.dto.ChoosedCourseDto;
+import com.learnincode.learning.model.dto.OwnedCourseQueryParams;
 import com.learnincode.learning.model.dto.OwnedCourseStatusDto;
 import com.learnincode.learning.model.po.ChoosedCourse;
 import com.learnincode.learning.model.po.CoursePublish;
@@ -231,6 +234,41 @@ public class MyCourseTablesServiceImpl implements MyCourseTablesService {
         OwnedCourse ownedCourse = addMyCourseTables(choosedCourse);
 
         return true;
+    }
+
+
+    /**
+     * @author CalmKin
+     * @description 分页查询用户的课程表信息
+     * @version 1.0
+     * @date 2024/2/5 16:04
+     */
+    @Override
+    public PageResult<OwnedCourse> getMyCourseTable(OwnedCourseQueryParams params) {
+
+        // 页码
+        int pageNo = params.getPage();
+        // 每页大小
+        int size = params.getSize();
+
+        Page<OwnedCourse> page = new Page<>(pageNo, size);
+
+        // 获取该用户的课程表
+        String userId = params.getUserId();
+
+        LambdaQueryWrapper<OwnedCourse> lqw = new LambdaQueryWrapper<OwnedCourse>()
+                .eq(OwnedCourse::getUserId, userId);
+
+        Page<OwnedCourse> result = ownedCourseMapper.selectPage(page, lqw);
+
+        List<OwnedCourse> records = result.getRecords();
+        long total = result.getTotal();
+        long pageSize = result.getSize();
+        long current = result.getCurrent();
+
+        PageResult<OwnedCourse> pageResult = new PageResult<>(records, total, current,pageSize);
+
+        return pageResult;
     }
 
 
