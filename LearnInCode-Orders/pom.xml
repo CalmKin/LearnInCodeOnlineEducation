@@ -20,6 +20,17 @@
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.learnincode</groupId>
+            <artifactId>LearnInCode-Message-SDK</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
+
         <!-- 支付宝SDK -->
         <dependency>
             <groupId>com.alipay.sdk</groupId>
