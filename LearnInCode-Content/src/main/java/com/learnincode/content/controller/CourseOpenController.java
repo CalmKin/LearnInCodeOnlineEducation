@@ -29,7 +29,7 @@ public class CourseOpenController {
     private CoursePublishService coursePublishService;
 
     /**
-     * 根据课程id获取课程详细信息
+     * 根据课程id获取未发布课程详细信息
      * @param courseId
      * @return
      */

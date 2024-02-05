@@ -138,6 +138,13 @@ public class CoursePublishServiceImpl  extends ServiceImpl<CoursePublishMapper, 
     }
 
 
+
+    /**
+     * @author CalmKin
+     * @description 查询的是还未发布的课程信息,面向机构使用
+     * @version 1.0
+     * @date 2024/2/5 10:52
+     */
     @Override
     public CoursePreviewDto getCoursePreviewInfo(Long courseId) {
         CoursePreviewDto viewObject = new CoursePreviewDto();
