@@ -19,4 +19,6 @@ public interface MyCourseTablesService {
 
     OwnedCourseStatusDto getLearningStatus(String userId, Long courseId);
 
+    boolean saveChooseCourseStauts(String courseId);
+
 }

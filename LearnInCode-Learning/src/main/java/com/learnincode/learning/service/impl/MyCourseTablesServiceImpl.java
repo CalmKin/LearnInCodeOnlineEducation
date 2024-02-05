@@ -11,13 +11,17 @@ import com.learnincode.learning.model.po.ChoosedCourse;
 import com.learnincode.learning.model.po.CoursePublish;
 import com.learnincode.learning.model.po.OwnedCourse;
 import com.learnincode.learning.service.MyCourseTablesService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Service
+@Slf4j
 public class MyCourseTablesServiceImpl implements MyCourseTablesService {
 
 
@@ -104,7 +108,6 @@ public class MyCourseTablesServiceImpl implements MyCourseTablesService {
         return ownedCourseStatus;
     }
 
-
     /**
      * @author CalmKin
      * @description 添加课程加入选课记录表
@@ -153,7 +156,6 @@ public class MyCourseTablesServiceImpl implements MyCourseTablesService {
 
     /**
      * 添加到我的课程表
-     *
      * @param choosedCourse 选课记录
      * @return
      */
@@ -190,5 +192,46 @@ public class MyCourseTablesServiceImpl implements MyCourseTablesService {
                         .eq(OwnedCourse::getUserId, userId)
                         .eq(OwnedCourse::getCourseId, courseId));
     }
+
+
+    /**
+     * @author CalmKin
+     * @description 根据选课id,将课程添加到我的课程表
+     * @version 1.0
+     * @date 2024/2/5 10:09
+     */
+    @Override
+    @Transactional
+    public boolean saveChooseCourseStauts(String courseId) {
+
+        // 先看看这门课在不在选课记录表里面
+        ChoosedCourse choosedCourse = chooseCourseMapper.selectById(courseId);
+        if(choosedCourse == null)
+        {
+            log.debug("根据选课id找不到选课记录,选课id:{}",courseId);
+            return false;
+        }
+
+        // 更改选课状态，幂等性判断
+        String status = choosedCourse.getStatus();
+
+        // 只有状态为未支付的时候,才需要将状态更改为已支付
+        if("701002".equals(status))
+        {
+            choosedCourse.setStatus("701001");
+            int update = chooseCourseMapper.updateById(choosedCourse);
+            if(update <= 0)
+            {
+                log.debug("更新选课状态失败: {}", choosedCourse);
+                return false;
+            }
+        }
+
+        // 添加到我的选课表
+        OwnedCourse ownedCourse = addMyCourseTables(choosedCourse);
+
+        return true;
+    }
+
 
 }
