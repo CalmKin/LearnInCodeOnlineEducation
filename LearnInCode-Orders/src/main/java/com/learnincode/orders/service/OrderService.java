@@ -1,5 +1,6 @@
 package com.learnincode.orders.service;
 
+import com.learnincode.messagesdk.model.po.MqMessage;
 import com.learnincode.orders.model.dto.CreateOrderDto;
 import com.learnincode.orders.model.dto.PayRecordDto;
 import com.learnincode.orders.model.dto.PayStatusDto;
@@ -14,5 +15,8 @@ public interface OrderService {
     PayRecordDto queryPayResult(String payNo);
 
     void saveAliPayStatus(PayStatusDto payStatusDto);
+
+
+     void notifyPayResult(MqMessage message);
 
 }

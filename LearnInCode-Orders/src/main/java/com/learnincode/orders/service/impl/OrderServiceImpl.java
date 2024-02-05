@@ -9,7 +9,10 @@ import com.alipay.api.request.AlipayTradeQueryRequest;
 import com.alipay.api.response.AlipayTradeQueryResponse;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.learnincode.base.exception.BusinessException;
+import com.learnincode.messagesdk.model.po.MqMessage;
+import com.learnincode.messagesdk.service.MqMessageService;
 import com.learnincode.orders.config.AlipayConfig;
+import com.learnincode.orders.config.PayNotifyConfig;
 import com.learnincode.orders.mapper.OrdersGoodsMapper;
 import com.learnincode.orders.mapper.OrdersMapper;
 import com.learnincode.orders.mapper.PayRecordMapper;
@@ -23,6 +26,11 @@ import com.learnincode.orders.service.OrderService;
 import com.learnincode.orders.utils.IdWorkerUtils;
 import com.learnincode.orders.utils.QRCodeUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageBuilder;
+import org.springframework.amqp.core.MessageDeliveryMode;
+import org.springframework.amqp.rabbit.connection.CorrelationData;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +38,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -57,6 +66,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     PayRecordMapper payRecordMapper;
+
+    @Autowired
+    MqMessageService mqMessageService;
+
+    @Autowired
+    RabbitTemplate rabbitTemplate;
 
     @Override
     @Transactional
@@ -269,6 +284,51 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * @author CalmKin
+     * @description 持久化支付结果后，通过消息队列进行通知
+     * @version 1.0
+     * @date 2024/2/5 8:11
+     */
+    @Override
+    public void notifyPayResult(MqMessage message) {
+        //1、消息体，转json
+        String msg = JSON.toJSONString(message);
+
+        // 将自定义的消息转化成MQ发送的消息
+        Message mqMsg = MessageBuilder.withBody(msg.getBytes(StandardCharsets.UTF_8))   //转化成字节流
+                .setDeliveryMode(MessageDeliveryMode.PERSISTENT)  // 持久化
+                .build();
+
+        // 2.给消息设置全局唯一的消息ID，需要封装到CorrelationData中
+        // 利用的是自定义消息表的自增主键保证消息id的唯一
+        CorrelationData correlationData = new CorrelationData(String.valueOf(message.getId()));
+
+        // 设置发送者回调函数
+        correlationData.getFuture().addCallback(
+                // 消息发送成功的回调
+                result->{
+                    // 如果消息已经被确认过了
+                    if(result.isAck())
+                    {
+                        log.debug("通知支付结果消息发送成功, ID:{}", correlationData.getId());
+                        //删除消息表中的记录
+                        mqMessageService.completed(message.getId());
+                    }
+                    // 发送成功但是确认失败
+                    else
+                    {
+                        // 3.2.nack，消息失败
+                        log.error("通知支付结果消息发送失败, ID:{}, 原因{}",correlationData.getId(), result.getReason());
+                    }
+                },
+                // 消息发送过程异常
+                ex -> log.error("消息发送异常, ID:{}, 原因{}",correlationData.getId(),ex.getMessage())
+        );
+        // 指定交换机进行发送
+        rabbitTemplate.convertAndSend(PayNotifyConfig.PAYNOTIFY_EXCHANGE_FANOUT,"",mqMsg, correlationData);
+    }
+
+    /**
+     * @author CalmKin
      * @description 保存支付记录
      * @version 1.0
      * @date 2024/2/4 14:32
@@ -351,6 +411,11 @@ public class OrderServiceImpl implements OrderService {
             ordersGood.setOrderId(id); // 设置明细对应的订单id
             goodsMapper.insert(ordersGood); // 插入到明细表
         }
+
+        // =====================发送消息队列=====================
+        // 先将消息持久化到数据库,参数1：支付结果通知类型，2: 业务id，3:业务类型
+        MqMessage mqMessage = mqMessageService.addMessage("payresult_notify",order.getOutBusinessId(), order.getOrderType(), null);
+        notifyPayResult(mqMessage);
 
         return order;
     }
