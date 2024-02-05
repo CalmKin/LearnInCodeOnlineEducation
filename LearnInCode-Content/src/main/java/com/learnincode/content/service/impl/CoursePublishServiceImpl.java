@@ -138,6 +138,13 @@ public class CoursePublishServiceImpl  extends ServiceImpl<CoursePublishMapper, 
     }
 
 
+
+    /**
+     * @author CalmKin
+     * @description 查询的是还未发布的课程信息,面向机构使用
+     * @version 1.0
+     * @date 2024/2/5 10:52
+     */
     @Override
     public CoursePreviewDto getCoursePreviewInfo(Long courseId) {
         CoursePreviewDto viewObject = new CoursePreviewDto();
@@ -243,6 +250,12 @@ public class CoursePublishServiceImpl  extends ServiceImpl<CoursePublishMapper, 
             throw new BusinessException("静态页面上传失败");
         }
 
+    }
+
+    @Override
+    public CoursePublish getCoursePublish(Long courseId) {
+        CoursePublish coursePublish = coursePublishMapper.selectById(courseId);
+        return coursePublish ;
     }
 
     /**
