@@ -25,7 +25,6 @@
         <module>LearnInCode-Search</module>
         <module>LearnInCode-Auth</module>
         <module>LearnInCode-CheckCode</module>
-        <module>LearnInCode-Orders</module>
     </modules>
 
     <packaging>pom</packaging>
