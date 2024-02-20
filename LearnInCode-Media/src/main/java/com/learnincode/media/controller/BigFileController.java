@@ -32,8 +32,7 @@ public class BigFileController {
 
     @ApiOperation(value = "文件上传前检查大文件是否已经存在")
     @PostMapping("/checkfile")
-    public RestResponse<Boolean> checkfile(@RequestParam("fileMd5") String fileMd5)
-    {
+    public RestResponse<Boolean> checkfile(@RequestParam("fileMd5") String fileMd5) {
         return fileService.checkfile(fileMd5);
     }
 
@@ -51,7 +50,7 @@ public class BigFileController {
                                     @RequestParam("fileMd5") String fileMd5,
                                     @RequestParam("chunk") int chunkOrder) throws Exception {
         // 先把前端传过来的文件保存到临时文件
-        File tmpFile = File.createTempFile(fileMd5.substring(0,10) + chunkOrder , ".tmp");
+        File tmpFile = File.createTempFile(fileMd5.substring(0, 10) + chunkOrder, ".tmp");
         file.transferTo(tmpFile);
 
         String absolutePath = tmpFile.getAbsolutePath();
@@ -60,10 +59,10 @@ public class BigFileController {
 
 
     /**
+     * @param chunkTotal 这个字段是为了方便后端遍历minio分块列表的时候，提供一个循环边界
      * @author CalmKin
      * @description 合并minio中所有分块
      * @version 1.0
-     * @param chunkTotal 这个字段是为了方便后端遍历minio分块列表的时候，提供一个循环边界
      * @date 2024/1/22 16:52
      */
     @ApiOperation(value = "合并文件")
@@ -72,7 +71,7 @@ public class BigFileController {
                                     @RequestParam("fileName") String fileName,
                                     @RequestParam("chunkTotal") int chunkTotal) throws Exception {
 
-       Long companyId =1232141425L;
+        Long companyId = 1232141425L;
         UploadFileParamsDto dto = new UploadFileParamsDto();
 
         dto.setFileType("001002");
@@ -81,7 +80,7 @@ public class BigFileController {
         dto.setFilename(fileName);
 
 
-        return fileService.mergechunks(companyId, fileMd5, chunkTotal, dto );
+        return fileService.mergechunks(companyId, fileMd5, chunkTotal, dto);
     }
 
 }

@@ -23,14 +23,13 @@ import java.io.IOException;
  * @description 媒资文件管理接口
  * @date 2022/9/6 11:29
  */
-@Api(value = "媒资文件管理接口", tags = "媒资文件管理接口")
+@Api(value = "普通文件管理接口", tags = "媒资文件管理接口")
 @RestController
 public class SimpleFilesController {
 
 
     @Autowired
     MediaFileService mediaFileService;
-
 
     @ApiOperation("媒资列表分页查询接口")
     @PostMapping("/files")
@@ -47,19 +46,19 @@ public class SimpleFilesController {
      * @version 1.0
      * @date 2024/1/21 11:42
      */
-    @ApiOperation("上传小型文件接口")
+    @ApiOperation("上传课程图片接口")
     @RequestMapping(value = "/upload/coursefile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public UploadFileResultDto uploadFile(@RequestPart("filedata") MultipartFile file, @RequestParam(value= "objectName",required=false) String objectName) throws IOException {
+    public UploadFileResultDto uploadFile(@RequestPart("filedata") MultipartFile file, @RequestParam(value = "objectName", required = false) String objectName) throws IOException {
 
         UploadFileParamsDto paramsDto = new UploadFileParamsDto();
         // 文件大小
         paramsDto.setFileSize(file.getSize());
-        // 文件类型
+        // 文件类型：图片
         paramsDto.setFileType("001001");
         // 文件名称
         paramsDto.setFilename(file.getOriginalFilename());
 
-        // 本地创建临时文件
+        // 将前端发送的文件转移到本地临时文件
         File tempFile = File.createTempFile("minio", "tmp");
         // 上传的文件拷贝到临时文件
         file.transferTo(tempFile);
@@ -70,9 +69,6 @@ public class SimpleFilesController {
 
         return mediaFileService.uploadFile(companyId, paramsDto, absolutePath, objectName);
     }
-
-
-
 
 
 }

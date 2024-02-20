@@ -32,6 +32,21 @@ public class MediaProcessServiceImpl extends ServiceImpl<MediaProcessMapper, Med
         return mediaProcessMapper.getTaskList(executorId, totalExecutor, taskCnt);
     }
 
+
+    /**
+     * @author CalmKin
+     * @description 获取超时未完成的任务(可能是线程挂了)
+     * @version 1.0
+     * @date 2024/2/20 13:38
+     */
+    @Override
+    public List<MediaProcess> getDeadTask(int executorId, int totalExecutor, int taskCnt)
+    {
+        return mediaProcessMapper.getDeadTask(executorId, totalExecutor, taskCnt);
+    }
+
+
+
     /**
      *
      * @param taskId
@@ -55,16 +70,21 @@ public class MediaProcessServiceImpl extends ServiceImpl<MediaProcessMapper, Med
         // 如果任务处理失败，更新任务表
         if(status.equals("3"))
         {
+            // 设置错误信息
             task.setErrormsg(errMsg);
+            // 失败次数++
             task.setFailCount( task.getFailCount() + 1);
             task.setStatus("3");
-            // todo 如果失败次数超过三次
+            if(task.getFailCount() == 3)
+            {
+                // todo 如果失败次数达到三次,发送邮件到运维,进行人工处理
+            }
             updateById(task);
             return;
         }
 
         // 任务执行成功
-        // 1. 改文件表，设置url
+        // 1. 改文件表，设置转码后文件的url
         MediaFiles mediaFiles = mediaFilesMapper.selectById(fileId);
         mediaFiles.setUrl(Url);
         mediaFilesMapper.updateById(mediaFiles);

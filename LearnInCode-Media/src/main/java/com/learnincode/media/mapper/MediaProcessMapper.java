@@ -27,4 +27,11 @@ public interface MediaProcessMapper extends BaseMapper<MediaProcess> {
      */
     @Update("update xcplus_media.media_process t set t.status = 4 where t.id = #{id} and (t.status = '1' or (t.status = '3' and t.fail_count < 3 ) )")
     int tryLock(@Param("id") long id);
+
+    @Select("SELECT * FROM xcplus_media.media_process t " +
+            "WHERE t.id % #{totalExecutor} = #{executorId} " +
+            "AND (t.status = '4') " +   // 任务状态为处理中
+            "AND TIMESTAMPDIFF(MINUTE, t.create_date, NOW()) < 30 " +   // 且任务执行时间超过30分钟
+            "LIMIT #{taskCnt}")
+    List<MediaProcess> getDeadTask(int executorId, int totalExecutor, int taskCnt);
 }

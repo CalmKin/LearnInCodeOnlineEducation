@@ -82,6 +82,13 @@ public class CourseBaseServiceImpl extends ServiceImpl<CourseBaseMapper, CourseB
         return new PageResult<>(records, total, offset, size);
     }
 
+
+    /**
+     * @author CalmKin
+     * @description 添加课程基本信息 + 营销信息
+     * @version 1.0
+     * @date 2024/2/20 13:11
+     */
     @Override
     @Transactional
     public CourseBaseInfoDto addCourseBaseInfo(Long companyId, AddCourseDto dto) {
@@ -134,6 +141,7 @@ public class CourseBaseServiceImpl extends ServiceImpl<CourseBaseMapper, CourseB
         CourseMarket courseMarket = new CourseMarket();
         BeanUtils.copyProperties(dto, courseMarket);
         courseMarket.setId(courseId);
+
         // 用代理防止事务失效
         CourseBaseServiceImpl proxy = (CourseBaseServiceImpl)AopContext.currentProxy();
         int ret = proxy.insertCourseMarketInfo(courseMarket);
@@ -206,6 +214,13 @@ public class CourseBaseServiceImpl extends ServiceImpl<CourseBaseMapper, CourseB
         return courseBaseInfoDto;
     }
 
+
+    /**
+     * @author CalmKin
+     * @description 修改课程基本信息 + 营销信息
+     * @version 1.0
+     * @date 2024/2/20 13:14
+     */
     @Transactional
     @Override
     public CourseBaseInfoDto updateCourseBaseInfo(Long companyId ,UpdateCourseDto dto) {

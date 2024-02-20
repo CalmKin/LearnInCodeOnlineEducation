@@ -9,6 +9,8 @@ public interface MediaProcessService extends IService<MediaProcess> {
 
     List<MediaProcess> getTask(int executorId,int totalExecutor, int taskCnt);
 
+    List<MediaProcess> getDeadTask(int executorId, int totalExecutor, int taskCnt);
+
     boolean startTask(long taskId);
 
     /**

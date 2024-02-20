@@ -35,6 +35,34 @@ public class VideoTask {
     @Value("${videoprocess.ffmpegpath}")
     private String ffmpeg_path ;
 
+    @XxlJob("TaskResumeHandler")
+    public void TaskResumeHandler()
+    {
+        //1. 获取分片id、分片数量
+        int shardTotal = XxlJobHelper.getShardTotal();
+        int shardIndex = XxlJobHelper.getShardIndex();
+
+        //2. 获取待执行任务列表(获取cpu核心数个任务,多了处理不过来)
+        int coreCount = Runtime.getRuntime().availableProcessors();
+        List<MediaProcess> taskList = mediaProcessService.getDeadTask(shardIndex, shardTotal, coreCount);
+
+        for (MediaProcess mediaProcess : taskList) {
+            mediaProcess.setStatus("1");
+        }
+
+        mediaProcessService.updateBatchById(taskList);
+
+    }
+
+
+
+
+    /**
+     * @author CalmKin
+     * @description
+     * @version 1.0
+     * @date 2024/2/20 13:26
+     */
     @XxlJob("videoJobHandler")
     public void processVideo() throws Exception {
         //1. 获取分片id、分片数量

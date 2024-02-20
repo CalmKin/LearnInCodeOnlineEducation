@@ -184,6 +184,7 @@ public class TeachplanServiceImpl extends ServiceImpl<TeachplanMapper, Teachplan
 
         Long courseId = teachplan.getCourseId();
 
+        // 媒资和课程计划绑定关系
         TeachplanMedia teachplanMedia = new TeachplanMedia();
         BeanUtils.copyProperties(bindTeachplanMediaDto, teachplanMedia);
         teachplanMedia.setCourseId(courseId);
