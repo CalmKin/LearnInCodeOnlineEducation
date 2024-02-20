@@ -3,6 +3,7 @@ package com.learnincode.content.controller;
 import com.learnincode.content.model.dto.BindTeachplanMediaDto;
 import com.learnincode.content.model.dto.SaveTeachplanDto;
 import com.learnincode.content.model.dto.TeachplanDto;
+import com.learnincode.content.service.TeachplanMediaService;
 import com.learnincode.content.service.TeachplanService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -19,6 +20,9 @@ public class TeachplanController {
 
     @Autowired
     private TeachplanService teachplanService;
+
+    @Autowired
+    private TeachplanMediaService teachplanMediaService;
 
     /**
      *  根据课程id查询对应课程计划树
@@ -72,6 +76,13 @@ public class TeachplanController {
     @PostMapping("/association/media")
     public void associationMedia(@RequestBody BindTeachplanMediaDto bindTeachplanMediaDto){
         teachplanService.attachMedia(bindTeachplanMediaDto);
+    }
+
+    @ApiOperation(value = "解除课程计划和视频资源的绑定")
+    @DeleteMapping("/association/media/{teachPlanId}/{mediaId}")
+    public void detachMedia(@PathVariable Long teachPlanId, @PathVariable Long mediaId)
+    {
+        teachplanMediaService.detachMedia(teachPlanId,mediaId);
     }
 
 

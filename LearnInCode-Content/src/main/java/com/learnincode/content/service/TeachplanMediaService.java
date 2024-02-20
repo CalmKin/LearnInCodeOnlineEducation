@@ -10,4 +10,5 @@ import com.learnincode.content.model.po.TeachplanMedia;
 */
 public interface TeachplanMediaService extends IService<TeachplanMedia> {
 
+    void detachMedia(Long teachPlanId, Long mediaId);
 }

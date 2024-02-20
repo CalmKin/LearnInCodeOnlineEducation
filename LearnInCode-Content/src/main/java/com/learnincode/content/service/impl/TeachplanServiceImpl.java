@@ -1,6 +1,7 @@
 package com.learnincode.content.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.learnincode.base.exception.BusinessException;
 import com.learnincode.content.mapper.TeachplanMapper;
@@ -197,6 +198,10 @@ public class TeachplanServiceImpl extends ServiceImpl<TeachplanMapper, Teachplan
         teachplanMediaMapper.insert(teachplanMedia);
 
     }
+
+
+
+
 
 }
 
