@@ -61,14 +61,22 @@ public class CoursePublishController {
         return coursePreviewDto;
     }
 
+
+    /**
+     * @author CalmKin
+     * @description 获取课程预览信息界面
+     * @version 1.0
+     * @date 2024/2/20 16:36
+     */
     @GetMapping("/coursepreview/{courseId}")
     public ModelAndView preview(@PathVariable("courseId") Long courseId){
 
         //获取课程预览信息
         CoursePreviewDto coursePreviewInfo = coursePublishService.getCoursePreviewInfo(courseId);
-
         ModelAndView modelAndView = new ModelAndView();
+        // 设置模型数据
         modelAndView.addObject("model",coursePreviewInfo);
+        // 设置模型名称
         modelAndView.setViewName("course_template");
         return modelAndView;
     }

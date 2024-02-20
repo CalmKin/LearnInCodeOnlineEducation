@@ -1,6 +1,8 @@
 package com.learnincode.content.controller;
 
 
+import com.learnincode.base.model.RestResponse;
+import com.learnincode.content.feignclient.MediaFeignClient;
 import com.learnincode.content.model.dto.CoursePreviewDto;
 import com.learnincode.content.service.CourseBaseService;
 import com.learnincode.content.service.CoursePublishService;
@@ -28,6 +30,9 @@ public class CourseOpenController {
     @Autowired
     private CoursePublishService coursePublishService;
 
+    @Autowired
+    private MediaFeignClient mediaFeignClient;
+
     /**
      * 根据课程id获取未发布课程详细信息
      * @param courseId
@@ -39,5 +44,26 @@ public class CourseOpenController {
         CoursePreviewDto coursePreviewInfo = coursePublishService.getCoursePreviewInfo(courseId);
         return coursePreviewInfo;
     }
+
+    @GetMapping("/content/course/whole/{courseId}")
+    public CoursePreviewDto getPublishedCourseInfo(@PathVariable("courseId") Long courseId)
+    {
+        return getPreviewInfo(courseId);
+    }
+
+
+    /**
+     * @author CalmKin
+     * @description 根据视频id返回视频播放地址(需要在课程发布表里面查)
+     * @version 1.0
+     * @date 2024/2/20 16:57
+     */
+    @GetMapping("media/preview/{mediaId}")
+    public RestResponse getMediaUrl(@PathVariable String mediaId)
+    {
+        // 根据媒资服务的FeignClient查询媒资信息
+         return mediaFeignClient.getPlayUrlByMediaId(mediaId);
+    }
+
 
 }

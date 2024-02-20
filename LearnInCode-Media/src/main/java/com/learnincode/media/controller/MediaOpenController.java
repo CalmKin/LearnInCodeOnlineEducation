@@ -34,7 +34,7 @@ public class MediaOpenController {
      * @param mediaId 视频id
      * @return 转码后的url
      */
-    @ApiOperation("预览文件")
+    @ApiOperation("获取视频在线播放地址")
     @GetMapping("/preview/{mediaId}")
     public RestResponse<String> getPlayUrlByMediaId(@PathVariable String mediaId) {
 
