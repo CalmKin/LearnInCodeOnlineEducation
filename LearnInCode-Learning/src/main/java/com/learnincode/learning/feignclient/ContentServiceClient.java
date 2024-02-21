@@ -10,9 +10,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 /**
  * @description 内容管理远程接口
  */
-@FeignClient(value = "content-api",fallbackFactory = ContentServiceClientFallbackFactory.class)
+@FeignClient(value = "content-api", fallbackFactory = ContentServiceClientFallbackFactory.class)
 public interface ContentServiceClient {
 
+
+    /**
+     * @author CalmKin
+     * @description 通过feign查询已发布的课程信息
+     * @version 1.0
+     * @date 2024/2/21 9:50
+     */
     @ResponseBody
     @GetMapping("/content/r/coursepublish/{courseId}")
     public CoursePublish getCoursepublish(@PathVariable("courseId") Long courseId);

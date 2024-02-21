@@ -29,11 +29,25 @@ public class MqMessageServiceImpl extends ServiceImpl<MqMessageMapper, MqMessage
     MqMessageHistoryMapper mqMessageHistoryMapper;
 
 
+
+    /**
+     * @author CalmKin
+     * @description 根据xxl-job作业分片索引 + 分片总数，获取当前分片领取的任务
+     * @version 1.0
+     * @date 2024/2/20 20:16
+     */
     @Override
     public List<MqMessage> getMessageList(int shardIndex, int shardTotal, String messageType,int count) {
         return mqMessageMapper.selectListByShardIndex(shardTotal,shardIndex,messageType,count);
     }
 
+
+    /**
+     * @author CalmKin
+     * @description 将业务消息保存到数据库中
+     * @version 1.0
+     * @date 2024/2/20 20:15
+     */
     @Override
     public MqMessage addMessage(String messageType, String businessKey1, String businessKey2, String businessKey3) {
         MqMessage mqMessage = new MqMessage();
@@ -51,7 +65,7 @@ public class MqMessageServiceImpl extends ServiceImpl<MqMessageMapper, MqMessage
     }
 
     /**
-     * 1. 将任务状态标记为
+     * 1. 将任务状态标记为完成
      * 2. 添加到历史消息表
      * 3. 删除原来表中的记录
      * @param id 消息id
@@ -64,6 +78,7 @@ public class MqMessageServiceImpl extends ServiceImpl<MqMessageMapper, MqMessage
         //完成任务
         mqMessage.setState("1");
         int update = mqMessageMapper.update(mqMessage, new LambdaQueryWrapper<MqMessage>().eq(MqMessage::getId, id));
+        // 状态更新成功之后,才进行后续操作
         if(update>0){
 
             mqMessage = mqMessageMapper.selectById(id);

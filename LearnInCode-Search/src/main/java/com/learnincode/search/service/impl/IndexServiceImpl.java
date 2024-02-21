@@ -48,6 +48,8 @@ public class IndexServiceImpl implements IndexService {
   }
   String name = indexResponse.getResult().name();
   System.out.println(name);
+
+  // 如果索引添加成功 OR 更新成功，都算成功
   return name.equalsIgnoreCase("created") || name.equalsIgnoreCase("updated");
 
  }

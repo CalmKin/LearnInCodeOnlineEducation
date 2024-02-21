@@ -43,7 +43,7 @@ public class CoursePublishTask extends MessageProcessAbstract {
 
 
     /**
-     //课程发布任务处理
+     * 单个课程发布的业务逻辑
      * @param mqMessage 执行任务内容
      * @return
      */
@@ -72,6 +72,8 @@ public class CoursePublishTask extends MessageProcessAbstract {
         MqMessageService mqMessageService = this.getMqMessageService();
         //消息幂等性处理
         int stageOne = mqMessageService.getStageOne(id);
+
+        // 如果某个阶段已经完成了，那么不用再执行了
         if(stageOne >0){
             log.debug("课程静态化已处理直接返回，课程id:{}",courseId);
             return ;
@@ -93,14 +95,13 @@ public class CoursePublishTask extends MessageProcessAbstract {
 
     //将课程信息缓存至redis
     public void saveCourseCache(MqMessage mqMessage,long courseId){
+        // todo 缓存课程信息
         log.debug("将课程信息缓存至redis,课程id:{}",courseId);
         try {
             TimeUnit.SECONDS.sleep(2);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-
-
     }
     //保存课程索引信息
     public void saveCourseIndex(MqMessage mqMessage,long courseId){

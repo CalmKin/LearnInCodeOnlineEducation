@@ -44,6 +44,13 @@ public class OrderController {
     @Autowired
     OrderService orderService;
 
+
+    /**
+     * @author CalmKin
+     * @description 请求生成支付二维码, PayRecordDto里面包含二维码url,前端解析并展示
+     * @version 1.0
+     * @date 2024/2/21 10:58
+     */
     @ApiOperation("生成支付二维码")
     @PostMapping("/generatepaycode")
     @ResponseBody
@@ -61,7 +68,7 @@ public class OrderController {
      * @param httpResponse 支付页面
      * @throws IOException
      */
-    @ApiOperation("扫码下单接口")
+    @ApiOperation("扫码下单接口,支付二维码指向的地址")
     @GetMapping("/requestpay")
     public void requestpay(String payNo, HttpServletResponse httpResponse) throws IOException {
         // 先查询支付号对应的支付记录
@@ -119,10 +126,11 @@ public class OrderController {
 
     /**
      * @author CalmKin
-     * @description 接收支付回调地址, 请求的路径和上面设置的setNotifyUrl要保持一致
+     * @description
      * @version 1.0
      * @date 2024/2/4 10:52
      */
+    @ApiOperation("被动接收支付回调地址, 请求的路径和上面设置的setNotifyUrl要保持一致")
     @PostMapping("/paynotify")
     public void paynotify(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map<String, String> params = new HashMap<>();

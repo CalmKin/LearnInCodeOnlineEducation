@@ -94,6 +94,7 @@ public class OrderServiceImpl implements OrderService {
         // 将支付id填入url中，发送给支付宝
         try {
             String url = String.format(qrcodeurl, payRecord.getPayNo());
+            // 根据请求支付的接口生成二维码
             qrCode = qrCodeUtil.createQRCode(url, 200, 200);
         } catch (Exception e) {
             throw new BusinessException("生成二维码失败");
@@ -171,10 +172,12 @@ public class OrderServiceImpl implements OrderService {
         AlipayClient alipayClient = new DefaultAlipayClient(AlipayConfig.URL, APP_ID, APP_PRIVATE_KEY, "json", AlipayConfig.CHARSET, ALIPAY_PUBLIC_KEY, AlipayConfig.SIGNTYPE); //获得初始化的AlipayClient
         AlipayTradeQueryRequest request = new AlipayTradeQueryRequest();
 
-        // 带上订单号
+        // 根据系统生成的订单号,查询支付宝的支付记录
         JSONObject bizContent = new JSONObject();
         bizContent.put("out_trade_no", payNo);
         request.setBizContent(bizContent.toString());
+
+
         AlipayTradeQueryResponse response = null;
         try {
             // 发起请求
@@ -218,14 +221,14 @@ public class OrderServiceImpl implements OrderService {
     public void saveAliPayStatus(PayStatusDto payStatusDto) {
 
         //================业务健壮性判断================
-
-        // 获取订单的payNo
+        // 获取订单的payNo(商户端)
         String payNo = payStatusDto.getOut_trade_no();
+
         // 健壮性判断: 查询支付订单是否存在
         PayRecord payRecord = payRecordMapper.selectOne(new LambdaQueryWrapper<PayRecord>().eq(PayRecord::getPayNo, payNo));
         if (payRecord == null) throw new BusinessException("支付记录不存在");
 
-        // 健壮性判断,查询关联的订单是否存在
+        // 健壮性判断,查询支付记录关联的订单是否存在
         Long orderId = payRecord.getOrderId();
         Orders orders = ordersMapper.selectOne(new LambdaQueryWrapper<Orders>().eq(Orders::getId, orderId));
         if (orders == null) throw new BusinessException("关联订单不存在");
@@ -267,7 +270,7 @@ public class OrderServiceImpl implements OrderService {
 
             log.info("更新支付记录状态成功:{}", payRecord.toString());
 
-            // 更新关联订单状态
+            //================ 保存状态到订单表================
             orders.setStatus("600002");
             update = ordersMapper.updateById(orders);
             if(update <= 0 )
@@ -276,6 +279,14 @@ public class OrderServiceImpl implements OrderService {
                 throw new BusinessException("更新订单表状态失败");
             }
             log.info("更新订单表状态成功,订单号:{}", orderId);
+
+
+
+            // =====================添加消息到本地消息表=====================
+            // 先将消息持久化到数据库,参数1：支付结果通知类型，2: 业务id，3:业务类型
+            MqMessage mqMessage =
+                    mqMessageService.addMessage("payresult_notify",orders.getOutBusinessId(), orders.getOrderType(), null);
+            notifyPayResult(mqMessage);
         }
 
 
@@ -371,10 +382,13 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public Orders saveOrders(String userId, CreateOrderDto createOrderDto) {
         // 幂等性处理（订单表有out_business_id唯一主键约束）
+        // 对于选课订单来说，用的是选课记录id
         String outBusinessId = createOrderDto.getOutBusinessId();
 
-        Orders order = ordersMapper.selectOne(new LambdaQueryWrapper<Orders>().eq(Orders::getOutBusinessId, outBusinessId));
+        Orders order = ordersMapper.selectOne(new LambdaQueryWrapper<Orders>()
+                .eq(Orders::getOutBusinessId, outBusinessId));
 
+        // 订单不存在时，才进行插入
         if (order != null) return order;
 
         order = new Orders();
@@ -411,12 +425,6 @@ public class OrderServiceImpl implements OrderService {
             ordersGood.setOrderId(id); // 设置明细对应的订单id
             goodsMapper.insert(ordersGood); // 插入到明细表
         }
-
-        // =====================发送消息队列=====================
-        // 先将消息持久化到数据库,参数1：支付结果通知类型，2: 业务id，3:业务类型
-        MqMessage mqMessage = mqMessageService.addMessage("payresult_notify",order.getOutBusinessId(), order.getOrderType(), null);
-        notifyPayResult(mqMessage);
-
         return order;
     }
 
