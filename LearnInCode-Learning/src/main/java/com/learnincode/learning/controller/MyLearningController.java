@@ -23,7 +23,7 @@ public class MyLearningController {
     @Autowired
     LearningService learningService;
 
-    @ApiOperation("获取视频")
+    @ApiOperation("获取视频在线播放地址")
     @GetMapping("/open/learn/getvideo/{courseId}/{teachplanId}/{mediaId}")
     public RestResponse<String> getvideo(@PathVariable("courseId") Long courseId, @PathVariable("teachplanId") Long teachplanId, @PathVariable("mediaId") String mediaId) {
 

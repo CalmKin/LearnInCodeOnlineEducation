@@ -3,6 +3,7 @@ package com.learnincode.content.controller;
 import com.learnincode.content.model.dto.BindTeachplanMediaDto;
 import com.learnincode.content.model.dto.SaveTeachplanDto;
 import com.learnincode.content.model.dto.TeachplanDto;
+import com.learnincode.content.model.po.Teachplan;
 import com.learnincode.content.service.TeachplanMediaService;
 import com.learnincode.content.service.TeachplanService;
 import io.swagger.annotations.Api;
@@ -84,6 +85,13 @@ public class TeachplanController {
     {
         teachplanMediaService.detachMedia(teachPlanId,mediaId);
     }
+    @ApiOperation(value = "根据id查询课程计划")
+    @GetMapping("/open/{teachPlanId}")
+    public Teachplan getTeachPlanById(@PathVariable Long teachPlanId)
+    {
+        return teachplanService.getById(teachPlanId);
+    }
+
 
 
 }

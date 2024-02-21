@@ -1,6 +1,7 @@
 package com.learnincode.learning.feignclient;
 
 import com.learnincode.learning.feignclient.fallback.ContentServiceClientFallbackFactory;
+import com.learnincode.learning.feignclient.model.Teachplan;
 import com.learnincode.learning.model.po.CoursePublish;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,5 +24,9 @@ public interface ContentServiceClient {
     @ResponseBody
     @GetMapping("/content/r/coursepublish/{courseId}")
     public CoursePublish getCoursepublish(@PathVariable("courseId") Long courseId);
+
+    @GetMapping("/teachplan/open/{teachPlanId}")
+    public Teachplan getTeachPlanById(@PathVariable Long teachPlanId);
+
 
 }

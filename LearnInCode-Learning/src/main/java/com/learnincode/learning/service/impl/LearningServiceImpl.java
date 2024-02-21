@@ -4,6 +4,7 @@ import com.learnincode.base.exception.BusinessException;
 import com.learnincode.base.model.RestResponse;
 import com.learnincode.learning.feignclient.ContentServiceClient;
 import com.learnincode.learning.feignclient.MediaServiceClient;
+import com.learnincode.learning.feignclient.model.Teachplan;
 import com.learnincode.learning.model.dto.OwnedCourseStatusDto;
 import com.learnincode.learning.model.po.CoursePublish;
 import com.learnincode.learning.service.LearningService;
@@ -40,9 +41,17 @@ public class LearningServiceImpl implements LearningService {
 
         String charge = coursepublish.getCharge();
 
+
+        RestResponse<String> playUrl = mediaServiceClient.getPlayUrlByMediaId(mediaId);
         //远程调用内容管理服务根据课程计1d(teachplanId)去查询课程计划信息，如果is_preview的值为1表示支持试学
         //也可以从coursepublish对象中解析出课程计划信息去判惭是否支持试学
-        // todo 如果支特试学,调用媒资服务查询视频的播放地址，返回
+        Teachplan teachPlan = contentServiceClient.getTeachPlanById(teachplanId);
+        // 如果支特试学,调用媒资服务查询视频的播放地址，返回
+        if("1".equals(teachPlan.getIsPreview()))
+        {
+            return playUrl;
+        }
+
 
         // 如果是收费课程，那么必须要保证已支付，而且没有过期
         if ("201001".equals(charge)) {
@@ -60,6 +69,6 @@ public class LearningServiceImpl implements LearningService {
         }
 
         // 有资格学习（走到这里，要么是免费课程，要么是付费课程有资格）
-        return   mediaServiceClient.getPlayUrlByMediaId(mediaId);
+        return playUrl;
     }
 }
