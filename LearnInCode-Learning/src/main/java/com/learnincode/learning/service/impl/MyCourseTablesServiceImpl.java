@@ -39,7 +39,7 @@ public class MyCourseTablesServiceImpl implements MyCourseTablesService {
 
     /**
      * @author CalmKin
-     * @description 添加课程到我的选课表中
+     * @description 添加选课
      * @version 1.0
      * @date 2024/2/3 17:44
      */
@@ -61,15 +61,18 @@ public class MyCourseTablesServiceImpl implements MyCourseTablesService {
             // 添加免费课程
             choosedCourse = addCoruse(userId, coursepublish, false);
             // 添加我的课程表
-
+            addMyCourseTables(choosedCourse);
         } else {
             // 添加收费课程到选课记录表
             choosedCourse = addCoruse(userId, coursepublish, true);
         }
 
         ChoosedCourseDto choosedCourseDto = new ChoosedCourseDto();
+
+        // 获取学习状态,根据学习状态方便前端进行相应的跳转
         OwnedCourseStatusDto learningStatus = getLearningStatus(userId, courseId);
         BeanUtils.copyProperties(learningStatus, choosedCourseDto);
+        BeanUtils.copyProperties(choosedCourse, choosedCourseDto);
 
         return choosedCourseDto;
     }
@@ -118,16 +121,17 @@ public class MyCourseTablesServiceImpl implements MyCourseTablesService {
      * @date 2024/2/3 17:52
      */
     public ChoosedCourse addCoruse(String userId, CoursePublish coursepublish, boolean isCharge) {
-
+        // 选课类型:免费or收费
         String orderType = isCharge ? "700002" : "700001";
+        // 如果是免费课程，那么选课状态就是选课成功,否则就是待支付
         String courseInitStatus = isCharge ? "701002" : "701001";
 
-        // 因为没有主键约束，所以先查询是否存在免费且选课成功的记录
+        // 因为没有主键约束，所以先查询是否存在相同的选课记录
         LambdaQueryWrapper<ChoosedCourse> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper = queryWrapper.eq(ChoosedCourse::getUserId, userId)
                 .eq(ChoosedCourse::getCourseId, coursepublish.getId())
-                .eq(ChoosedCourse::getOrderType, orderType)//免费课程
-                .eq(ChoosedCourse::getStatus, courseInitStatus);//选课成功
+                .eq(ChoosedCourse::getOrderType, orderType)
+                .eq(ChoosedCourse::getStatus, courseInitStatus);
 
         List<ChoosedCourse> choosedCours = chooseCourseMapper.selectList(queryWrapper);
 
@@ -136,21 +140,22 @@ public class MyCourseTablesServiceImpl implements MyCourseTablesService {
             return choosedCours.get(0);
         }
 
-        // 往选课记录插入
+        // 不存在选课记录时,才往选课记录插入
         ChoosedCourse choosedCourse = new ChoosedCourse();
         choosedCourse.setCourseId(coursepublish.getId());    // 设置课程id
         choosedCourse.setCourseName(coursepublish.getName());//课程名称
-        choosedCourse.setCoursePrice(0f);//免费课程价格为0
+        choosedCourse.setCoursePrice(isCharge ? 0f : coursepublish.getPrice());//免费课程价格为0
         choosedCourse.setUserId(userId); // 用户id
         choosedCourse.setCompanyId(coursepublish.getCompanyId()); // 课程所属机构id
         choosedCourse.setOrderType(orderType);//免费课程
         LocalDateTime now = LocalDateTime.now();
         choosedCourse.setCreateDate(now);
         choosedCourse.setStatus(courseInitStatus);//选课状态：选课成功
-
-        choosedCourse.setValidDays(365);//免费课程默认365
+        Integer validDays = isCharge ? 365 : coursepublish.getValidDays();
+        choosedCourse.setValidDays(validDays);//免费课程默认365
         choosedCourse.setValidtimeStart(now); // 生效时间
-        choosedCourse.setValidtimeEnd(now.plusDays(365)); // 结束时间
+        choosedCourse.setValidtimeEnd(now.plusDays(validDays)); // 结束时间
+
         chooseCourseMapper.insert(choosedCourse);
 
         return choosedCourse;
@@ -158,7 +163,7 @@ public class MyCourseTablesServiceImpl implements MyCourseTablesService {
 
 
     /**
-     * 添加到我的课程表
+     * 根据选课记录,将课程添加到我的课程表
      * @param choosedCourse 选课记录
      * @return
      */
@@ -189,6 +194,13 @@ public class MyCourseTablesServiceImpl implements MyCourseTablesService {
 
     }
 
+
+    /**
+     * @author CalmKin
+     * @description 根据用户id和课程id，查询我的选课表中是否存在某个课程
+     * @version 1.0
+     * @date 2024/2/21 10:05
+     */
     private OwnedCourse getOwnedCourse(String userId, Long courseId) {
         return ownedCourseMapper.
                 selectOne(new LambdaQueryWrapper<OwnedCourse>()
@@ -199,19 +211,19 @@ public class MyCourseTablesServiceImpl implements MyCourseTablesService {
 
     /**
      * @author CalmKin
-     * @description 根据选课id,将课程添加到我的课程表
+     * @description 根据选课id, 将课程添加到我的课程表
      * @version 1.0
      * @date 2024/2/5 10:09
      */
     @Override
     @Transactional
-    public boolean saveChooseCourseStauts(String courseId) {
+    public boolean saveChooseCourseStauts(String courseId)
+    {
 
         // 先看看这门课在不在选课记录表里面
         ChoosedCourse choosedCourse = chooseCourseMapper.selectById(courseId);
-        if(choosedCourse == null)
-        {
-            log.debug("根据选课id找不到选课记录,选课id:{}",courseId);
+        if (choosedCourse == null) {
+            log.debug("根据选课id找不到选课记录,选课id:{}", courseId);
             return false;
         }
 
@@ -219,12 +231,10 @@ public class MyCourseTablesServiceImpl implements MyCourseTablesService {
         String status = choosedCourse.getStatus();
 
         // 只有状态为未支付的时候,才需要将状态更改为已支付
-        if("701002".equals(status))
-        {
+        if ("701002".equals(status)) {
             choosedCourse.setStatus("701001");
             int update = chooseCourseMapper.updateById(choosedCourse);
-            if(update <= 0)
-            {
+            if (update <= 0) {
                 log.debug("更新选课状态失败: {}", choosedCourse);
                 return false;
             }
@@ -266,7 +276,7 @@ public class MyCourseTablesServiceImpl implements MyCourseTablesService {
         long pageSize = result.getSize();
         long current = result.getCurrent();
 
-        PageResult<OwnedCourse> pageResult = new PageResult<>(records, total, current,pageSize);
+        PageResult<OwnedCourse> pageResult = new PageResult<>(records, total, current, pageSize);
 
         return pageResult;
     }
