@@ -54,7 +54,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         // 统一入口实现多种认证方式的核心
         AuthService authService = (AuthService) applicationContext.getBean(paramsDto.getAuthType() + "_authservice");
 
-        // 开始认证
+        // 开始认证(抽象接口，由具体的认证方法实现)
         UserExt userExt = authService.execute(paramsDto);
 
         // 根据用户认证信息,封装userDetail
