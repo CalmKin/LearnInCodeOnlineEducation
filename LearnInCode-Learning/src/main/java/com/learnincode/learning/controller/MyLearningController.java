@@ -27,7 +27,7 @@ public class MyLearningController {
     @GetMapping("/open/learn/getvideo/{courseId}/{teachplanId}/{mediaId}")
     public RestResponse<String> getvideo(@PathVariable("courseId") Long courseId, @PathVariable("teachplanId") Long teachplanId, @PathVariable("mediaId") String mediaId) {
 
-        SecurityUtil.XcUser user = SecurityUtil.getUser();
+        SecurityUtil.User user = SecurityUtil.getUser();
         // 这里的逻辑是一刀切，不管用户没有登录的话，免费视频也不能看
         if(user == null) return RestResponse.validfail("请先登录");
         String userId = user.getId();

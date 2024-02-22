@@ -15,33 +15,37 @@ import java.util.Arrays;
 
 /**
  * @author CalmKin
- * @description token配置
+ * @description token配置，密钥、刷新策略等等
  * @version 1.0
  * @date 2024/2/2 12:09
  */
 @Configuration
 public class TokenConfig {
 
-
+    // TOKEN 签名密钥
     private String SIGNING_KEY = "mq123";
 
+    // 管理token的一个接口
     @Autowired
     TokenStore tokenStore;
 
-//    @Bean
-//    public TokenStore tokenStore() {
-//        //使用内存存储令牌（普通令牌）
-//        return new InMemoryTokenStore();
-//    }
 
     @Autowired
     private JwtAccessTokenConverter accessTokenConverter;
 
+    //用于转换 JWT 访问令牌的类。
     @Bean
     public TokenStore tokenStore() {
         return new JwtTokenStore(accessTokenConverter());
     }
 
+
+    /**
+     * @author CalmKin
+     * @description 设置Token签名密钥
+     * @version 1.0
+     * @date 2024/2/22 17:38
+     */
     @Bean
     public JwtAccessTokenConverter accessTokenConverter() {
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();

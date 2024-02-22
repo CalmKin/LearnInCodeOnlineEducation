@@ -56,7 +56,7 @@ public class OrderController {
     @ResponseBody
     public PayRecordDto generatePayCode(@RequestBody CreateOrderDto createOrderDto) {
 
-        SecurityUtil.XcUser user = SecurityUtil.getUser();
+        SecurityUtil.User user = SecurityUtil.getUser();
         String userId = user.getId();
 
         return orderService.createOrder(userId, createOrderDto);

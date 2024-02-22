@@ -32,7 +32,7 @@ public class MyCourseTablesController {
     @PostMapping("/choosecourse/{courseId}")
     public ChoosedCourseDto addChooseCourse(@PathVariable("courseId") Long courseId) {
 
-        SecurityUtil.XcUser user = SecurityUtil.getUser();
+        SecurityUtil.User user = SecurityUtil.getUser();
         String userId = user.getId();
 
         return myCourseTablesService.addChooseCourse(userId, courseId);
@@ -42,7 +42,7 @@ public class MyCourseTablesController {
     @PostMapping("/choosecourse/learnstatus/{courseId}")
     public OwnedCourseStatusDto getLearnstatus(@PathVariable("courseId") Long courseId) {
 
-        SecurityUtil.XcUser user = SecurityUtil.getUser();
+        SecurityUtil.User user = SecurityUtil.getUser();
         String userId = user.getId();
 
         return myCourseTablesService.getLearningStatus(userId, courseId);
@@ -52,7 +52,7 @@ public class MyCourseTablesController {
     @GetMapping("/mycoursetable")
     public PageResult<OwnedCourse> mycoursetable(OwnedCourseQueryParams params) {
 
-        SecurityUtil.XcUser user = SecurityUtil.getUser();
+        SecurityUtil.User user = SecurityUtil.getUser();
         String userId = user.getId();
 
         params.setUserId(userId);

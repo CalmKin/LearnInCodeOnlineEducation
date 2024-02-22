@@ -63,26 +63,34 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return userDetails;
     }
 
-    /**
-     * @param userExt 认证通过之后获取到的用户信息
-     * @return
-     */
 
+
+    /**
+     * @author CalmKin
+     * @description  将UserExt封装为UserDetails
+     * @version 1.0
+     * @date 2024/2/22 18:06
+     */
     private UserDetails getUserPrincipal(UserExt userExt) {
         //用户权限,如果不加报Cannot pass a null GrantedAuthority collection
 //        String[] authorities = {"test"};
 
         String password = userExt.getPassword();
 
+        // 从数据库中查询用户包含权限
         List<Menu> menus = menuMapper.selectPermissionByUserId(userExt.getId());
         List<String> permission = new ArrayList<>();
 
+        //将用户权限码取出放到permission列表中
         if(!CollectionUtils.isEmpty(menus))
         {
             menus.forEach(item -> {
                 permission.add(item.getCode());
             });
         }
+        else
+            //如果不加则报Cannot pass a null GrantedAuthority collection
+            permission.add("simple");
 
         //将用户权限放在UserExt中
         userExt.setPermissions(permission);

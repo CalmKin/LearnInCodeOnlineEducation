@@ -14,14 +14,14 @@ import java.time.LocalDateTime;
 @Slf4j
 public class SecurityUtil {
 
-    public static XcUser getUser() {
+    public static User getUser() {
         try {
             Object principalObj = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             if (principalObj instanceof String) {
                 //取出用户身份信息
                 String principal = principalObj.toString();
                 //将json转成对象
-                XcUser user = JSON.parseObject(principal, XcUser.class);
+                User user = JSON.parseObject(principal, User.class);
                 return user;
             }
         } catch (Exception e) {
@@ -33,7 +33,7 @@ public class SecurityUtil {
     }
 
     @Data
-    public static class XcUser implements Serializable {
+    public static class User implements Serializable {
 
         private static final long serialVersionUID = 1L;
 

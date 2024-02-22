@@ -12,9 +12,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
- * @description 安全管理配置
+ * 安全管理配置，定义了认证管理器、密码编码器以及 HTTP 请求的安全拦截机制
  */
+// 启用了 Spring Security 的 Web 安全功能
 @EnableWebSecurity
+//启用了全局方法安全性。
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -32,8 +34,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     DaoAuthenticationProviderCustom daoAuthenticationProviderCustom;
 
+    // 将DaoAuthenticationProvider设置为自定义的
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        //将自定义的 DaoAuthenticationProvider 设置为认证管理器，用于处理身份验证。
         auth.authenticationProvider(daoAuthenticationProviderCustom);
     }
 
@@ -62,10 +66,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/r/**").authenticated()//访问/r开始的请求需要认证通过
-                .anyRequest().permitAll()//其它请求全部放行
+                //访问/r开始的请求需要认证通过
+                .antMatchers("/r/**").authenticated()
+                //其它请求全部放行
+                .anyRequest().permitAll()
                 .and()
-                .formLogin().successForwardUrl("/login-success");//登录成功跳转到/login-success
+                //登录成功跳转到/login-success
+                .formLogin().successForwardUrl("/login-success");
     }
 
 

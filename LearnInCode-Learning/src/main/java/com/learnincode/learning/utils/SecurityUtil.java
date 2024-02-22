@@ -14,19 +14,19 @@ import java.time.LocalDateTime;
 @Slf4j
 public class SecurityUtil {
 
-    public static XcUser getUser() {
+    public static User getUser() {
         //拿jwt中的用户身份
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (principal instanceof String){
             String jsonString = (String) principal;
-            XcUser xcUser = null;
+            User User = null;
             try {
-                xcUser = JSON.parseObject(jsonString, XcUser.class);
+                User = JSON.parseObject(jsonString, User.class);
             } catch (Exception e) {
-                log.debug("解析jwt中的用户身份无法转成XcUser对象:{}",jsonString);
+                log.debug("解析jwt中的用户身份无法转成User对象:{}",jsonString);
             }
-            return xcUser;
+            return User;
 
         }
         return null;
@@ -35,7 +35,7 @@ public class SecurityUtil {
 
 
     @Data
-    public static class XcUser implements Serializable {
+    public static class User implements Serializable {
 
         private static final long serialVersionUID = 1L;
 
