@@ -25,3 +25,23 @@
 | gogs | 0.13.0 | docker |
 | nginx |  1.12.2 | docker |
 
+
+
+核心业务流程
+
+本项目主要包括三类用户角色：学生、教学机构的老师、平台运营人员，核心业务流程包括课程发布流程、选课学习流程。
+
+课程编辑与发布
+
+课程发布流程：
+1、教学机构的老师登录教学管理平台，编辑课程信息，发布自己的课程。
+2、平台运营人员登录运营平台审核课程、视频等信息，审核通过后课程方可发布。
+![image](https://github.com/CalmKin/LearnInCodeOnlineEducation/assets/87215319/8c355a19-86cf-4dfd-88bc-54eef60b4eba)
+
+
+用户选课、在线学习。
+
+免费课程可直接学习，收费课程需要下单购买。
+学生选课流程如下：
+![image](https://github.com/CalmKin/LearnInCodeOnlineEducation/assets/87215319/91589cbd-b778-4ca4-af11-01df203ca523)
+
