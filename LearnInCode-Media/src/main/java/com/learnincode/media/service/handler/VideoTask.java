@@ -35,6 +35,13 @@ public class VideoTask {
     @Value("${videoprocess.ffmpegpath}")
     private String ffmpeg_path ;
 
+
+    /**
+     * @author CalmKin
+     * @description 任务补偿机制
+     * @version 1.0
+     * @date 2024/3/12 21:39
+     */
     @XxlJob("TaskResumeHandler")
     public void TaskResumeHandler()
     {
@@ -46,6 +53,7 @@ public class VideoTask {
         int coreCount = Runtime.getRuntime().availableProcessors();
         List<MediaProcess> taskList = mediaProcessService.getDeadTask(shardIndex, shardTotal, coreCount);
 
+        // 标记任务为未处理
         for (MediaProcess mediaProcess : taskList) {
             mediaProcess.setStatus("1");
         }

@@ -1,0 +1,27 @@
+@startuml
+
+participant "前端" as front
+participant "任务调度中心" as xxl_job
+participant "内容管理服务" as content_service
+participant "内容管理数据库" as content_db
+participant "redis" as redis
+participant "ElasticSearch" as es
+participant "媒资管理服务" as media_service
+participant MinIO as MinIO
+
+front->content_service: 1.课程发布
+content_service->content_db: 2.存储课程到发布表\n删除预发布表记录\n插入消息表
+xxl_job->content_service: 3.定时调度
+content_service->content_db: 4.扫描消息表,读取发布任务
+
+content_service<-content_service: 5.执行任务
+
+content_service->redis: 5.1 课程缓存
+content_service->es: 5.2 添加课程索引
+content_service->media_service: 5.3上传课程详情静态页面
+media_service->MinIO: 5.4 上传文件
+
+content_service->content_db: 6.任务结束,删除消息记录
+
+
+@enduml

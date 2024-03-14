@@ -1,0 +1,43 @@
+@startuml
+
+actor 用户 as user
+
+participant "前端" as front
+participant "学习中心服务" as learning_service
+participant "学习中心数据库" as learning_db
+participant "订单服务" as order_service
+participant "订单数据库" as order_db
+participant "第三方支付" as alipay
+participant "消息队列" as mq
+
+
+user->front: 0.点击支付
+front->learning_service: 1.添加选课记录
+front->order_service: 2.携带订单信息,添加订单
+order_service->order_db: 2.1 创建商品订单
+order_service->order_db: 2.2 创建订单明细表
+order_service->order_db: 2.3 创建支付交易记录
+order_service-->front: 3.根据支付记录id\n生成二维码
+
+
+user->front: 4.支付宝扫描二维码
+front->order_service: 5.携带支付记录id,请求支付
+order_service->order_db: 6.根据id查询支付记录
+order_service-->front: 订单已支付成功
+front-->user: 提醒不要重复支付
+order_service->alipay: 7.订单未支付,构造请求参数\n通过SDK发起支付请求
+alipay-->front: 8.响应支付页面
+user->front: 9.输入密码
+front->alipay: 请求支付
+user->front: 10.1 点击完成支付(主动查询)
+front->order_service: 10.2 请求查询支付结果接口
+order_service->alipay: 10.3 查询支付结果
+order_service<--alipay: 10.4 支付结果(携带订单id)
+order_service->order_db: 11. 根据回调结果中订单id\n更新订单和支付记录状态
+order_service->mq: 12. 发送课程支付成功消息(课程id)
+mq-->learning_service: 支付结果通知
+learning_service-->learning_db: 将课程添加到"我的课程表中"\n用户即可开始学习
+
+order_service-->front: 13. 支付成功
+
+@enduml

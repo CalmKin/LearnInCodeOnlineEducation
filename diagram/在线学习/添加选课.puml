@@ -1,0 +1,23 @@
+@startuml
+
+
+actor 用户 as user
+
+participant "学习中心服务" as learning_service
+participant "内容管理服务" as content_service
+participant "学习中心数据库" as learning_db
+participant "内容管理数据库" as content_db
+
+
+user->learning_service: 1.添加选课
+learning_service->content_service: 2.查询课程信息
+content_service->content_db: 3.查询课程发布表
+learning_service->learning_service: 4.判断收费标准
+learning_service->learning_db: \t\t 免费课程:\n添加选课记录表以及我的课程表
+learning_service->learning_db: \t\t 收费课程:\添加选课记录表
+
+
+
+
+
+@enduml

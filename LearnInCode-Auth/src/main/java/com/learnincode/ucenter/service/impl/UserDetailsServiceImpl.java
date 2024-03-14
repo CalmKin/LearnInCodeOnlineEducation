@@ -43,6 +43,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String Str) throws UsernameNotFoundException {
 
+        //将认证参数转为AuthParamsDto类型
         AuthParamsDto paramsDto = null;
         try {
             paramsDto = JSON.parseObject(Str, AuthParamsDto.class);
@@ -51,8 +52,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throw new BusinessException("认证请求数据格式不对");
         }
 
+        // 认证类型
+        String authType = paramsDto.getAuthType();
         // 统一入口实现多种认证方式的核心
-        AuthService authService = (AuthService) applicationContext.getBean(paramsDto.getAuthType() + "_authservice");
+        AuthService authService = (AuthService) applicationContext.getBean( authType+ "_authservice");
 
         // 开始认证(抽象接口，由具体的认证方法实现)
         UserExt userExt = authService.execute(paramsDto);
@@ -74,7 +77,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private UserDetails getUserPrincipal(UserExt userExt) {
         //用户权限,如果不加报Cannot pass a null GrantedAuthority collection
 //        String[] authorities = {"test"};
-
         String password = userExt.getPassword();
 
         // 从数据库中查询用户包含权限
@@ -97,16 +99,23 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         // 转化成数组,方便保存在security上下文
         String[] authorities = permission.toArray(new String[0]);
 
-        // 排除敏感信息
+        //为了安全在令牌中不放密码，排除敏感信息
         excludeSensitiveInfo(userExt);
         // 将用户信息压缩成JSON串存在UserName中
         String userInfo = JSON.toJSONString(userExt);
-
+        //创建UserDetails对象
         UserDetails userDetails = org.springframework.security.core.userdetails.User.withUsername(userInfo)
                 .password(password).authorities(authorities).build();
         return userDetails;
     }
 
+
+    /**
+     * @author CalmKin
+     * @description 排除user中的敏感信息
+     * @version 1.0
+     * @date 2024/3/13 10:38
+     */
     void excludeSensitiveInfo(User user) {
         user.setPassword(null);
         user.setEmail(null);

@@ -1,0 +1,37 @@
+@startuml
+title 大文件断点续传
+'https://plantuml.com/sequence-diagram
+
+actor 用户 as user
+
+participant "前端" as front
+participant "定时任务" as xxl_job
+participant "消息队列" as mq
+participant "媒资接口层" as media_controller
+participant "媒资服务层" as media_service
+participant "媒资数据库" as media_db
+participant MinIO as MinIO
+
+user->front: 1.上传视频
+front->media_controller: 2.检查文件是否存在
+front-->user: 2.1文件存在,直接返回
+front-->front: 2.2文件不存在,将文件分块
+front->media_controller: 3.检查当前分块是否上传\n(携带分片序号)
+front->media_controller: 3.1分块存在,检查下一个分块
+front->media_controller: 3.2分块不存在,上传分块
+media_controller->media_service: 4.上传分块
+media_service->MinIO: 5.上传分块
+MinIO-->media_service
+media_service-->media_controller
+media_controller-->front: 6.上传结果
+front->media_controller: 7.分块上传完毕.合并分块
+media_controller->media_service: 8.合并分块
+media_service->MinIO: 9.调接口合并分块
+media_service->media_db: 10.媒资信息入库
+media_service->mq: 11. 发送清理分块消息
+mq-->MinIO: 异步清理分块文件
+media_service->media_db: 12.如果视频需要转码\n添加记录到media_process表
+xxl_job-->media_db: 13. 视频处理（详见视频处理.puml）
+
+
+@enduml

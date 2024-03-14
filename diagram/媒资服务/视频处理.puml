@@ -1,0 +1,19 @@
+@startuml
+
+participant "任务调度中心" as xxl_job
+participant "媒资服务层" as media_service
+participant "媒资数据库" as media_db
+participant MinIO as MinIO
+
+xxl_job->media_service: 1.广播作业分片
+media_service->media_db: 2.根据分片id和总分片\n获取待处理视频
+media_db-->media_service
+MinIO->media_service: 3.下载视频
+media_service->media_service: 4.多线程处理
+media_service->MinIO: 5.上传处理后的视频
+media_service->media_db: 6.记录处理结果到history表
+media_service->media_db: 7.更新文件访问地址
+media_service->media_db: 8.删除原表待处理记录
+
+
+@enduml

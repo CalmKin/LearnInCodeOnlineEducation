@@ -87,11 +87,15 @@ public class OrderController {
         }
 
         // 通过支付宝SDK，发起支付请求
+        //获得初始化的AlipayClient
         AlipayClient client = new DefaultAlipayClient(AlipayConfig.URL, APP_ID, APP_PRIVATE_KEY, AlipayConfig.FORMAT, AlipayConfig.CHARSET, ALIPAY_PUBLIC_KEY, AlipayConfig.SIGNTYPE);//获得初始化的AlipayClient
+        //创建API对应的request
         AlipayTradeWapPayRequest alipayRequest = new AlipayTradeWapPayRequest();//创建API对应的request
 
-        //在公共参数中设置回跳和通知地址
+        // 设置支付成功后的结果通知地址
         alipayRequest.setNotifyUrl("http://服务ip:端口/orders/paynotify");
+
+        //填充业务参数
         alipayRequest.setBizContent("{" +
                 " \"out_trade_no\":\"" + payRecord.getPayNo() + "\"," + // 支付流水号
                 " \"total_amount\":\"" + payRecord.getTotalPrice() + "\"," +    // 总金额
@@ -99,7 +103,7 @@ public class OrderController {
                 " \"product_code\":\"QUICK_WAP_PAY\"" +
                 " }");//填充业务参数
 
-        // 获取支付页面
+        //调用SDK生成支付表单
         String form = "";
         try {
             //请求支付宝下单接口,发起http请求
@@ -133,10 +137,12 @@ public class OrderController {
     @ApiOperation("被动接收支付回调地址, 请求的路径和上面设置的setNotifyUrl要保持一致")
     @PostMapping("/paynotify")
     public void paynotify(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+        // 参数里面的request由支付宝发送,里面包含了回调的结果
+        // 所以第一步需要先解析请求参数
         Map<String, String> params = new HashMap<>();
         Map requestParams = request.getParameterMap();
 
-        //
         for (Iterator iter = requestParams.keySet().iterator(); iter.hasNext(); ) {
             String name = (String) iter.next();
             String[] values = (String[]) requestParams.get(name);
@@ -149,7 +155,7 @@ public class OrderController {
         }
 
         // 对请求进行验签
-        //boolean AlipaySignature.rsaCheckV1(Map<String, String> params, String publicKey, String charset, String sign_type)
+//        boolean AlipaySignature.rsaCheckV1(Map<String, String> params, String publicKey, String charset, String sign_type)
         boolean verify_result = AlipaySignature.rsaCheckV1(params, ALIPAY_PUBLIC_KEY, AlipayConfig.CHARSET, "RSA2");
 
         if (verify_result) {//验证成功
