@@ -120,6 +120,12 @@ public class OrderController {
     }
 
 
+    /**
+     * @author CalmKin
+     * @description 根据支付流水号，主动发起支付结果查询
+     * @version 1.0
+     * @date 2024/3/17 16:36
+     */
     @ApiOperation("根据支付流水号，主动向支付宝查询支付状态")
     @GetMapping("/payresult")
     @ResponseBody
@@ -158,7 +164,8 @@ public class OrderController {
 //        boolean AlipaySignature.rsaCheckV1(Map<String, String> params, String publicKey, String charset, String sign_type)
         boolean verify_result = AlipaySignature.rsaCheckV1(params, ALIPAY_PUBLIC_KEY, AlipayConfig.CHARSET, "RSA2");
 
-        if (verify_result) {//验证成功
+        //验证成功
+        if (verify_result) {
             //商户订单号
             String out_trade_no = new String(request.getParameter("out_trade_no").getBytes("ISO-8859-1"), "UTF-8");
 
@@ -172,9 +179,8 @@ public class OrderController {
             String total_amount = new String(request.getParameter("total_amount").getBytes("ISO-8859-1"), "UTF-8");
 
 
-            //交易成功
+            //交易成功，保存支付状态
             if (trade_status.equals("TRADE_SUCCESS")) {
-                System.out.println(trade_status);
 
                 PayStatusDto payStatusDto = new PayStatusDto();
                 payStatusDto.setOut_trade_no(out_trade_no);

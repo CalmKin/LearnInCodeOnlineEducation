@@ -47,7 +47,9 @@ import java.util.Map;
 @Slf4j
 public class OrderServiceImpl implements OrderService {
 
-    @Value("${pay.qrcodeurl}")  // 需要生成二维码的url
+    // 需要生成二维码的url模板,参数为支付记录号
+    //  http://192.168.101.1/api/orders/requestpay?payNo=%s
+    @Value("${pay.qrcodeurl}")
     String qrcodeurl;
     @Value("${pay.alipay.APP_ID}")
     String APP_ID;
@@ -100,7 +102,8 @@ public class OrderServiceImpl implements OrderService {
             throw new BusinessException("生成二维码失败");
         }
 
-        // 将生成的二维码包装在支付记录,返回给前端
+        // 将生成的二维码包装在支付记录里面,返回给前端
+        // 前端可以拿到支付记录号，用户扫码后向支付宝发起请求
         PayRecordDto payRecordDto = new PayRecordDto();
         BeanUtils.copyProperties(payRecord, payRecordDto);
         payRecordDto.setQrcode(qrCode);
@@ -110,7 +113,6 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 根据支付流水号查询支付记录
-     *
      * @param payNo
      * @return
      */
@@ -161,8 +163,7 @@ public class OrderServiceImpl implements OrderService {
 
 
     /**
-     * 请求支付宝查询支付结果
-     *
+     * 根据支付交易号，主动请求支付宝查询支付结果
      * @param payNo 支付交易号
      * @return 支付结果
      */

@@ -44,6 +44,7 @@ public class PayNotifyConfig implements ApplicationContextAware {
     }
 
     //交换机和支付通知队列绑定
+    // @Qualifier在自动装配的时候指定名称
     @Bean
     public Binding binding_course_publish_queue(@Qualifier(PAYNOTIFY_QUEUE) Queue queue, @Qualifier(PAYNOTIFY_EXCHANGE_FANOUT) FanoutExchange exchange) {
         return BindingBuilder.bind(queue).to(exchange);

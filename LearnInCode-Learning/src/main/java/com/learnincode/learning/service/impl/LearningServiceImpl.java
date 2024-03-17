@@ -43,15 +43,7 @@ public class LearningServiceImpl implements LearningService {
 
 
         RestResponse<String> playUrl = mediaServiceClient.getPlayUrlByMediaId(mediaId);
-        //远程调用内容管理服务根据课程计1d(teachplanId)去查询课程计划信息，如果is_preview的值为1表示支持试学
-        //也可以从coursepublish对象中解析出课程计划信息去判惭是否支持试学
         Teachplan teachPlan = contentServiceClient.getTeachPlanById(teachplanId);
-        // 如果支特试学,调用媒资服务查询视频的播放地址，返回
-        if("1".equals(teachPlan.getIsPreview()))
-        {
-            return playUrl;
-        }
-
 
         // 如果是收费课程，那么必须要保证已支付，而且没有过期
         if ("201001".equals(charge)) {

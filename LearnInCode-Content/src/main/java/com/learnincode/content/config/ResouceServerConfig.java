@@ -10,7 +10,9 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Res
 import org.springframework.security.oauth2.provider.token.TokenStore;
 
 @Configuration
+// 标记这个服务，允许对外提供资源
 @EnableResourceServer
+// 开启全局方法访问认证
 @EnableGlobalMethodSecurity(securedEnabled = true,prePostEnabled = true)
 public class ResouceServerConfig extends ResourceServerConfigurerAdapter {
 
